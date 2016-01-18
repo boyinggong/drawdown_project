@@ -1,0 +1,34 @@
+----- US Equity -----
+
+AGG: iShares Core US Aggregate Bond
+HYG: iShares iBoxx $ High Yield Corporate Bd
+TIP: iShares TIPS Bond
+
+----- Index -----
+
+BCOM: Bloomberg Commodity Index
+Bloomberg Commodity Index (BCOM) is calculated on an excess return basis and reflects commodity futures price movements. The index rebalances annually weighted 2/3 by trading volume and 1/3 by world production and weight-caps are applied at the commodity, sector and group level for diversification. Roll period typically occurs from 6th-10th business day based on the roll schedule.
+
+BUHY: Bloomberg USD High Yield Corporate Bond Index
+The Bloomberg USD High Yield Corporate Bond Index is a rules-based, market-value weighted index engineered to measure publicly issued non-investment grade USD fixed-rate, taxable, corporate bonds. To be included in the index a security must have a minimum par amount of 250MM.
+
+G0O1: 3-month U.S. Treasury Bill Index
+
+LTP5TRUU: 
+
+MXEA: MSCI EAFE Index
+The MSCI EAFE Index is an equity index which captures large and mid cap representation across Developed Markets countries (include: Australia, Austria, Belgium, Denmark, Finland, France, Germany, Hong Kong, Ireland, Israel, Italy, Japan, the Netherlands, New Zealand, Norway, Portugal, Singapore, Spain, Sweden, Switzerland and the UK.) around the world, excluding the US and Canada. With 926 constituents, the index covers approximately 85% of the free float-adjusted market capitalization in each country.
+
+MXEF: MSCI Emerging Markets Index
+The MSCI Emerging Markets Index (ticker MXEF) captures large- and mid-cap representation across 23 Emerging Markets (EM) countries. With more than 800 constituents, the index covers approximately 85% of the free float-adjusted market capitalization in each country.
+
+RAY: Russell 3000 Index
+The Russell 3000 Index is composed of 3000 large U.S. companies, as determined by market capitalization. This portfolio of Securities represents approximately 98% of the investable U.S. equity market. The Russell 3000 Index is comprised of stocks within the Russell 1000 and the Russell 2000 Indices. The index was developed with a base value of 140.00 as of December 31, 1986.
+
+RMZ: MSCI US REIT Index
+The MSCI US REIT Index is a free float-adjusted market capitalization index that is comprised of equity REITs. The index is based on MSCI USA Investable Market Index (IMI) its parent index which captures large, mid and small caps securities. With 151 constituents, it represents about 99% of the US REIT universe and securities are classified in the REIT sector according to the Global Industry Classification Standard (GICS®). It however excludes Mortgage REIT and selected Specialized REITs.
+
+SPX: S&P 500 Index
+
+USGG10YR: US Generic Govt 10 Year
+Yields are yield to maturity and pre-tax. Indices have increased in precision as of 5/20/2008 to 4 decimal places. The rates are comprised of Generic United States on-the-run government bill/note/bond indices.
