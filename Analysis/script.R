@@ -28,6 +28,8 @@ year(USGG10YR$Date[index]) = year(USGG10YR$Date[index]) - 100
 
 ######################### calculate the returns #########################
 
+# annual returns are based on 252 bussiness days
+
 for (i in assetsList){
   val <- get(i)
   len <- nrow(val)
@@ -38,4 +40,46 @@ for (i in assetsList){
   assign(i, cbind(val, retrn_dl, retrn_an)) 
 }
 
+######################### calculate the VaR #########################
+
+# 3 month: 63 days
+# 6 month: 126 days
+# 1 year: 252 days
+# 2 years: 504 days
+# 5 years: 1260 days
+# calculation are based on annualized returns
+
+lvs <- c(.9, .95, .99)
+prds <- c(63, 126, 252, 504, 1260)
+names(prds) <- c("mon3", "mon6", "yr1", "yr2", "yr5")
+library("PerformanceAnalytics")
+
+calcVaR <- function(lv, prd){
+  sapply(2:(nrow(val)-prd+1), function(x){
+    VaR(val$retrn_an[x:(x+prd-1)], p=lv, method="historical")
+  })
+}
+
+for (i in assetsList){
+  val <- get(i)
+  resVaRs <- lapply(prds, function(y){
+    VaRs <- sapply(lvs, function(x)calcVaR(x, y))
+    colnames(VaRs) <- lvs
+    return(as.data.frame(VaRs))
+  })
+  WriteXLS(resVaRs, ExcelFileName = paste(i, ".xls", sep=''))
+}
+
+resVaRs <- lapply(prds, function(y){
+  VaRs <- sapply(lvs, function(x)calcVaR(x, y))
+  colnames(VaRs) <- lvs
+  return(as.data.frame(VaRs))
+})
+WriteXLS(resVaRs, ExcelFileName = paste(i, ".xls", sep=''))
+
+# VaRs <- apply(expand.grid(lv = lvs, prd = prds), 1, 
+#               function(xx)do.call(calcVaR, as.list(xx)))
+# lstNm <- apply(expand.grid(lvs, names(prds)), 1, 
+#                function(x)paste(x[1], x[2], sep = "_"))
+# names(VaRs) <- lstNm
 
