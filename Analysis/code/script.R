@@ -1,4 +1,5 @@
 setwd("Desktop/drawdown/Analysis/csv_data/")
+library("PerformanceAnalytics")
 
 ######################### read in the data file #########################
 
@@ -34,13 +35,33 @@ for (i in assetsList){
   val <- get(i)
   len <- nrow(val)
   # daily returns
-  retrn_dl <- c(0,(AGG$PX_LAST[2:len]-AGG$PX_LAST[1:(len-1)])/AGG$PX_LAST[1:(len-1)])
+  retrn_dl <- c(0,(val$PX_LAST[2:len]-val$PX_LAST[1:(len-1)])/val$PX_LAST[1:(len-1)])
   # annalized returnss
   retrn_an <- (1+retrn_dl)^252-1
   assign(i, cbind(val, retrn_dl, retrn_an)) 
 }
 
-######################### calculate the VaR #########################
+######################### calculate the VaR & ES #########################
+
+lvs <- c(.9, .95, .99)
+resVaR <- matrix(rep(0, length(lvs)*length(assetsList)), ncol=length(lvs))
+colnames(resVaR) <- lvs
+rownames(resVaR) <- assetsList
+
+resES <- matrix(rep(0, length(lvs)*length(assetsList)), ncol=length(lvs))
+colnames(resES) <- lvs
+rownames(resES) <- assetsList
+
+count <- 1
+
+for (i in assetsList){
+  val <- get(i)
+  resVaR[count, ] <- sapply(lvs, function(lv)VaR(val$retrn_an, p=lv, method="historical"))
+  resES[count, ] <- sapply(lvs, function(lv)ES(val$retrn_an, p=lv, method="historical"))
+  count = count + 1
+}
+
+######################### calculate the CDAR #########################
 
 # 3 month: 63 days
 # 6 month: 126 days
@@ -52,9 +73,8 @@ for (i in assetsList){
 lvs <- c(.9, .95, .99)
 prds <- c(63, 126, 252, 504, 1260)
 names(prds) <- c("mon3", "mon6", "yr1", "yr2", "yr5")
-library("PerformanceAnalytics")
 
-calcVaR <- function(lv, prd){
+calcCDAR <- function(lv, prd){
   sapply(2:(nrow(val)-prd+1), function(x){
     VaR(val$retrn_an[x:(x+prd-1)], p=lv, method="historical")
   })
@@ -82,4 +102,3 @@ WriteXLS(resVaRs, ExcelFileName = paste(i, ".xls", sep=''))
 # lstNm <- apply(expand.grid(lvs, names(prds)), 1, 
 #                function(x)paste(x[1], x[2], sep = "_"))
 # names(VaRs) <- lstNm
-
