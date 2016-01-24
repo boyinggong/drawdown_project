@@ -4,6 +4,7 @@
 \usepackage{float}
 \usepackage{tikz}
 \usepackage{array}
+\usepackage{amsfonts}
 \def\Session{Fall 2015}
 \usepackage[english]{babel}
 \title{Exploratory Analysis of Various Assets}
@@ -96,14 +97,30 @@ R_a = (1+R_d)^{N} -1
 where $R_a$ is the annualized returns, $R_d$ is the daily returns, N is the number of trading days in one year (N = 252).
 
 \subsection{Sharpe Ratio, Standard deviation, Skewnes and Kurtosis}
+Symbol explanation:
+
+i: represents different index.
+
+t: time period.
 
 \begin{itemize}
 \item Sharpe Ratio
-
+\begin{equation}
+sharpe\_ratio = \frac{\bar{r}_i-Rf}{\sigma_i}
+\end{equation}
 Here we let $Rf = 0$
 \item Standard deviation
-\item Skewnes
+\begin{equation}
+standard\_deviation_i =\sqrt{ \frac{1}{n-1}\sum_{t=1}^n{(r_i^t-\bar{r}_i)^2}} 
+\end{equation}
+\item Skewness
+\begin{equation}
+skewness_i = E_t \left[ \left( \frac{r_i^t-\bar{r}_i}{\sigma_i} \right)^3 \right]
+\end{equation}
 \item Kurtosis
+\begin{equation}
+kurtosis_i = \frac{E_t \left[ \left( r_i^t-\bar{r}_i \right)^4 \right]}{\left(E_t \left[ \left( r_i^t-\bar{r}_i \right)^2 \right]\right)^2}
+\end{equation}
 \end{itemize}
 
 
@@ -117,7 +134,19 @@ In this section, all the risk diagnostics are calculated based on daily returns.
 
 \begin{itemize}
 \item VaR
+
+$\textit{Value at Risk (VaR)} $  is a measure of the risk of investments. It estimates how much a set of investments might lose, given normal market conditions, in a set time period such as a day. VaR is typically used by firms and regulators in the financial industry to gauge the amount of assets needed to cover possible losses. The mathematicial representation of VaR under $\alpha$ was shown below. \footnote{https://en.wikipedia.org/wiki/Value\_at\_risk}
+\begin{equation}
+VaR_{\alpha}(L) = inf\{l \in \mathbb{R} : P(L < l) \leq 1-\alpha \} = 
+inf\{l \in \mathbb{R} : F_L(l) \geq \alpha \}
+\end{equation}
 \item ES
+
+$\textit{Expected shortfall (ES)}$ is a risk measure -- a concept used in the field of financial risk measurement to evaluate the market risk or credit risk of a portfolio. The ``expected shortfall at q\% level" is the expected return on the portfolio in the worst q\% of cases. ES is an alternative to Value at Risk that is more sensitive to the shape of the loss distribution in the tail of the distribution. The mathematicial representation of ES was shown below.\footnote{https://en.wikipedia.org/wiki/Expected\_shortfall}
+\begin{equation}
+ES_{\alpha}(L) = E\left[ L \vert L<VaR_{\alpha}(L) \right]
+\end{equation}
+
 \end{itemize}
 
 
