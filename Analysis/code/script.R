@@ -1,5 +1,8 @@
-setwd("/Users/Xinyue_star/drawdown_project/Analysis/csv_data")
+setwd("/Users/jorothygong/Desktop/drawdown/Analysis/csv_data/")
 library("PerformanceAnalytics")
+library(ggplot2)
+library(grid)
+library(gridExtra)
 
 ######################### read in the data file #########################
 
@@ -93,6 +96,8 @@ for (i in assetsList){
   statSmmr[i, 1] <- (mean(val$retrn_dl) - Rf)/ statSmmr[i, 2]
 } 
 
+write.csv(statSmmr, file = "../results/statSmmr.csv")
+
 ######################### calculate the VaR & ES #########################
 
 VaR <- function(R, p = 0.95){
@@ -119,10 +124,13 @@ count <- 1
 
 for (i in assetsList){
   val <- get(i)
-  resVaR[count, ] <- sapply(lvs, function(lv)VaR(val$retrn_dl, p=lv, method="historical"))
-  resES[count, ] <- sapply(lvs, function(lv)ES(val$retrn_dl, p=lv, method="historical"))
+  resVaR[count, ] <- sapply(lvs, function(lv)VaR(val$retrn_dl, p=lv))
+  resES[count, ] <- sapply(lvs, function(lv)ES(val$retrn_dl, p=lv))
   count = count + 1
 }
+
+write.csv(resVaR, file = "../results/resVaR.csv")
+write.csv(resES, file = "../results/resES.csv")
 
 ######################### calculate the CED #########################
 
@@ -139,13 +147,13 @@ names(prds) <- c("mon3", "mon6", "yr1", "yr2", "yr5")
 
 calcCED <- function(val, prd){
   sapply(2:(nrow(val)-prd+1), function(x){
-    dt <- as.data.frame(val$PX_LAST[x:(x+prd-1)])
+    dt <- as.data.frame(val$retrn_dl[x:(x+prd-1)])
     rownames(dt) <- val$Date[x:(x+prd-1)] 
     maxDrawdown(dt)
   })
 }
 
-prd = prds[1]
+calcCED(MXEF, 1260)
 
 for (prd in prds){
   resCEDs <- matrix(rep(0, length(assetsList)*length(lvs)), ncol = length(lvs))
@@ -156,10 +164,10 @@ for (prd in prds){
   for (i in assetsList){
     val <- get(i)
     mxd <- calcCED(val, prd)
-    resCEDs[i, ] <- sapply(lvs, function(lv)ES(-mxd, p=lv, method="historical"))
+    resCEDs[i, ] <- sapply(lvs, function(lv)ES(-mxd, p=lv))
     print(i)
   }
-  write.csv(resCEDs, file = paste("../results/", names(prd), "_CED.csv", sep = ''))
+  write.csv(resCEDs, file = paste("../results/", prd, "_CED.csv", sep = ''))
 }
 
 ######################### calculate the rolling stats #########################
@@ -173,7 +181,7 @@ for (prd in prds){
 
 lvs <- c(.9, .95, .99)
 prds <- c(63, 126, 252, 504, 1260)
-names(prds) <- c("mon3", "mon6", "yr1", "yr2", "yr5")
+names(prds) <- c("3mon", "6mon", "1yr", "2yr", "5yr")
 
 assetsList <- c("AGG")
 lvs <- c(.9)
@@ -184,12 +192,137 @@ calcRolling <- function(val, lv, prd, FUN, ...){
   res <- sapply(2:(nrow(val)-prd+1), function(x){
     dt <- as.data.frame(val$retrn_dl[x:(x+prd-1)])
     rownames(dt) <- val$Date[x:(x+prd-1)] 
-    do.call(FUN, list(dt, lv))
+    do.call(FUN, list(dt[, 1], lv))
   })
 }
 
-aaaaasha <- calcRolling(val, lv = 0.9, prd = prds["mon3"], FUN = "ES")
-plot(val$Date[2:(nrow(val)-prd+1)], aaaaasha)
+################   plot   ################
 
+
+windw = "1yr"
+FUN = "ES"
+
+windw = "6mon"
+FUN = "ES"
+
+windw = "6mon"
+FUN = "VaR"
+
+windw = "1yr"
+FUN = "VaR"
+
+assign(paste(FUN, windw, sep = ''), 
+       lapply(assetsList, function(i)calcRolling(get(i), lv = 0.9, prd = prds[windw], FUN)))
+assign(paste(FUN, windw, "_date",sep = ''),
+       lapply(assetsList, function(i)get(i)$Date[2:(nrow(get(i))-prds[windw]+1)]))
+testplot <- data.frame(ES = get(paste(FUN, windw, sep = ''))[[1]], Date = get(paste(FUN, windw, "_date",sep = ''))[[1]])
+
+count = 1
+png(paste("../results/", FUN, windw, ".png", sep = ''), width = 900, height = 1500)
+plots = list()
+for (i in assetsList){
+  plt <- data.frame(y_axis = get(paste(FUN, windw, sep = ''))[[count]]*100,
+                    x_axis = get(paste(FUN, windw, "_date",sep = ''))[[count]])
+  plots[[i]] <- ggplot(plt, aes(x=x_axis, y=y_axis)) +
+    geom_line() +
+    ggtitle(i) +
+    labs(y = paste(FUN, "(%)"))+
+    labs(x = "Date")
+  count = count+1
+}
+multiplot(plotlist = plots, cols = 3)
+dev.off()
+
+###################  rolling variance   ###################
+
+windw = "6mon"
+FUN = "var"
+
+windw = "1yr"
+FUN = "var"
+
+calcRolling <- function(val, prd, FUN, ...){
+  res <- sapply(2:(nrow(val)-prd+1), function(x){
+    dt <- as.data.frame(val$retrn_dl[x:(x+prd-1)])
+    rownames(dt) <- val$Date[x:(x+prd-1)] 
+    do.call(FUN, list(dt[, 1]))
+  })
+}
+
+assign(paste(FUN, windw, sep = ''), 
+       lapply(assetsList, function(i)calcRolling(get(i), prd = prds[windw], FUN)))
+assign(paste(FUN, windw, "_date",sep = ''),
+       lapply(assetsList, function(i)get(i)$Date[2:(nrow(get(i))-prds[windw]+1)]))
+testplot <- data.frame(ES = get(paste(FUN, windw, sep = ''))[[1]], Date = get(paste(FUN, windw, "_date",sep = ''))[[1]])
+
+count = 1
+png(paste("../results/", FUN, windw, ".png", sep = ''), width = 900, height = 1500)
+plots = list()
+for (i in assetsList){
+  plt <- data.frame(y_axis = get(paste(FUN, windw, sep = ''))[[count]],
+                    x_axis = get(paste(FUN, windw, "_date",sep = ''))[[count]])
+  plots[[i]] <- ggplot(plt, aes(x=x_axis, y=y_axis)) +
+    geom_line() +
+    ggtitle(i) +
+    labs(y = paste("variance"))+
+    labs(x = "Date")
+  count = count+1
+}
+multiplot(plotlist = plots, cols = 3)
+dev.off()
+
+
+
+
+
+
+
+
+
+# Multiple plot function
+#
+# ggplot objects can be passed in ..., or to plotlist (as a list of ggplot objects)
+# - cols:   Number of columns in layout
+# - layout: A matrix specifying the layout. If present, 'cols' is ignored.
+#
+# If the layout is something like matrix(c(1,2,3,3), nrow=2, byrow=TRUE),
+# then plot 1 will go in the upper left, 2 will go in the upper right, and
+# 3 will go all the way across the bottom.
+#
+multiplot <- function(..., plotlist=NULL, file, cols=1, layout=NULL) {
+  require(grid)
+  
+  # Make a list from the ... arguments and plotlist
+  plots <- c(list(...), plotlist)
+  
+  numPlots = length(plots)
+  
+  # If layout is NULL, then use 'cols' to determine layout
+  if (is.null(layout)) {
+    # Make the panel
+    # ncol: Number of columns of plots
+    # nrow: Number of rows needed, calculated from # of cols
+    layout <- matrix(seq(1, cols * ceiling(numPlots/cols)),
+                     ncol = cols, nrow = ceiling(numPlots/cols))
+  }
+  
+  if (numPlots==1) {
+    print(plots[[1]])
+    
+  } else {
+    # Set up the page
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(nrow(layout), ncol(layout))))
+    
+    # Make each plot, in the correct location
+    for (i in 1:numPlots) {
+      # Get the i,j matrix positions of the regions that contain this subplot
+      matchidx <- as.data.frame(which(layout == i, arr.ind = TRUE))
+      
+      print(plots[[i]], vp = viewport(layout.pos.row = matchidx$row,
+                                      layout.pos.col = matchidx$col))
+    }
+  }
+}
 
 
