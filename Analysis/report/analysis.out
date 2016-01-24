@@ -1,0 +1,11 @@
+\BOOKMARK [1][-]{section.1}{Description}{}% 1
+\BOOKMARK [2][-]{subsection.1.1}{US Equity}{section.1}% 2
+\BOOKMARK [2][-]{subsection.1.2}{Index}{section.1}% 3
+\BOOKMARK [1][-]{section.2}{Statistical summary}{}% 4
+\BOOKMARK [2][-]{subsection.2.1}{Annualized return}{section.2}% 5
+\BOOKMARK [2][-]{subsection.2.2}{Sharpe Ratio, Standard deviation, Skewnes and Kurtosis}{section.2}% 6
+\BOOKMARK [1][-]{section.3}{Risk diagnostics}{}% 7
+\BOOKMARK [2][-]{subsection.3.1}{VaR \046 ES}{section.3}% 8
+\BOOKMARK [2][-]{subsection.3.2}{CED}{section.3}% 9
+\BOOKMARK [1][-]{section.4}{Time varying risk diagnostics}{}% 10
+\BOOKMARK [1][-]{section.5}{Appendix: Tables and Plots}{}% 11
