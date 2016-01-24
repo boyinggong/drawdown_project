@@ -1,7 +1,3 @@
-*.aux 
-*.log
-*.pdf
-*.gz, 
 *.Rproj.user
 *.Rhistory
 *.RData
