@@ -32,6 +32,14 @@ rownames(G0O1) <- NULL
 LTP5TRUU <- LTP5TRUU[which(LTP5TRUU$Date == as.Date("2010-06-03")):nrow(LTP5TRUU), ]
 rownames(LTP5TRUU) <- NULL
 
+######################### basic information #########################
+
+for (i in assetsList){
+  val <- get(i)
+  print(i)
+  print(paste(range(val$Date), collapse = " to "))
+}
+
 ######################### calculate the returns #########################
 
 # annual returns are based on 252 bussiness days
@@ -116,37 +124,6 @@ for (i in assetsList){
   count = count + 1
 }
 
-######################### calculate the CDAR #########################
-
-# 3 month: 63 days
-# 6 month: 126 days
-# 1 year: 252 days
-# 2 years: 504 days
-# 5 years: 1260 days
-# calculation are based on annualized returns
-
-lvs <- c(.9, .95, .99)
-prds <- c(63, 126, 252, 504, 1260)
-names(prds) <- c("mon3", "mon6", "yr1", "yr2", "yr5")
-
-calcCDD <- function(lv, prd){
-  sapply(2:(nrow(val)-prd+1), function(x){
-    dt <- as.data.frame(val$retrn_dl[x:(x+prd-1)])
-    rownames(dt) <- val$Date[x:(x+prd-1)] 
-    CDD(dt, p=lv)
-  })
-}
-
-for (i in assetsList){
-  val <- get(i)
-  resCDDs <- lapply(prds, function(y){
-    CDDs <- sapply(lvs, function(x)calcCDD(x, y))
-    colnames(VaRs) <- lvs
-    return(as.data.frame(CDDs))
-  })
-  WriteXLS(resCDDs, ExcelFileName = paste(i, ".xls", sep=''))
-}
-
 ######################### calculate the CED #########################
 
 # 3 month: 63 days
@@ -162,7 +139,7 @@ names(prds) <- c("mon3", "mon6", "yr1", "yr2", "yr5")
 
 calcCED <- function(val, prd){
   sapply(2:(nrow(val)-prd+1), function(x){
-    dt <- as.data.frame(val$retrn_dl[x:(x+prd-1)])
+    dt <- as.data.frame(val$PX_LAST[x:(x+prd-1)])
     rownames(dt) <- val$Date[x:(x+prd-1)] 
     maxDrawdown(dt)
   })
@@ -182,10 +159,37 @@ for (prd in prds){
     resCEDs[i, ] <- sapply(lvs, function(lv)ES(-mxd, p=lv, method="historical"))
     print(i)
   }
-  write.csv(resCEDs, file = paste(names(prd), "_CED.csv", sep = ''))
+  write.csv(resCEDs, file = paste("../results/", names(prd), "_CED.csv", sep = ''))
 }
 
-################# time varying volatilities and sharpe ratio #################
+######################### calculate the rolling stats #########################
 
-######################### time varying ES and VaR #########################
+# 3 month: 63 days
+# 6 month: 126 days
+# 1 year: 252 days
+# 2 years: 504 days
+# 5 years: 1260 days
+# calculation are based on annualized returns
+
+lvs <- c(.9, .95, .99)
+prds <- c(63, 126, 252, 504, 1260)
+names(prds) <- c("mon3", "mon6", "yr1", "yr2", "yr5")
+
+assetsList <- c("AGG")
+lvs <- c(.9)
+prds <- c(63)
+names(prds) <- c("mon3")
+
+calcRolling <- function(val, lv, prd, FUN, ...){
+  res <- sapply(2:(nrow(val)-prd+1), function(x){
+    dt <- as.data.frame(val$retrn_dl[x:(x+prd-1)])
+    rownames(dt) <- val$Date[x:(x+prd-1)] 
+    do.call(FUN, list(dt, lv))
+  })
+}
+
+aaaaasha <- calcRolling(val, lv = 0.9, prd = prds["mon3"], FUN = "ES")
+plot(val$Date[2:(nrow(val)-prd+1)], aaaaasha)
+
+
 

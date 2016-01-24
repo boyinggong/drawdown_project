@@ -1,0 +1,212 @@
+\documentclass[12pt]{article}
+\usepackage{amsmath,textcomp,amssymb,geometry,graphicx,enumerate,upquote,color}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{array}
+\def\Session{Fall 2015}
+\usepackage[english]{babel}
+\title{Exploratory Analysis of Various Assets}
+\author{Boying Gong, Xinyue Zhou}
+\newenvironment{qparts}{\begin{enumerate}[{(}a{)}]}{\end{enumerate}}
+\def\endproofmark{$\Box$}
+\newenvironment{proof}{\par{\bf Proof}:}{\endproofmark\smallskip}
+\begin{document}
+\maketitle
+
+\section{Description}
+\subsection{US Equity}
+
+\begin{itemize}
+\item AGG: iShares Core US Aggregate Bond\\
+Date ranges: 2003-09-29 to 2015-12-31\\
+Components: \\
+Description:
+\item HYG: iShares iBoxx \$ High Yield Corporate Bd\\
+Date ranges: 2007-04-12 to 2015-12-31\\
+Components: \\
+Description:
+\item TIP: iShares TIPS Bond\\
+Date ranges: 2003-12-08 to 2015-12-31\\
+Components: \\
+Description:
+\end{itemize}
+
+\subsection{Index}
+
+\begin{itemize}
+\item BCOM: Bloomberg Commodity Index\\
+Date ranges: 1991-01-03 to 2015-12-31\\
+Description: Bloomberg Commodity Index (BCOM) is calculated on an excess return basis and reflects commodity futures price movements. The index rebalances annually weighted 2/3 by trading volume and 1/3 by world production and weight-caps are applied at the commodity, sector and group level for diversification. Roll period typically occurs from 6th-10th business day based on the roll schedule.\footnote{http://www.bloomberg.com/quote/BCOM:IND}
+\item BUHY: Bloomberg USD High Yield Corporate Bond Index\\
+Date ranges: 2010-01-04 to 2015-12-31 \\
+Description: The Bloomberg USD High Yield Corporate Bond Index is a rules-based, market-value weighted index engineered to measure publicly issued non-investment grade USD fixed-rate, taxable, corporate bonds. To be included in the index a security must have a minimum par amount of 250MM.\footnote{http://www.bloomberg.com/quote/BUHY:IND}
+\item G0O1: 3-month U.S. Treasury Bill Index\\
+Date ranges: 1992-04-01 to 2015-12-31 \\
+Components: \\
+Description:
+\item LTP5TRUU: \\
+Date ranges: 2010-06-03 to 2015-12-31 \\
+Components: \\
+Description:
+\item MXEA: MSCI EAFE Index \\
+Date ranges: 1970-01-07 to 2015-12-31 \\
+Components: \\
+Description:
+\item MXEF: MSCI Emerging Markets Index\\
+Date ranges: 1988-01-01 to 2015-12-31 \\
+Components: \\
+Description:
+\item RAY: Russell 3000 Index\\
+Date ranges: 1979-01-02 to 2015-12-31 \\
+Description: The Russell 3000 Index is composed of 3000 large U.S. companies, as determined by market capitalization. This portfolio of Securities represents approximately 98\% of the investable U.S. equity market. The Russell 3000 Index is comprised of stocks within the Russell 1000 and the Russell 2000 Indices. The index was developed with a base value of 140.00 as of December 31, 1986.\footnote{http://www.bloomberg.com/quote/RAY:IND}
+\item RMZ: MSCI US REIT Index\\
+Date ranges: 2005-06-20 to 2015-12-31 \\
+Components: \\
+Description:
+\item SPX: S\&P 500 Index\\
+Date ranges: 1950-01-04 to 2015-12-31 \\
+Description: Standard and Poor's 500 Index is a capitalization-weighted index of 500 stocks. The index is designed to measure performance of the broad domestic economy through changes in the aggregate market value of 500 stocks representing all major industries. The index was developed with a base level of 10 for the 1941-43 base period.\footnote{http://www.bloomberg.com/quote/SPX:IND}
+\item USGG10YR: US Generic Govt 10 Year\\
+Date ranges: 1962-01-03 to 2015-12-31 \\
+Components: \\
+Description:
+\end{itemize}
+
+
+\section{Statistical summary}
+
+\subsection{Annualized return}
+
+Annualised return are calculated based on the daily returns. 
+\begin{equation}
+R_a = (1+R_d)^{N} -1
+\end{equation}
+where $R_a$ is the annualized returns, $R_d$ is the daily returns, N is the number of trading days in one year (N = 252).
+
+\subsection{Sharpe Ratio, Standard deviation, Skewnes and Kurtosis}
+
+\begin{itemize}
+\item Sharpe Ratio
+
+Here we let $Rf = 0$
+\item Standard deviation
+\item Skewnes
+\item Kurtosis
+\end{itemize}
+
+
+
+
+\section{Risk diagnostics}
+
+In this section, all the risk diagnostics are calculated based on daily returns.
+
+\subsection{VaR \& ES}
+
+\begin{itemize}
+\item VaR
+\item ES
+\end{itemize}
+
+
+
+\subsection{CED}
+
+Three month CED.
+
+
+
+\section{Time varying risk diagnostics}
+
+
+Time series diagnostics: time varying risk diagnostics over a 6-month (and then 1-year) rolling window
+
+
+\section{Appendix: Tables and Plots}
+
+
+\begin{table}[!h]
+\caption{Statistical Summary of Assets} % title of Table
+\centering 
+\begin{tabular}{ | c || p{1.5cm} p{1.5cm} r r | } 
+ \hline
+Asset & Sharpe  & Sd. & Skewnes & Kurtosis \\
+  \hline \hline
+AGG & 0.0516 & 0.0032 & -2.5102 & 81.3606\\ 
+HYG & 0.0250 & 0.0084 &  0.8657 & 36.7430\\ 
+TIP & 0.0402 & 0.0041 &  0.0954 &  6.4866\\ 
+BCOM & 0.0008 & 0.0094 & -0.2718 &  4.3366\\ 
+BUHY & 0.1237 & 0.0019 & -1.7849 & 11.2806\\ 
+G0O1 & 0.7167 & 0.0001 &  0.6853 & 26.7670\\ 
+LTP5TRUU & 0.0402 & 0.0011 &  0.1615 &  1.7925\\ 
+MXEA & 0.0300 & 0.0097 & -0.3153 & 10.7456\\ 
+MXEF & 0.0307 & 0.0113 & -0.3933 &  7.7139\\ 
+RAY & 0.0360 & 0.0109 & -0.6614 & 17.2216\\ 
+RMZ & 0.0162 & 0.0230 &  0.3566 & 13.6886\\ 
+SPX & 0.0348 & 0.0097 & -0.6493 & 21.1192\\ 
+USGG10YR & 0.0031 & 0.0127 &  0.1159 &  8.8116 \\
+ \hline
+\end{tabular}
+\label{table:statSum}
+\end{table}
+
+
+\begin{table}[!h]
+\caption{VaR and ES under various probabilities} % title of Table
+\centering 
+\begin{tabular}{ | r || r r r || r r r | } 
+ \hline
+ & & VaR(\%) &&& ES(\%) & \\
+Asset& 0.9 & 0.95 & 0.99 & 0.9 & 0.95 & 0.99 \\
+  \hline \hline
+AGG & -0.2906 & -0.4011 & -0.6911 & -0.5014 & -0.6641 & -1.2317\\ 
+HYG & -0.6189 & -1.0301 & -2.5006 & -1.4125 & -2.0298 & -4.0129\\ 
+TIP & -0.4417 & -0.6220 & -1.0146 & -0.7178 & -0.9100 & -1.4712\\ 
+BCOM & -1.0405 & -1.4740 & -2.6157 & -1.7128 & -2.1974 & -3.5476\\ 
+BUHY & -0.1634 & -0.2910 & -0.6573 & -0.3690 & -0.5252 & -0.9751\\ 
+G0O1 & -0.0003 & -0.0020 & -0.0126 & -0.0056 & -0.0099 & -0.0313\\ 
+LTP5TRUU & -0.1233 & -0.1800 & -0.2922 & -0.1979 & -0.2476 & -0.3501\\ 
+MXEA & -1.0210 & -1.4619 & -2.5908 & -1.7372 & -2.2568 & -3.7602\\ 
+MXEF & -1.2088 & -1.7587 & -3.3164 & -2.1061 & -2.7544 & -4.6707\\ 
+RAY & -1.1064 & -1.6239 & -2.9659 & -1.9500 & -2.5554 & -4.4182\\ 
+RMZ & -1.9079 & -3.0008 & -7.5575 & -3.9925 & -5.6189 & -9.9890\\ 
+SPX & -0.9889 & -1.4350 & -2.5757 & -1.7055 & -2.2255 & -3.7960\\ 
+USGG10YR & -1.2640 & -1.9492 & -3.5935 & -2.2764 & -2.9939 & -4.8875 \\
+ \hline
+\end{tabular}
+\label{table:VaRES}
+\end{table}
+
+
+\begin{table}[!h]
+\caption{CED under 3-month rolling window} % title of Table
+\centering 
+\begin{tabular}{ | r || r r r | } 
+ \hline
+ & & CED(\%) & \\
+Asset& 0.9 & 0.95 & 0.99  \\
+  \hline \hline
+AGG &  -5.5963 &  -7.7247 & -12.8352\\ 
+HYG & -18.4178 & -24.0716 & -29.4005\\ 
+TIP &  -7.4759 &  -9.8950 & -13.0980\\ 
+BCOM & -18.1428 & -22.5428 & -38.0340\\ 
+BUHY &  -5.8071 &  -6.2709 &  -7.5793\\ 
+G0O1 &  -0.0913 &  -0.1435 &  -0.2550\\ 
+LTP5TRUU &  -2.0623 &  -2.3847 &  -2.9234\\ 
+MXEA & -20.3911 & -23.7284 & -33.3246\\ 
+MXEF & -26.2108 & -30.8033 & -46.7422\\ 
+RAY & -20.6454 & -25.6426 & -35.9454\\ 
+RMZ & -37.3016 & -48.4088 & -63.4499\\ 
+SPX & -18.3513 & -22.6740 & -32.4618\\ 
+USGG10YR & -23.2767 & -28.1128 & -41.8330\\
+ \hline
+\end{tabular}
+\label{table:CED3}
+\end{table}
+
+
+%\bibliographystyle{unsrt}
+%\bibliography{analysis}
+
+\end{document}
