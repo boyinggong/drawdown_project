@@ -1,4 +1,4 @@
-setwd("/Users/jorothygong/Desktop/drawdown/Analysis/csv_data/")
+setwd("/Users/Xinyue_star/drawdown_project/Analysis/csv_data")
 library("PerformanceAnalytics")
 
 ######################### read in the data file #########################
