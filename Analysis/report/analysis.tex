@@ -159,11 +159,11 @@ CED_\alpha(X_{T_n}) = \textbf{E}(\mathbf{\mu}(X_{T_n})|\mathbf{\mu}(X_{T_n}) > D
 \end{equation}
 where $\mathbf{\mu}(X_{T_n})$ is the maximum drawdown distribution over a finite path.
 
-We calculate the CED of various assets under 0.9, 0.95, 0.99 confidence level for different path length (3 months, 6 months, 1 year, 2 years, 5 years) separately.
+We calculate the CED of various assets under 0.9, 0.95, 0.99 confidence level for different path length (3 months, 6 months, 1 year, 2 years, 5 years) separately. Note that for longer path length such as 2-year and 5-year, there might be some missing values under large confidence levels. CED data tend to be lack of variance under long time period. In such cases, the empirical quantile no longer exits without some distribution or polynomial assumption of the tail. Since we do not familiar the performance of CED, it becomes impropriate to make such assumptions.
 
 \section{Time varying risk diagnostics}
 
-We calculate the time varying VaR and ES  for different assets over a 6-month and a 1-year rolling window seperately, to see how these two risk diagnostics changing over time.
+We calculate the time varying variance(Figure \ref{fig: variance6mon}), VaR{fig: VaR6mon} and ES{fig: ES6mon}  for different assets over a 6-month and a 1-year rolling window (confidence level: 0.95) seperately, to see how these two risk diagnostics changing over time. 
 
 
 \section{Appendix: Tables and Plots}
@@ -276,10 +276,31 @@ USGG10YR & 42.8817 & 48.3664 & 53.9551 & 54.7912 & 59.1359 & 62.8237\\
 \end{table}
 
 \begin{figure}[h]
-\caption{CED(\%) under 1-year and 2-year rolling window} % title of Table
+\caption{CED under various time period and confidence levels}
 \centering 
-\includegraphics[width=13cm]{../results/ES6mon}
-\label{table:CED3}
+\includegraphics[width=16cm]{../results/CED}
+\label{fig: CED}
+\end{figure}
+
+\begin{figure}[h]
+\caption{Variance under 6-month rolling window} 
+\centering 
+\includegraphics[width=16cm]{../results/variance6mon}
+\label{fig: variance6mon}
+\end{figure}
+
+\begin{figure}[h]
+\caption{VaR(\%) under 6-month rolling window}
+\centering 
+\includegraphics[width=16cm]{../results/VaR6mon}
+\label{fig: VaR6mon}
+\end{figure}
+
+\begin{figure}[h]
+\caption{ES(\%) under 6-month rolling window} 
+\centering 
+\includegraphics[width=16cm]{../results/ES6mon}
+\label{fig: ES6mon}
 \end{figure}
 
 

@@ -170,6 +170,35 @@ for (prd in prds){
   write.csv(resCEDs, file = paste("../results/", prd, "_CED.csv", sep = ''))
 }
 
+#### plot CED
+
+CED3mon <- read.csv("../results/63_CED.csv")
+CED6mon <- read.csv("../results/126_CED.csv")
+CED1yr <- read.csv("../results/252_CED.csv")
+CED2yr <- read.csv("../results/504_CED.csv")
+CED5yr <- read.csv("../results/1260_CED.csv")
+
+
+count = 1
+png(paste("../results/CED.png", sep = ''), width = 1600, height = 1600)
+plots = list()
+for (i in assetsList){
+  plt <- data.frame(CED = unlist(c(CED3mon[count, 2:4], CED6mon[count, 2:4], CED1yr[count, 2:4], 
+                            CED2yr[count, 2:4], CED5yr[count, 2:4])),
+                    prd = as.factor(rep(names(prds), each = 3)),
+                    confLevel = rep(c("p = 0.9", "p = 0.95", "p = 0.99"), 5))
+  plots[[i]] <- ggplot(plt, aes(x = prd, y = -CED, group = confLevel, color = confLevel)) +
+    geom_line() + geom_point() +
+    ggtitle(i) + ylim(0, 0.75) +
+    labs(y = paste(FUN, "(%)"))+
+    labs(x = "Date")
+  count = count+1
+}
+multiplot(plotlist = plots, cols = 4)
+dev.off()
+
+
+
 ######################### calculate the rolling stats #########################
 
 # 3 month: 63 days
@@ -182,11 +211,6 @@ for (prd in prds){
 lvs <- c(.9, .95, .99)
 prds <- c(63, 126, 252, 504, 1260)
 names(prds) <- c("3mon", "6mon", "1yr", "2yr", "5yr")
-
-assetsList <- c("AGG")
-lvs <- c(.9)
-prds <- c(63)
-names(prds) <- c("mon3")
 
 calcRolling <- function(val, lv, prd, FUN, ...){
   res <- sapply(2:(nrow(val)-prd+1), function(x){
@@ -212,13 +236,13 @@ windw = "1yr"
 FUN = "VaR"
 
 assign(paste(FUN, windw, sep = ''), 
-       lapply(assetsList, function(i)calcRolling(get(i), lv = 0.9, prd = prds[windw], FUN)))
+       lapply(assetsList, function(i)calcRolling(get(i), lv = 0.95, prd = prds[windw], FUN)))
 assign(paste(FUN, windw, "_date",sep = ''),
-       lapply(assetsList, function(i)get(i)$Date[2:(nrow(get(i))-prds[windw]+1)]))
+       lapply(assetsList, function(i)get(i)$Date[(1+prds[windw]):(nrow(get(i)))]))
 testplot <- data.frame(ES = get(paste(FUN, windw, sep = ''))[[1]], Date = get(paste(FUN, windw, "_date",sep = ''))[[1]])
 
 count = 1
-png(paste("../results/", FUN, windw, ".png", sep = ''), width = 900, height = 1500)
+png(paste("../results/", FUN, windw, ".png", sep = ''), width = 1600, height = 1600)
 plots = list()
 for (i in assetsList){
   plt <- data.frame(y_axis = get(paste(FUN, windw, sep = ''))[[count]]*100,
@@ -230,7 +254,7 @@ for (i in assetsList){
     labs(x = "Date")
   count = count+1
 }
-multiplot(plotlist = plots, cols = 3)
+multiplot(plotlist = plots, cols = 4)
 dev.off()
 
 ###################  rolling variance   ###################
@@ -252,11 +276,11 @@ calcRolling <- function(val, prd, FUN, ...){
 assign(paste(FUN, windw, sep = ''), 
        lapply(assetsList, function(i)calcRolling(get(i), prd = prds[windw], FUN)))
 assign(paste(FUN, windw, "_date",sep = ''),
-       lapply(assetsList, function(i)get(i)$Date[2:(nrow(get(i))-prds[windw]+1)]))
+       lapply(assetsList, function(i)get(i)$Date[(1+prds[windw]):(nrow(get(i)))]))
 testplot <- data.frame(ES = get(paste(FUN, windw, sep = ''))[[1]], Date = get(paste(FUN, windw, "_date",sep = ''))[[1]])
 
 count = 1
-png(paste("../results/", FUN, windw, ".png", sep = ''), width = 900, height = 1500)
+png(paste("../results/variance", windw, ".png", sep = ''), width = 1600, height = 1600)
 plots = list()
 for (i in assetsList){
   plt <- data.frame(y_axis = get(paste(FUN, windw, sep = ''))[[count]],
@@ -264,11 +288,11 @@ for (i in assetsList){
   plots[[i]] <- ggplot(plt, aes(x=x_axis, y=y_axis)) +
     geom_line() +
     ggtitle(i) +
-    labs(y = paste("variance"))+
+    labs(y = paste("variance"))
     labs(x = "Date")
   count = count+1
 }
-multiplot(plotlist = plots, cols = 3)
+multiplot(plotlist = plots, cols = 4)
 dev.off()
 
 
