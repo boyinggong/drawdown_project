@@ -37,22 +37,22 @@ CED2yr <- read.csv("../results/504_CED.csv")
 
 
 aa <- paste(assetsList,
-           format(round(-CED3mon[, "X0.9"]*100, 4), nsmall = 4),  
-           format(round(-CED3mon[, "X0.95"]*100, 4), nsmall = 4), 
-           format(round(-CED3mon[, "X0.99"]*100, 4), nsmall = 4),
-           format(round(-CED6mon[, "X0.9"]*100, 4), nsmall = 4),  
-           format(round(-CED6mon[, "X0.95"]*100, 4), nsmall = 4), 
-           format(round(-CED6mon[, "X0.99"]*100, 4), nsmall = 4), sep = ' & ')
+           format(round(-CED3mon[, "X0.9"]*100, 2), nsmall = 2),  
+           format(round(-CED3mon[, "X0.95"]*100, 2), nsmall = 2), 
+           format(round(-CED3mon[, "X0.99"]*100, 2), nsmall = 2),
+           format(round(-CED6mon[, "X0.9"]*100, 2), nsmall = 2),  
+           format(round(-CED6mon[, "X0.95"]*100, 2), nsmall = 2), 
+           format(round(-CED6mon[, "X0.99"]*100, 2), nsmall = 2), sep = ' & ')
 bb <- paste(aa, collapse = "\\\\ \n")
 cat(bb)
 
 aa <- paste(assetsList,
-            format(round(-CED1yr[, "X0.9"]*100, 4), nsmall = 4),  
-            format(round(-CED1yr[, "X0.95"]*100, 4), nsmall = 4), 
-            format(round(-CED1yr[, "X0.99"]*100, 4), nsmall = 4),
-            format(round(-CED2yr[, "X0.9"]*100, 4), nsmall = 4),  
-            format(round(-CED2yr[, "X0.95"]*100, 4), nsmall = 4), 
-            format(round(-CED2yr[, "X0.99"]*100, 4), nsmall = 4), sep = ' & ')
+            format(round(-CED1yr[, "X0.9"]*100, 2), nsmall = 2),  
+            format(round(-CED1yr[, "X0.95"]*100, 2), nsmall = 2), 
+            format(round(-CED1yr[, "X0.99"]*100, 2), nsmall = 2),
+            format(round(-CED2yr[, "X0.9"]*100, 2), nsmall = 2),  
+            format(round(-CED2yr[, "X0.95"]*100, 2), nsmall = 2), 
+            format(round(-CED2yr[, "X0.99"]*100, 2), nsmall = 2), sep = ' & ')
 bb <- paste(aa, collapse = "\\\\ \n")
 cat(bb)
 

@@ -112,14 +112,14 @@ for (i in assetsList){
     plots[[i]] <- ggplot(plt, aes(x=x_axis)) +
       geom_density() + 
       ggtitle(i) +
-      labs(x = "Returns") + xlim(-0.1, 0.1) + 
+      labs(x = "Returns") + xlim(-0.04, 0.04) + 
       ylim(0, 175)
   } else {
     plt <- data.frame(x_axis = get(i)$retrn_dl[2:length(val$Date)])
     plots[[i]] <- ggplot(plt, aes(x=x_axis)) +
       geom_density() + 
       ggtitle(i) +
-      labs(x = "Returns") + xlim(-0.1, 0.1)
+      labs(x = "Returns") + xlim(-0.04, 0.04)
   }
 
   count = count+1
@@ -181,72 +181,6 @@ for (i in assetsList){
 
 write.csv(resVaR, file = "../results/resVaR.csv")
 write.csv(resES, file = "../results/resES.csv")
-
-######################### calculate the CED #########################
-
-# 3 month: 63 days
-# 6 month: 126 days
-# 1 year: 252 days
-# 2 years: 504 days
-# 5 years: 1260 days
-# calculation are based on annualized returns
-
-lvs <- c(.9, .95, .99)
-prds <- c(63, 126, 252, 504, 1260)
-names(prds) <- c("mon3", "mon6", "yr1", "yr2", "yr5")
-
-calcCED <- function(val, prd){
-  sapply(2:(nrow(val)-prd+1), function(x){
-    dt <- as.data.frame(val$retrn_dl[x:(x+prd-1)])
-    rownames(dt) <- val$Date[x:(x+prd-1)] 
-    maxDrawdown(dt)
-  })
-}
-
-calcCED(MXEF, 1260)
-
-for (prd in prds){
-  resCEDs <- matrix(rep(0, length(assetsList)*length(lvs)), ncol = length(lvs))
-  resCEDs <- as.data.frame(resCEDs)
-  rownames(resCEDs) <- assetsList
-  colnames(resCEDs) <- lvs
-  
-  for (i in assetsList){
-    val <- get(i)
-    mxd <- calcCED(val, prd)
-    resCEDs[i, ] <- sapply(lvs, function(lv)ES(-mxd, p=lv))
-    print(i)
-  }
-  write.csv(resCEDs, file = paste("../results/", prd, "_CED.csv", sep = ''))
-}
-
-#### plot CED
-
-CED3mon <- read.csv("../results/63_CED.csv")
-CED6mon <- read.csv("../results/126_CED.csv")
-CED1yr <- read.csv("../results/252_CED.csv")
-CED2yr <- read.csv("../results/504_CED.csv")
-CED5yr <- read.csv("../results/1260_CED.csv")
-
-
-count = 1
-png(paste("../results/CED.png", sep = ''), width = 1600, height = 1600)
-plots = list()
-for (i in assetsList){
-  plt <- data.frame(CED = unlist(c(CED3mon[count, 2:4], CED6mon[count, 2:4], CED1yr[count, 2:4], 
-                            CED2yr[count, 2:4], CED5yr[count, 2:4])),
-                    prd = as.factor(rep(names(prds), each = 3)),
-                    confLevel = rep(c("p = 0.9", "p = 0.95", "p = 0.99"), 5))
-  plots[[i]] <- ggplot(plt, aes(x = prd, y = -CED, group = confLevel, color = confLevel)) +
-    geom_line() + geom_point() +
-    ggtitle(i) + ylim(0, 0.75) +
-    labs(y = "CED")+
-    labs(x = "Date")
-  count = count+1
-}
-multiplot(plotlist = plots, cols = 4)
-dev.off()
-
 
 
 ######################### calculate the rolling stats #########################
@@ -347,12 +281,110 @@ for (i in assetsList){
 multiplot(plotlist = plots, cols = 3)
 dev.off()
 
+######################### calculate the maximum drawdown #########################
+
+# 3 month: 63 days
+# 6 month: 126 days
+# 1 year: 252 days
+# 2 years: 504 days
+# 5 years: 1260 days
+# calculation are based on annualized returns
+
+lvs <- c(.9, .95, .99)
+prds <- c(63, 126, 252, 504, 1260)
+names(prds) <- c("mon3", "mon6", "yr1", "yr2", "yr5")
+
+calcMaxDd <- function(val, prd){
+  res <- sapply(2:(nrow(val)-prd+1), function(x){
+    dt <- as.data.frame(val$retrn_dl[x:(x+prd-1)])
+    rownames(dt) <- val$Date[x:(x+prd-1)] 
+    maxDrawdown(dt)
+  })
+}
+
+assetsList <- c("AGG", "HYG", "TIP",
+                "BCOM", "BUHY", "G0O1", "LTP5TRUU", "MXEA", "MXEF", "RAY", "RMZ", "SPX", "USGG10YR")
+indexSub <- c(1:4, 6, 8:13)
+assetsList <- assetsList[indexSub]
+
+
+windw = "yr5"
+FUN = "maxDrawdown"
+
+assign(paste(FUN, windw, sep = ''), 
+       lapply(assetsList, function(i)calcMaxDd(get(i), prd = prds[windw])))
+assign(paste(FUN, windw, "_date",sep = ''),
+       lapply(assetsList, function(i)get(i)$Date[(1+prds[windw]):(nrow(get(i)))]))
+
+for (i in length(assetsList)){
+  df <- as.data.frame(maxDd = get(paste(FUN, windw, sep = ''))[i],
+                      Date = get(paste(FUN, windw, "_date",sep = ''))[i])
+  write.csv(df, MXEF_mon3)
+}
+
+paste("../results/maxDrawdowns/,", i, window, ".csv", sep='')
+
+
+
+
+######################### calculate the CED #########################
 
 
 
 
 
 
+
+
+
+
+
+
+
+# for (prd in prds){
+#   resCEDs <- matrix(rep(0, length(assetsList)*length(lvs)), ncol = length(lvs))
+#   resCEDs <- as.data.frame(resCEDs)
+#   rownames(resCEDs) <- assetsList
+#   colnames(resCEDs) <- lvs
+#   
+#   for (i in assetsList){
+#     val <- get(i)
+#     mxd <- calcCED(val, prd)
+#     resCEDs[i, ] <- sapply(lvs, function(lv)ES(-mxd, p=lv))
+#     print(i)
+#   }
+#   write.csv(resCEDs, file = paste("../results/", prd, "_CED.csv", sep = ''))
+# }
+
+#### plot CED
+
+# CED3mon <- read.csv("../results/63_CED.csv")
+# CED6mon <- read.csv("../results/126_CED.csv")
+# CED1yr <- read.csv("../results/252_CED.csv")
+# CED2yr <- read.csv("../results/504_CED.csv")
+# CED5yr <- read.csv("../results/1260_CED.csv")
+# 
+# 
+# count = 1
+# png(paste("../results/CED.png", sep = ''), width = 1600, height = 1600)
+# plots = list()
+# for (i in assetsList){
+#   plt <- data.frame(CED = unlist(c(CED3mon[count, 2:4], CED6mon[count, 2:4], CED1yr[count, 2:4], 
+#                             CED2yr[count, 2:4], CED5yr[count, 2:4])),
+#                     prd = as.factor(rep(names(prds), each = 3)),
+#                     confLevel = rep(c("p = 0.9", "p = 0.95", "p = 0.99"), 5))
+#   plots[[i]] <- ggplot(plt, aes(x = prd, y = -CED, group = confLevel, color = confLevel)) +
+#     geom_line() + geom_point() +
+#     ggtitle(i) + ylim(0, 0.75) +
+#     labs(y = "CED")+
+#     labs(x = "Date")
+#   count = count+1
+# }
+# multiplot(plotlist = plots, cols = 4)
+# dev.off()
+
+
+####################################################################
 
 
 # Multiple plot function
