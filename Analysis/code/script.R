@@ -8,6 +8,9 @@ library(gridExtra)
 
 assetsList <- c("AGG", "HYG", "TIP",
                 "BCOM", "BUHY", "G0O1", "LTP5TRUU", "MXEA", "MXEF", "RAY", "RMZ", "SPX", "USGG10YR")
+indexSub <- c(1:4, 6, 8:13)
+assetsList <- assetsList[indexSub]
+
 
 setAs("character","myDate", function(from) as.Date(from, format="%m/%d/%y") )
 for (i in 1:3){
@@ -54,7 +57,9 @@ for (i in assetsList){
   retrn_dl <- c(0,(val$PX_LAST[2:len]-val$PX_LAST[1:(len-1)])/val$PX_LAST[1:(len-1)])
   # annalized returnss
   retrn_an <- (1+retrn_dl)^252-1
-  assign(i, cbind(val, retrn_dl, retrn_an)) 
+  # logarithmic return
+  retrn_log <- c(0, log(val$PX_LAST[2:len]/val$PX_LAST[1:(len-1)]))
+  assign(i, cbind(val, retrn_dl, retrn_an, retrn_log)) 
 }
 
 for (i in assetsList){
@@ -64,17 +69,62 @@ for (i in assetsList){
 }
 
 ######################### plot the returns #########################
+# 
+# par(mfrow=c(3,5))
+# # par(mar = rep(2, 4))
+# 
+# for (i in assetsList){
+#   val <- get(i)
+#   plot(val$Date[2:length(val$Date)], val$retrn_dl[2:length(val$Date)],
+#        main = i,
+#        xlab = "Date",
+#        ylab = "Return")
+# }
+# 
+# dev.off()
 
-par(mfrow=c(3,5))
-
+count = 1
+png("../results/returns.png", width = 1600, height = 1600)
+plots = list()
 for (i in assetsList){
   val <- get(i)
-  plot(val$Date[2:length(val$Date)], val$retrn_dl[2:length(val$Date)],
-       main = i,
-       xlab = "Date",
-       ylab = "Return")
+  plt <- data.frame(x_axis = get(i)$Date[2:length(val$Date)],
+                    y_axis = get(i)$retrn_dl[2:length(val$Date)])
+  plots[[i]] <- ggplot(plt, aes(x=x_axis, y=y_axis)) +
+    geom_line() +
+    ggtitle(i) +
+    labs(y = "Returns") + ylim(-0.15, 0.15)
+    labs(x = "Date") 
+  count = count+1
 }
+multiplot(plotlist = plots, cols = 3)
+dev.off()
 
+######################### plot the empirical return distribution #########################
+
+count = 1
+png("../results/returns_dist.png", width = 1600, height = 1600)
+plots = list()
+for (i in assetsList){
+  val <- get(i)
+  if (i != "G0O1"){
+    plt <- data.frame(x_axis = get(i)$retrn_dl[2:length(val$Date)])
+    plots[[i]] <- ggplot(plt, aes(x=x_axis)) +
+      geom_density() + 
+      ggtitle(i) +
+      labs(x = "Returns") + xlim(-0.1, 0.1) + 
+      ylim(0, 175)
+  } else {
+    plt <- data.frame(x_axis = get(i)$retrn_dl[2:length(val$Date)])
+    plots[[i]] <- ggplot(plt, aes(x=x_axis)) +
+      geom_density() + 
+      ggtitle(i) +
+      labs(x = "Returns") + xlim(-0.1, 0.1)
+  }
+
+  count = count+1
+}
+multiplot(plotlist = plots, cols = 3)
 dev.off()
 
 ######################### calculate the Sharpe Ratio, #########################
@@ -190,7 +240,7 @@ for (i in assetsList){
   plots[[i]] <- ggplot(plt, aes(x = prd, y = -CED, group = confLevel, color = confLevel)) +
     geom_line() + geom_point() +
     ggtitle(i) + ylim(0, 0.75) +
-    labs(y = paste(FUN, "(%)"))+
+    labs(y = "CED")+
     labs(x = "Date")
   count = count+1
 }
@@ -242,7 +292,7 @@ assign(paste(FUN, windw, "_date",sep = ''),
 testplot <- data.frame(ES = get(paste(FUN, windw, sep = ''))[[1]], Date = get(paste(FUN, windw, "_date",sep = ''))[[1]])
 
 count = 1
-png(paste("../results/", FUN, windw, ".png", sep = ''), width = 1600, height = 1600)
+png(paste("../results/", FUN, windw, "_scaled.png", sep = ''), width = 1600, height = 1600)
 plots = list()
 for (i in assetsList){
   plt <- data.frame(y_axis = get(paste(FUN, windw, sep = ''))[[count]]*100,
@@ -250,14 +300,15 @@ for (i in assetsList){
   plots[[i]] <- ggplot(plt, aes(x=x_axis, y=y_axis)) +
     geom_line() +
     ggtitle(i) +
-    labs(y = paste(FUN, "(%)"))+
+    labs(y = paste(FUN, "(%)")) +
+    ylim(-11, 0) + 
     labs(x = "Date")
   count = count+1
 }
-multiplot(plotlist = plots, cols = 4)
+multiplot(plotlist = plots, cols = 3)
 dev.off()
 
-###################  rolling variance   ###################
+###################  rolling volatility   ###################
 
 windw = "6mon"
 FUN = "var"
@@ -274,25 +325,26 @@ calcRolling <- function(val, prd, FUN, ...){
 }
 
 assign(paste(FUN, windw, sep = ''), 
-       lapply(assetsList, function(i)calcRolling(get(i), prd = prds[windw], FUN)))
+       lapply(assetsList, function(i)sqrt(prds["1yr"])*sqrt(calcRolling(get(i), prd = prds[windw], FUN))))
 assign(paste(FUN, windw, "_date",sep = ''),
        lapply(assetsList, function(i)get(i)$Date[(1+prds[windw]):(nrow(get(i)))]))
-testplot <- data.frame(ES = get(paste(FUN, windw, sep = ''))[[1]], Date = get(paste(FUN, windw, "_date",sep = ''))[[1]])
+# testplot <- data.frame(ES = get(paste(FUN, windw, sep = ''))[[1]], Date = get(paste(FUN, windw, "_date",sep = ''))[[1]])
 
 count = 1
-png(paste("../results/variance", windw, ".png", sep = ''), width = 1600, height = 1600)
+png(paste("../results/volatility", windw, ".png", sep = ''), width = 1600, height = 1600)
 plots = list()
 for (i in assetsList){
   plt <- data.frame(y_axis = get(paste(FUN, windw, sep = ''))[[count]],
                     x_axis = get(paste(FUN, windw, "_date",sep = ''))[[count]])
   plots[[i]] <- ggplot(plt, aes(x=x_axis, y=y_axis)) +
     geom_line() +
-    ggtitle(i) +
-    labs(y = paste("variance"))
+    ggtitle(i) + 
+    labs(y = paste("volatility")) + 
+    ylim(0, 1) +
     labs(x = "Date")
   count = count+1
 }
-multiplot(plotlist = plots, cols = 4)
+multiplot(plotlist = plots, cols = 3)
 dev.off()
 
 

@@ -8,25 +8,24 @@ cat(b)
 
 ################ Statistical summary ################
 
-a0 <- paste(assetsList,
-           format(round(statSmmr[, 1], 4), nsmall = 4),  
-           format(round(statSmmr[, 2], 4), nsmall = 4), 
-           format(round(statSmmr[, 3], 4), nsmall = 4), 
-           format(round(statSmmr[, 4], 4), nsmall = 4), sep = ' & ')
+a0 <- paste(assetsList[indexSub],
+           format(round(statSmmr[indexSub, 1], 3), nsmall = 3),  
+           format(round(statSmmr[indexSub, 2], 3), nsmall = 3), 
+           format(round(statSmmr[indexSub, 3], 2), nsmall = 2), 
+           format(round(statSmmr[indexSub, 4], 2), nsmall = 2), sep = ' & ')
 b0 <- paste(a0, collapse = "\\\\ \n")
 cat(b0)
 
 ################ VaR & ES ################
 
-a <- paste(assetsList,
-           format(round(resVaR[, "0.9"]*100, 4), nsmall = 4),  
-           format(round(resVaR[, "0.95"]*100, 4), nsmall = 4), 
-           format(round(resVaR[, "0.99"]*100, 4), nsmall = 4), 
-           format(round(resES[, "0.9"]*100, 4), nsmall = 4), 
-           format(round(resES[, "0.95"]*100, 4), nsmall = 4),
-           format(round(resES[, "0.99"]*100, 4), nsmall = 4), sep = ' & ')
-b <- paste(a, collapse = "\\\\ \n"
-           )
+a <- paste(assetsList[indexSub],
+           format(round(resVaR[indexSub, "0.9"]*100, 2), nsmall = 2),  
+           format(round(resVaR[indexSub, "0.95"]*100, 2), nsmall = 2), 
+           format(round(resVaR[indexSub, "0.99"]*100, 2), nsmall = 2), 
+           format(round(resES[indexSub, "0.9"]*100, 2), nsmall = 2), 
+           format(round(resES[indexSub, "0.95"]*100, 2), nsmall = 2),
+           format(round(resES[indexSub, "0.99"]*100, 2), nsmall = 2), sep = ' & ')
+b <- paste(a, collapse = "\\\\ \n")
 cat(b)
 
 ################ CED ################
