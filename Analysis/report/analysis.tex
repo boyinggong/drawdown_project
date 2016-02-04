@@ -140,7 +140,7 @@ In this section, all the risk diagnostics are calculated based on daily returns.
 
 $\textit{Value at Risk (VaR)} $  is a measure of the risk of investments. It estimates how much a set of investments might lose, given normal market conditions, in a set time period such as a day. VaR is typically used by firms and regulators in the financial industry to gauge the amount of assets needed to cover possible losses. The mathematicial representation of VaR under $\alpha$ was shown below. \footnote{https://en.wikipedia.org/wiki/Value\_at\_risk}
 \begin{equation}
-VaR_{\alpha}(L) = inf\{l \in \mathbb{R} : P(L < l) \leq 1-\alpha \} = 
+VaR_{\alpha}(L) = inf\{l \in \mathbb{R} : P(L > l) \leq 1-\alpha \} = 
 inf\{l \in \mathbb{R} : F_L(l) \geq \alpha \}
 \end{equation}
 \item ES
@@ -168,16 +168,22 @@ We calculate the CED of various assets under 0.9, 0.95, 0.99 confidence level fo
 
 We calculate the time varying variance(Figure \ref{fig: variance6mon}), VaR\ref{fig: VaR6mon} and ES\ref{fig: ES6mon}  for different assets over a 6-month and a 1-year rolling window (confidence level: 0.95) seperately, to see how these two risk diagnostics changing over time. 
 
+\section{Basic Analyzing}
+In the practice, investment managers tend to choose the assets with a higher sharpe ratio, as they can are expected to produce more return on unit risk(votility). However, according to the \ref{tab: statSum}, all the Sharpe Ratio is below 0.8. This makes sense, as all the indices in the list are either consist of one issue with low returns (eg: G0O1) or a portforlio of assets with varied risk and return, and thus no index give a spectacular performace. \\
+Among all the indices, it is necessary to highlight G0O1 and RMZ. G0O1 is the 3-Month U.S. Treasury Bill Index, which is considered to be free of risk. It yields a outstanding Sharpe Ratio while it does not actually have a  high return (\ref{fig: dailyReturns}). It blows up because its super stable return giving a smaller(close to 0) denominator. RMZ is a free float-adjusted market capitalization index that is comprised of equity REITs(Real Estate Investment Trusts), which is expected to have a high voltility, especially for subprime mortagae crisis around 2008 (It indeed is the case based on \ref{fig: dailyReturns}). In the table, it reveals in the table as a high standard deviation.\\
+Statistics in \ref{tab: VaRES} also accord with information we get from \ref{tab: statSum}. Since there is almost no volatility in G0O1, its returns (and also lost) will center around zero, forming a peak in the \ref{fig: dreturnsDist}. From the definition of VaR and ES, they are thus very closed to zero, indicating a lower risk. Considering a high standard deviation, RMZ's return are spread out, resulting in a higher VaR and ES. Individual figures \ref{fig: variance6mon} \ref{fig: VaR6mon} \ref{fig: ES6mon} are also able to report two extreme risk conditions of G0O1 and RMZ.\\
+For the CEDs in \ref{table:CED3}, there is a general trend that larger rolling time windows produce high tail mean of maximum drawdown, for the reason that it can incorporate more underlying risk in the each time period. The risk revelation of tail mean of maximum drawdown also agree with the fact and other measurement: G0O1 has smallest CED and RMZ has the highest.
+
+
 
 \section{Appendix: Tables and Plots}
-
 
 \begin{table}[!h]
 \caption{Statistical Summary of Assets} % title of Table
 \centering 
 \begin{tabular}{ | c || p{1.5cm} p{1.2cm} r r | } 
  \hline
-Asset & Sharpe  & Sd. & Skewnes & Kurtosis \\
+Asset & Sharpe  & Sd. & Skewness & Kurtosis \\
   \hline \hline
 AGG & 0.052 & 0.003 & -2.51 & 81.36\\ 
 HYG & 0.025 & 0.008 &  0.87 & 36.74\\ 
