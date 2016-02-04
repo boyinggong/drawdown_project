@@ -221,6 +221,50 @@ USGG10YR & -1.26 & -1.95 & -3.59 & -2.28 & -2.99 & -4.89\\
 \end{table}
 
 
+
+
+\begin{figure}[h]
+\caption{Daily Returns} 
+\centering 
+\includegraphics[width=15cm]{../results/returns}
+\label{fig: dailyReturns}
+\end{figure}
+
+\begin{figure}[h]
+\caption{Empirical distribution of daily returns} 
+\centering 
+\includegraphics[width=15cm]{../results/returns_dist}
+\label{fig: returnsDist}
+\end{figure}
+
+\begin{figure}[h]
+\caption{Volatility under 6-month rolling window} 
+\centering 
+\includegraphics[width=15cm]{../results/volatility6mon}
+\label{fig: variance6mon}
+\end{figure}
+
+\begin{figure}[h]
+\caption{VaR(\%) under 6-month rolling window}
+\centering 
+\includegraphics[width=15cm]{../results/VaR6mon_scaled}
+\label{fig: VaR6mon}
+\end{figure}
+
+\begin{figure}[h]
+\caption{ES(\%) under 6-month rolling window} 
+\centering 
+\includegraphics[width=15cm]{../results/ES6mon_scaled}
+\label{fig: ES6mon}
+\end{figure}
+
+\begin{figure}[h]
+\caption{Empirical distribution of maximum drawdown under 6 month rolling window} 
+\centering 
+\includegraphics[width=15cm]{../results/maxdd_dist_mon6}
+\label{fig: dist_mdd}
+\end{figure}
+
 \begin{table}[!h]
 \centering 
 \caption{tail mean of maximum drawdown distribution under 3-month, 6-month, 1-year and 2-year rolling window} % title of Table
@@ -261,40 +305,11 @@ USGG10YR & 42.88 & 48.37 & 53.96 & 54.79 & 59.14 & 62.82\\
 \end{table}
 
 \begin{figure}[h]
-\caption{Daily Returns} 
+\caption{CED under 3-month-5-year Rolling Window (confidence level = 0.95)} 
 \centering 
-\includegraphics[width=15cm]{../results/returns}
-\label{fig: dailyReturns}
+\includegraphics[width=15cm]{../results/CED_3mon_5yr_95}
+\label{fig: CED3mon5yr95}
 \end{figure}
-
-\begin{figure}[h]
-\caption{Empirical distribution of daily returns} 
-\centering 
-\includegraphics[width=15cm]{../results/returns_dist}
-\label{fig: returnsDist}
-\end{figure}
-
-\begin{figure}[h]
-\caption{Volatility under 6-month rolling window} 
-\centering 
-\includegraphics[width=15cm]{../results/volatility6mon}
-\label{fig: variance6mon}
-\end{figure}
-
-\begin{figure}[h]
-\caption{VaR(\%) under 6-month rolling window}
-\centering 
-\includegraphics[width=15cm]{../results/VaR6mon_scaled}
-\label{fig: VaR6mon}
-\end{figure}
-
-\begin{figure}[h]
-\caption{ES(\%) under 6-month rolling window} 
-\centering 
-\includegraphics[width=15cm]{../results/ES6mon_scaled}
-\label{fig: ES6mon}
-\end{figure}
-
 
 
 % \bibliographystyle{unsrt}
