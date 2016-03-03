@@ -207,7 +207,7 @@ calcRolling <- function(val, lv, prd, FUN, ...){
 ################   plot   ################
 
 
-windw = "1yr"
+windw = "5yr"
 FUN = "ES"
 
 windw = "6mon"
