@@ -1,0 +1,220 @@
+%-*- program: xelatex -*-        
+%-*- program: biber -*-`        
+%-*- program: xelatex -*-
+\documentclass[12pt]{article}
+\usepackage{amsmath,textcomp,amssymb,geometry,graphicx,enumerate,upquote,color}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{array}
+\usepackage{amsfonts}
+\def\Session{Fall 2015}
+\usepackage[english]{babel}
+\title{Analysis of Various Assets}
+\author{Boying Gong, Xinyue Zhou}
+\newenvironment{qparts}{\begin{enumerate}[{(}a{)}]}{\end{enumerate}}
+\def\endproofmark{$\Box$}
+\newenvironment{proof}{\par{\bf Proof}:}{\endproofmark\smallskip}
+\begin{document}
+\maketitle
+
+\tableofcontents
+
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Background of Serial Correlation}%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\input{01.background.tex}
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Asset Description}%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%
+
+\input{02.asset_discription}
+
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Statistical Summary}%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%
+
+
+\input{03.statitical_summary.tex}
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Risk Diagnostics}%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%
+
+\input{04.risk_diagnostics.tex}
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Time Varying Risk Diagnostics}%%
+%%%%%%%%%%%%%%%%%%%%%
+
+\input{05.time_varying_risk_diagnostics.tex}
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Regime Switching Model}%%%%
+%%%%%%%%%%%%%%%%%%%%%
+
+\input{06.regime.tex}
+
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Time Series -- ARMA model}%%%%
+%%%%%%%%%%%%%%%%%%%%%
+
+\input{07.timeseriesARMA.tex}
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Time Series -- GARCH model}%%%%
+%%%%%%%%%%%%%%%%%%%%%
+
+\input{08.timeseriesGARCH.tex}
+
+\clearpage
+
+%%%%%%%%%%%%%%%%%%%%%
+\section{Appendix: Plot and Tables}%%%
+%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}[h]
+\caption{Daily Returns} 
+\centering 
+\includegraphics[width=15cm]{../results/returns}
+\label{fig: dailyReturns}
+\end{figure}
+
+\begin{figure}[h]
+\caption{Empirical distribution of daily returns} 
+\centering 
+\includegraphics[width=15cm]{../results/returns_dist}
+\label{fig: returnsDist}
+\end{figure}
+
+\begin{figure}[h]
+\caption{Empirical distribution of maximum drawdown under 6 month rolling window} 
+\centering
+\includegraphics[width=15cm]{../results/maxdd_dist_mon6}
+\label{fig: dist_mdd}
+\end{figure}
+
+\begin{table}[!h]
+\centering 
+\caption{tail mean of maximum drawdown distribution under 3-month, 6-month, 1-year and 2-year rolling window} 
+\begin{tabular}{ | r || r r r || r r r |} 
+ \hline
+ & & 3 month & & & 6 month & \\
+Asset& 0.9 & 0.95 & 0.99 & 0.9 & 0.95 & 0.99  \\
+  \hline \hline
+AGG &  5.60 &  7.72 & 12.84 &  8.12 & 11.45 & 12.84\\ 
+HYG & 18.41 & 24.07 & 29.67 & 26.43 & 30.77 & 32.26\\ 
+TIP &  7.48 &  9.90 & 13.10 & 11.14 & 12.91 & 14.39\\ 
+BCOM & 18.14 & 22.54 & 38.03 & 26.61 & 33.66 & 51.74\\ 
+G0O1 &  0.10 &  0.145 &  0.26 &  0.14 &  0.23 &  0.26\\ 
+MXEA & 20.39 & 23.73 & 33.32 & 27.21 & 31.79 & 47.11\\ 
+MXEF & 26.21 & 30.80 & 48.03 & 36.35 & 43.30 & 59.63\\ 
+RAY & 20.65 & 25.64 & 35.95 & 27.81 & 34.08 & 45.08\\ 
+RMZ & 37.30 & 48.41 & 63.45 & 52.04 & 62.41 & 67.61\\ 
+SPX & 18.35 & 22.67 & 32.46 & 25.18 & 30.65 & 40.69\\ 
+USGG10YR & 23.28 & 28.11 & 41.83 & 32.78 & 39.00 & 49.28\\
+ \hline \hline
+ & & 1 year & & & 2 year & \\
+Asset& 0.9 & 0.95 & 0.99 & 0.9 & 0.95 & 0.99  \\
+  \hline \hline
+AGG & 12.11 & 12.84 & 12.84 & 12.84 & 12.84 & 12.83\\ 
+HYG & 33.15 & 34.20 &      & 34.24 & 34.25 &       \\ 
+TIP & 13.73 & 14.50 & 14.57 & 14.57 & 14.57 &       \\ 
+BCOM & 39.91 & 49.26 & 57.14 & 53.38 & 57.14 &       \\ 
+G0O1 &  0.23 &  0.25 &  0.26 &  0.26 &  0.26 &  0.26\\ 
+MXEA & 36.15 & 42.61 & 56.70 & 50.21 & 58.08 & 61.85\\ 
+MXEF & 48.63 & 58.81 & 64.56 & 62.45 & 65.90 &       \\ 
+RAY & 37.56 & 44.06 & 52.42 & 47.95 & 54.33 &       \\ 
+RMZ & 67.09 & 69.86 & 70.02 & 73.70 & 74.56 & 74.92\\ 
+SPX & 34.07 & 39.15 & 50.30 & 44.62 & 50.47 & 56.77\\ 
+USGG10YR & 42.88 & 48.37 & 53.96 & 54.79 & 59.14 & 62.82\\
+ \hline
+\end{tabular}
+\label{table:tail_maxdrawdown}
+\end{table}
+
+\begin{figure}[h]
+\caption{Volatility under 6-month rolling window} 
+\centering 
+\includegraphics[width=15cm]{../results/volatility6mon}
+\label{fig: variance6mon}
+\end{figure}
+
+\begin{figure}[h]
+\caption{VaR(\%) (significance level = 0.95) under 6-month rolling window}
+\centering 
+\includegraphics[width=15cm]{../results/VaR6mon_scaled}
+\label{fig: VaR6mon}
+\end{figure}
+
+\begin{figure}[h]
+\caption{ES(\%) (significance level = 0.95) under 6-month rolling window} 
+\centering 
+\includegraphics[width=15cm]{../results/ES6mon_scaled}
+\label{fig: ES6mon}
+\end{figure}
+
+\begin{figure}[h]
+\caption{CED under 3-month-5-year Rolling Window (confidence level = 0.95)} 
+\centering 
+\includegraphics[width=15cm]{../results/CED_3mon_5yr_95}
+\label{fig: CED3mon5yr95}
+\end{figure}
+
+\begin{figure}[h]
+\caption{CED (confidence level = 0.9) versus ES under 3-month-5-year Rolling Window} 
+\centering 
+\includegraphics[width=15cm]{../results/CED_ES_3mon_5yr5yr}
+\label{fig: CED_ES_3mon_5yr5yr}
+\end{figure}
+
+\begin{figure}
+  \caption{First-order serial correlation calculated using AR(1) model versus VaR}
+  \includegraphics[width = 1\textwidth]{../results/SerCol-VaR5yrAR1}
+  \label{fig:SerCol-VaR5yrAR1}
+\end{figure}
+
+\begin{figure}
+  \caption{First-order serial correlation calculated using AR(1) model versus ES}
+  \includegraphics[width = 1\textwidth]{../results/SerCol-ES5yrAR1}
+  \label{fig:SerCol-ES5yrAR1}
+\end{figure}
+
+\begin{figure}
+  \caption{First-order serial correlation calculated using AR(1) model versus CED}
+  \includegraphics[width = 1\textwidth]{../results/SerCol-CED5yr3monAR1}
+  \label{fig:SerCol-CED5yr3monAR1}
+\end{figure}
+
+\begin{figure}
+  \caption{First-order serial correlation calculated using MA(1) model versus VaR}
+  \includegraphics[width = 1\textwidth]{../results/SerCol-ES5yrMA1}
+  \label{fig:SerCol-ES5yrMA1}
+\end{figure}
+
+\begin{figure}
+  \caption{First-order serial correlation calculated using MA(1) model versus CED}
+  \includegraphics[width = 1\textwidth]{../results/SerCol-CED5yr3monMA1}
+  \label{fig:SerCol-CED5yr3monMA1}
+\end{figure}
+
+\begin{figure}
+  \caption{First-order serial correlation calculated using ARMA(1) model versus CED}
+  \includegraphics[width = 1\textwidth]{../results/SerCol-CED5yr3monARMA11}
+  \label{fig:SerCol-CED5yr3monARMA1}
+\end{figure}
+
+\clearpage
+
+\bibliographystyle{unsrt}
+\bibliography{analysis}
+
+\end{document}
