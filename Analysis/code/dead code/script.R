@@ -1,5 +1,5 @@
 setwd("/Users/jorothygong/Desktop/drawdown/Analysis/csv_data/")
-library("PerformanceAnalytics")
+library(PerformanceAnalytics)
 library(ggplot2)
 library(grid)
 library(gridExtra)
@@ -8,9 +8,8 @@ library(gridExtra)
 
 assetsList <- c("AGG", "HYG", "TIP",
                 "BCOM", "BUHY", "G0O1", "LTP5TRUU", "MXEA", "MXEF", "RAY", "RMZ", "SPX", "USGG10YR")
-indexSub <- c(1:4, 6, 8:13)
-assetsList <- assetsList[indexSub]
-
+# indexSub <- c(1:4, 6, 8:13)
+# assetsList <- assetsList[indexSub]
 
 setAs("character","myDate", function(from) as.Date(from, format="%m/%d/%y") )
 for (i in 1:3){
@@ -139,11 +138,11 @@ for (i in assetsList){
   dt <- as.data.frame(val$retrn_dl)
   rownames(dt) <- val$Date
   # statSmmr[i, 1] <- SharpeRatio(dt, Rf = 0)
-  statSmmr[i, 2] <- sd(val$retrn_dl)
+  statSmmr[i, 2] <- sd(val$retrn_dl) * sqrt(252)
   statSmmr[i, 3] <- skewness(val$retrn_dl) # method?
   statSmmr[i, 4] <- kurtosis(val$retrn_dl)
   Rf = 0
-  statSmmr[i, 1] <- (mean(val$retrn_dl) - Rf)/ statSmmr[i, 2]
+  statSmmr[i, 1] <- (mean(val$retrn_dl) - Rf)/ statSmmr[i, 2] * sqrt(252)
 } 
 
 write.csv(statSmmr, file = "../results/statSmmr.csv")
@@ -151,11 +150,11 @@ write.csv(statSmmr, file = "../results/statSmmr.csv")
 ######################### calculate the VaR & ES #########################
 
 VaR <- function(R, p = 0.95){
-  quantile(R, probs = 1-p)
+  return(-quantile(R, probs = 1-p))
 }
 
 ES <- function(R, p = 0.95){
-  mean(R[R < quantile(R, probs = 1-p)])
+  -mean(R[R < quantile(R, probs = 1-p)])
 }
 
 microbenchmark(VaR(AGG$retrn_dl, p = 0.95), 
@@ -193,8 +192,8 @@ write.csv(resES, file = "../results/resES.csv")
 # calculation are based on annualized returns
 
 lvs <- c(.9, .95, .99)
-prds <- c(63, 126, 252, 504, 1260)
-names(prds) <- c("3mon", "6mon", "1yr", "2yr", "5yr")
+prds <- c(63, 126, 252, 504, 1260, 63+1260)
+names(prds) <- c("3mon", "6mon", "1yr", "2yr", "5yr", "3mon5yr")
 
 calcRolling <- function(val, lv, prd, FUN, ...){
   res <- sapply(2:(nrow(val)-prd+1), function(x){
@@ -207,7 +206,7 @@ calcRolling <- function(val, lv, prd, FUN, ...){
 ################   plot   ################
 
 
-windw = "5yr"
+windw = "1yr"
 FUN = "ES"
 
 windw = "6mon"
@@ -219,11 +218,17 @@ FUN = "VaR"
 windw = "1yr"
 FUN = "VaR"
 
+windw = "3mon5yr"
+FUN = "ES"
+
+windw = "3mon5yr"
+FUN = "VaR"
+
 assign(paste(FUN, windw, sep = ''), 
        lapply(assetsList, function(i)calcRolling(get(i), lv = 0.95, prd = prds[windw], FUN)))
 assign(paste(FUN, windw, "_date",sep = ''),
        lapply(assetsList, function(i)get(i)$Date[(1+prds[windw]):(nrow(get(i)))]))
-testplot <- data.frame(ES = get(paste(FUN, windw, sep = ''))[[1]], Date = get(paste(FUN, windw, "_date",sep = ''))[[1]])
+# testplot <- data.frame(ES = get(paste(FUN, windw, sep = ''))[[1]], Date = get(paste(FUN, windw, "_date",sep = ''))[[1]])
 
 count = 1
 png(paste("../results/", FUN, windw, "_scaled.png", sep = ''), width = 1600, height = 1600)
@@ -235,7 +240,7 @@ for (i in assetsList){
     geom_line() +
     ggtitle(i) +
     labs(y = paste(FUN, "(%)")) +
-    ylim(-11, 0) + 
+    ylim(0, 15) + 
     labs(x = "Date")
   count = count+1
 }
@@ -324,11 +329,40 @@ for (i in length(assetsList)){
 
 paste("../results/maxDrawdowns/,", i, window, ".csv", sep='')
 
+######################### plot the empirical maximum drawdown distribution #########################
 
+windw = "yr5"
+
+count = 1
+png("../results/maxdd_dist_yr5.png", width = 1600, height = 1600)
+plots = list()
+for (i in 1:11){
+  dt <- data.frame(Dd = get(paste("maxDrawdown", windw, sep=''))[[i]], 
+                   Date = get(paste("maxDrawdown", windw, "_date", sep=''))[[i]])
+  plots[[i]] <- ggplot(dt, aes(x=Dd)) +
+    geom_density() + 
+    ggtitle(assetsList[i]) +
+    labs(x = "Maximum Drawdown") + xlim(0, 1) + ylim(0, 80)
+  count = count+1
+}
+multiplot(plotlist = plots, cols = 3)
+dev.off()
 
 
 ######################### calculate the CED #########################
 
+windw = "5yr"
+FUN = "ES"
+
+CED_3mon_5yr <- lapply(maxDrawdownmon3, function(i)-calcCED(i, lv = 0.1, prd = prds[windw], FUN))
+CED_3mon_5yr_date <- lapply(maxDrawdownmon3_date, function(i)i[(1+prds[windw]):(length(i))])
+
+calcCED <- function(val, lv, prd, FUN, ...){
+  res <- sapply(2:(length(val)-prd+1), function(x){
+    dt <- val[x:(x+prd-1)]
+    do.call(FUN, list(dt, lv))
+  })
+}
 
 
 
@@ -339,49 +373,6 @@ paste("../results/maxDrawdowns/,", i, window, ".csv", sep='')
 
 
 
-
-
-# for (prd in prds){
-#   resCEDs <- matrix(rep(0, length(assetsList)*length(lvs)), ncol = length(lvs))
-#   resCEDs <- as.data.frame(resCEDs)
-#   rownames(resCEDs) <- assetsList
-#   colnames(resCEDs) <- lvs
-#   
-#   for (i in assetsList){
-#     val <- get(i)
-#     mxd <- calcCED(val, prd)
-#     resCEDs[i, ] <- sapply(lvs, function(lv)ES(-mxd, p=lv))
-#     print(i)
-#   }
-#   write.csv(resCEDs, file = paste("../results/", prd, "_CED.csv", sep = ''))
-# }
-
-#### plot CED
-
-# CED3mon <- read.csv("../results/63_CED.csv")
-# CED6mon <- read.csv("../results/126_CED.csv")
-# CED1yr <- read.csv("../results/252_CED.csv")
-# CED2yr <- read.csv("../results/504_CED.csv")
-# CED5yr <- read.csv("../results/1260_CED.csv")
-# 
-# 
-# count = 1
-# png(paste("../results/CED.png", sep = ''), width = 1600, height = 1600)
-# plots = list()
-# for (i in assetsList){
-#   plt <- data.frame(CED = unlist(c(CED3mon[count, 2:4], CED6mon[count, 2:4], CED1yr[count, 2:4], 
-#                             CED2yr[count, 2:4], CED5yr[count, 2:4])),
-#                     prd = as.factor(rep(names(prds), each = 3)),
-#                     confLevel = rep(c("p = 0.9", "p = 0.95", "p = 0.99"), 5))
-#   plots[[i]] <- ggplot(plt, aes(x = prd, y = -CED, group = confLevel, color = confLevel)) +
-#     geom_line() + geom_point() +
-#     ggtitle(i) + ylim(0, 0.75) +
-#     labs(y = "CED")+
-#     labs(x = "Date")
-#   count = count+1
-# }
-# multiplot(plotlist = plots, cols = 4)
-# dev.off()
 
 
 ####################################################################

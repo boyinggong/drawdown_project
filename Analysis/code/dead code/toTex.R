@@ -8,6 +8,8 @@ cat(b)
 
 ################ Statistical summary ################
 
+indexSub = 1:11
+
 a0 <- paste(assetsList[indexSub],
            format(round(statSmmr[indexSub, 1], 3), nsmall = 3),  
            format(round(statSmmr[indexSub, 2], 3), nsmall = 3), 
@@ -55,5 +57,22 @@ aa <- paste(assetsList,
             format(round(-CED2yr[, "X0.99"]*100, 2), nsmall = 2), sep = ' & ')
 bb <- paste(aa, collapse = "\\\\ \n")
 cat(bb)
+
+################ Statistical summary ################
+########### of regime dependent mdoels ##############
+
+a0 <- paste(assetsList,
+            # format(round(statSmmr_regime1[, 1], 3), nsmall = 3),  
+            format(round(statSmmr_regime1[, 2], 3), nsmall = 3),  
+            format(round(statSmmr_regime2[, 2], 3), nsmall = 3), 
+            format(round(statSmmr_regime1[, 3], 2), nsmall = 2), 
+            format(round(statSmmr_regime2[, 3], 2), nsmall = 2), 
+            format(round(statSmmr_regime1[, 4], 2), nsmall = 2), 
+            format(round(statSmmr_regime2[, 4], 2), nsmall = 2),
+            # format(round(statSmmr_regime2[, 1], 3), nsmall = 3), 
+            sep = ' & ')
+b0 <- paste(a0, collapse = "\\\\ \n")
+cat(b0)
+
 
 

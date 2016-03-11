@@ -8,4 +8,4 @@ all:
 
 
 clean:
-	rm -f *.{aux,log,bbl,lof,lot,blg,out,gz}
+	rm -f *.{aux,log,bbl,lof,lot,blg,out,gz,fls,fdb_latexmk,toc}
