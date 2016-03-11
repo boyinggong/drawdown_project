@@ -134,7 +134,7 @@ As shown in Table \ref{table:ridkDiagsRegimeRMZ}, The episode of regime 1 have s
  \hline 
 VaR (empirical, p = 0.95) & 7.4\% & 1.5\% \\
 ES (empirical, p = 0.95) & 9.9\% & 2.1\% \\
-CED (one-month, p = 0.9) & 11.3\% & 3.1\% \\
+CED (one-month, p = 0.9) & 38.4\% & 8.4\% \\
 Serial correlation (order = 1) & -0.257 & -0.026 \\
 Serial correlation (order = 2) & -0.023 & 0.008 \\
  \hline
@@ -149,6 +149,27 @@ Serial correlation (order = 2) & -0.023 & 0.008 \\
 \includegraphics[width=0.7\textwidth]{../results/regime/RMZ_mon1_mdd}
 \label{fig: RMZregime_mdd}
 \end{figure}
+
+\subsubsection{Rolling risk diagnostics}
+
+For the two regimes in the above section, we calculated the VaR, ES, VaR and maximum drawdown based on one-month rolling window. Based on the rolling risk diagnotics, we are able to calculate and compare the corelation between different risk diagnotics and their difference under high and low volatility regimes. As shown in Table \ref{table:corr_risk_serial_regime}, in high volatility regimes, the correlation between isk diagnostics and serial correlation is higher than in low volatility regimes.
+
+\begin{table}[!h]
+\caption{correlation between risk diagnostics and serial correlation of two equal-length episode of each regime} 
+\centering 
+\begin{tabular}{| r | r | r |} 
+ \hline
+& Regime 1 & Regime 2 \\
+& High volatility & Low volatility \\
+ \hline 
+corr(VaR, $\rho(1)$)  & -0.29 & 0.08 \\
+corr(ES, $\rho(1)$)   & -0.30 & 0.07 \\
+corr(volatility, $\rho(1)$)  & -0.33 & 8.4 \\
+corr(maximum drawdown, $\rho(1)$)  & -0.24 & 0.07 \\
+ \hline
+\end{tabular}
+\label{table:corr_risk_serial_regime}
+\end{table}
 
 \iffalse
 \end{document}
