@@ -97,7 +97,7 @@ Table \ref{table:statSumRegimeRMZ} shows the descriptive summary and risk diagno
 \label{fig: RMZregime}
 \end{figure}
 
-\begin{table}[!h]
+\begin{table}[h]
 \caption{Descriptive summary and risk diagnostics for RMZ of each regime} 
 \centering 
 \begin{tabular}{| r | r | r |} 
@@ -122,9 +122,9 @@ ES (empirical, p = 0.95) & 9.3\% & 2.2\% \\
 
 In order to make a consistent comparison of risk diagnostics between two regimes, we ignore some short discontinuity and pick two longest single occurring episode for each regime. Both episode contain 530 trading days. The episode of regime 1 range from 10/30/2007 to 12/07/2009, and the episode of regime 2 range from 06/20/2013 to 07/29/2015.
 
-As shown in Table \ref{table:ridkDiagsRegimeRMZ}, The episode of regime 1 have significantly larger VaR, ES and CED value, which indicate a larger risk. This is consistent with the fact that returns of regime 1 have larger volatility. Figure \ref{fig: RMZregime_mdd} shows the maximum drawdown distribution of now-month rolling window. It is clear from the figure that regime 1 with higher volatility has larger maximum drawdown values than regime 2. For the case of RMZ, The regime with high risk also have a higher serial correlation for order one and order two. 
+As shown in Table \ref{table:ridkDiagsRegimeRMZ}, The episode of regime 1 have significantly larger VaR, ES and CED value, which indicate a larger risk. This is consistent with the fact that returns of regime 1 have larger volatility. Figure \ref{fig: RMZregime_mdd} shows the maximum drawdown distribution of now-month rolling window. It is clear from the figure that regime 1 with higher volatility has larger maximum drawdown values than regime 2. We further look at the summary statistics of the two regimes and compare them with the overall drawdown distribution in Table \ref{table:SummatyMDDRegimeRMZ}. After dividing them into two regimes, both knewness and kurtosis declined. The regime with high volatility has larger mean, standard deviation, skewness and kurtosis. For the case of RMZ, The regime with high risk also have a higher serial correlation for order one and order two. 
 
-\begin{table}[!h]
+\begin{table}[h]
 \caption{Risk diagnostics for RMZ of two equal-length episode of each regime} 
 \centering 
 \begin{tabular}{| r | r | r |} 
@@ -140,6 +140,25 @@ Serial correlation (order = 2) & -0.023 & 0.008 \\
  \hline
 \end{tabular}
 \label{table:ridkDiagsRegimeRMZ}
+\end{table}
+
+\begin{table}[h]
+\caption{Summary statistics of maximum drawdown distribution} 
+\centering 
+\begin{tabular}{| r | r | r | r |} 
+ \hline
+& Regime 1 & Regime 2 & \\
+& High volatility & Low volatility & Overall \\
+ \hline 
+Mean & 0.14 & 0.04 & 0.07\\
+Medium  & 0.11 & 0.03 & 0.049 \\
+Max  & 0.47 & 0.13 & 0.47\\
+Standard diviation & 0.10 & 0.02 & 0.07\\
+Sknewness & 1.60 & 1.06 & 2.86\\
+Kurtosis  & 1.87 & 1.12 & 10.9\\
+ \hline
+\end{tabular}
+\label{table:SummatyMDDRegimeRMZ}
 \end{table}
 
 
