@@ -105,18 +105,26 @@ Figure \ref{fig: variance6mon}, \ref{fig: VaR6mon} and \ref{fig: ES6mon} show th
 \fi
 %%%%%%%
 
-Table \ref{table:corrRiskMeasure} shows correlation between each pair of risk measures including VaR ($\alpha = 0.95$), ES ($\alpha = 0.95$), volatility and maximum drawdown. The correlation is calculated based on 6-month rolling risk measures and averaged over asset classes. Among them, VaR, ES and volatility are closely related with each other, with correlations over 95\%. Maximum drawdown has strong but comparatively weaker correlation with the other three. In general, these risk measures are all closely correlated. Figure \ref{fig: risk_meausre_RMZ} shows the comparison of the four risk measures calculated based on rolling windows for asset RMZ. Their pattens tend out to be very similar.
+Table \ref{table:corrRiskMeasure} shows correlation between each pair of risk measures including VaR ($\alpha = 0.95$), ES ($\alpha = 0.95$), volatility and maximum drawdown. The correlation is calculated based on 6-month rolling risk measures. Among them, VaR, ES and volatility are closely related with each other, with average correlations over 95\%. Maximum drawdown has strong but comparatively weaker correlation with the other three. In general, these risk measures are all closely correlated. Figure \ref{fig: risk_meausre_RMZ} shows the comparison of the four risk measures calculated based on rolling windows for asset RMZ. Their pattens turned out to be very similar.
 
-\begin{table}[!h]
+\begin{table}[h]
 \caption{Correlation between risk measures}
 \centering 
-\begin{tabular}{ p{2cm}||p{2cm}|p{2cm}|p{2cm}} 
+\begin{tabular}{ p{2cm}||p{1.6cm}|p{1.6cm}|p{1.6cm}|p{1.6cm}|p{1.6cm}|p{1.6cm}} 
 \hline
-Measures & Maximum drawdown & VaR & ES\\
+Measure 1 & \multicolumn{3}{|c|}{Maximum drawdown} & \multicolumn{2}{|c|}{Volatility} & VaR\\ \hline
+Measure 2 & Volatility & VaR & ES & VaR & ES & ES\\
   \hline \hline
-VaR & 0.85 & & \\
-ES & 0.81 & 0.96 & \\
-Volatility & 0.86 & 0.96 & 0.97  \\
+AGG & 0.90 & 0.89 & 0.94 & 0.96 & 0.98 & 0.95\\ 
+HYG & 0.95 & 0.95 & 0.96 & 0.99 & 0.99 & 0.99\\ 
+TIP & 0.72 & 0.82 & 0.83 & 0.94 & 0.97 & 0.96\\ 
+BCOM & 0.67 & 0.76 & 0.74 & 0.96 & 0.96 & 0.96\\
+MXEA & 0.76 & 0.82 & 0.80 & 0.94 & 0.97 & 0.94\\ 
+MXEF & 0.79 & 0.86 & 0.86 & 0.96 & 0.97 & 0.97\\ 
+RAY & 0.87 & 0.85 & 0.87 & 0.96 & 0.96 & 0.92\\ 
+RMZ & 0.90 & 0.92 & 0.93 & 0.99 & 0.99 & 0.99\\ 
+SPX & 0.80 & 0.80 & 0.80 & 0.96 & 0.96 & 0.93\\ 
+USGG10YR & 0.77 & 0.84 & 0.83 & 0.97 & 0.97 & 0.98\\ 
 \hline
 \end{tabular}
 \label{table:corrRiskMeasure}
@@ -130,7 +138,7 @@ Volatility & 0.86 & 0.96 & 0.97  \\
 \end{figure}
 
 
-\subsection{CED}
+\subsection{Time varying CED}
 
 Maximum drawdown is the largest cumulative loss from peak to trough. Conditional Expected Drawdown (CED) is the tail mean of maximum drawdown distributions.\footnote{On a Convex Measure of Drawdown Risk. Lisa R. Goldberg, Ola Mahmoud} Under confidence level $\alpha$, the conditional expected drawdown is defined as:
 \begin{equation}
@@ -138,7 +146,7 @@ CED_\alpha(X_{T_n}) = \textbf{E}(\mathbf{\mu}(X_{T_n})|\mathbf{\mu}(X_{T_n}) > D
 \end{equation}
 where $\mathbf{\mu}(X_{T_n})$ is the maximum drawdown distribution over a finite path.
 
-Here we calculated the CED using a 3-month-5-year rolling window (Figure \ref{fig: CED3mon5yr95}).  Note that here we use 3 month as the basic period. For empirical distribution of 3-month maximum drawdown, there are less multi-mode problems, and the tail value is more informative than using longer period. For longer path length such as 2-year and 5-year, there might be some missing values under large confidence levels. CED data tend to be lack of variance under long time period. In such cases, the empirical quantile no longer exits without some distribution or polynomial assumption of the tail. Since we do not familiar the performance of CED, it becomes impropriate to make such assumptions. 
+Here we calculated the CED using a 3-month-2-year rolling window (Figure \ref{fig: CED3mon2yr}).  Note that here we use 3 month as the basic period. For empirical distribution of 3-month maximum drawdown, there are less multi-mode problems, and the tail value is more informative than using longer period. For longer path length such as 2-year and 5-year, there might be some missing values under large confidence levels. CED data tend to be lack of variance under long time period. In such cases, the empirical quantile no longer exits without some distribution or polynomial assumption of the tail. Since we do not familiar the performance of CED, it becomes impropriate to make such assumptions. 
 
 %%%%%
 \iffalse
@@ -153,7 +161,7 @@ Here we calculated the CED using a 3-month-5-year rolling window (Figure \ref{fi
 \fi
 %%%%%%
 
-CED is also closely related with other traditional risk measure. Table \ref{table:corrRiskMeasure} shows the correlation between CED and other risk measures. Again, the correlation is calculated based on 6-month rolling risk measures and averaged over asset classes. Moreover, Figure \ref{fig: CED_ES_3mon_5yr5yr} shows the plot of ES and CED, which indicates their positive correlated relationship.
+CED is also closely related with other traditional risk measure. However, the correlation between CED and the other three risk measures are slightly weaker than the correlation among volatility, VaR and ES. Table \ref{table:corrRiskMeasureCED} shows the correlation between CED and other risk measures. Again, the correlation is calculated based on 6-month rolling risk measures for every asset. Moreover, Figure \ref{fig: CED_ES_3mon_5yr5yr} shows the plot of ES and CED, which indicates their positive correlated relationship.
 
 
 \begin{table}[!h]
@@ -163,11 +171,23 @@ CED is also closely related with other traditional risk measure. Table \ref{tabl
 \hline
 Measures & Volatility & VaR & ES\\
   \hline
-CED & 0.88 & 0.91 & 0.86  \\
+AGG & 0.94 & 0.89 & 0.95\\ 
+HYG & 0.98 & 0.97 & 0.97\\ 
+TIP & 0.77 & 0.85 & 0.85\\ 
+BCOM & 0.84 & 0.89 & 0.89\\ 
+MXEA & 0.84 & 0.83 & 0.86\\ 
+MXEF & 0.91 & 0.91 & 0.93\\ 
+RAY & 0.92 & 0.85 & 0.92\\ 
+RMZ & 0.96 & 0.96 & 0.97\\ 
+SPX & 0.84 & 0.81 & 0.84\\ 
+USGG10YR & 0.91 & 0.93 & 0.95\\
 \hline
 \end{tabular}
-\label{table:corrRiskMeasure}
+\label{table:corrRiskMeasureCED}
 \end{table}
+
+% \subsection{Time varying seirial correlation and their relationship with risk measures}
+
 
 %%%%%
 \iffalse

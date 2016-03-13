@@ -13,6 +13,18 @@ for (asset in names(assetData)){
   print(paste(range(assetData[[asset]]$Date), collapse = " to "))
 }
 
+##################################
+#### ks.test of asset returns ####
+##################################
+
+library(Matching)
+
+ks.test_res = rep(0, length(assetData))
+for (asset in names(assetData)){
+  x = assetData[[asset]]$retrn_dl
+  ks.test_res[i] = ks.boot(x, rnorm(10000, mean(x), sd(x)))$ks.boot.pvalue
+}
+
 ########################
 ### plot the returns ###
 ########################

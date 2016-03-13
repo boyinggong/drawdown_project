@@ -1,0 +1,46 @@
+\begin{thebibliography}{1}
+
+\bibitem{barucci2012financial}
+Emilio Barucci.
+\newblock {\em Financial markets theory: Equilibrium, efficiency and
+  information}.
+\newblock Springer Science \& Business Media, 2012.
+
+\bibitem{lo1988stock}
+Andrew~W Lo and A~Craig MacKinlay.
+\newblock Stock market prices do not follow random walks: Evidence from a
+  simple specification test.
+\newblock {\em Review of financial studies}, 1(1):41--66, 1988.
+
+\bibitem{poterba1988mean}
+James~M Poterba and Lawrence~H Summers.
+\newblock Mean reversion in stock prices: Evidence and implications.
+\newblock {\em Journal of financial economics}, 22(1):27--59, 1988.
+
+\bibitem{conrad1991components}
+Jennifer Conrad, Gautam Kaul, and Mahendrarajah Nimalendran.
+\newblock Components of short-horizon individual security returns.
+\newblock {\em Journal of Financial Economics}, 29(2):365--384, 1991.
+
+\bibitem{lo1990econometric}
+Andrew~W Lo and A~Craig MacKinlay.
+\newblock An econometric analysis of nonsynchronous trading.
+\newblock {\em Journal of Econometrics}, 45(1):181--211, 1990.
+
+\bibitem{mech1993portfolio}
+Timothy~S Mech.
+\newblock Portfolio return autocorrelation.
+\newblock {\em Journal of Financial Economics}, 34(3):307--344, 1993.
+
+\bibitem{getmansky2004econometric}
+Mila Getmansky, Andrew~W Lo, and Igor Makarov.
+\newblock An econometric model of serial correlation and illiquidity in hedge
+  fund returns.
+\newblock {\em Journal of Financial Economics}, 74(3):529--609, 2004.
+
+\bibitem{di2014risk}
+Antonio Di~Cesare, Philip~A Stork, and Casper~G De~Vries.
+\newblock Risk measures for autocorrelated hedge fund returns.
+\newblock {\em Journal of Financial Econometrics}, page nbu023, 2014.
+
+\end{thebibliography}

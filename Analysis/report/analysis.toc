@@ -1,0 +1,40 @@
+\select@language {english}
+\contentsline {section}{\numberline {1}Background of Serial Correlation}{3}{section.1}
+\contentsline {subsection}{\numberline {1.1}Definition}{3}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}Literature Review}{3}{subsection.1.2}
+\contentsline {section}{\numberline {2}Asset Description}{4}{section.2}
+\contentsline {section}{\numberline {3}Statistical Summary}{7}{section.3}
+\contentsline {subsection}{\numberline {3.1}Statistics}{7}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Summary}{8}{subsection.3.2}
+\contentsline {subsubsection}{\numberline {3.2.1}Returns}{8}{subsubsection.3.2.1}
+\contentsline {subsubsection}{\numberline {3.2.2}Statistical summary}{8}{subsubsection.3.2.2}
+\contentsline {section}{\numberline {4}Risk Diagnostics}{9}{section.4}
+\contentsline {subsection}{\numberline {4.1}VaR \& ES}{9}{subsection.4.1}
+\contentsline {section}{\numberline {5}Time Varying Risk Diagnostics}{11}{section.5}
+\contentsline {subsection}{\numberline {5.1}Time varying maximum drawdown}{11}{subsection.5.1}
+\contentsline {subsection}{\numberline {5.2}Time varying volatility, VaR and ES}{12}{subsection.5.2}
+\contentsline {subsection}{\numberline {5.3}Time varying CED}{12}{subsection.5.3}
+\contentsline {section}{\numberline {6}Regime Switching Model}{13}{section.6}
+\contentsline {subsection}{\numberline {6.1}Comparison of basic summary of two regimes}{14}{subsection.6.1}
+\contentsline {subsection}{\numberline {6.2}Detailed analysis (Take RMZ as an example)}{15}{subsection.6.2}
+\contentsline {subsubsection}{\numberline {6.2.1}Summary}{15}{subsubsection.6.2.1}
+\contentsline {subsubsection}{\numberline {6.2.2}Risk diagnostics}{16}{subsubsection.6.2.2}
+\contentsline {subsubsection}{\numberline {6.2.3}Rolling risk diagnostics}{17}{subsubsection.6.2.3}
+\contentsline {section}{\numberline {7}Time Series -- ARMA model}{20}{section.7}
+\contentsline {subsection}{\numberline {7.1}Explortary Step}{20}{subsection.7.1}
+\contentsline {subsubsection}{\numberline {7.1.1}AR(1)}{20}{subsubsection.7.1.1}
+\contentsline {subsubsection}{\numberline {7.1.2}MA(1)}{21}{subsubsection.7.1.2}
+\contentsline {subsubsection}{\numberline {7.1.3}ARMA(1,1)}{21}{subsubsection.7.1.3}
+\contentsline {subsection}{\numberline {7.2}Model Selection}{22}{subsection.7.2}
+\contentsline {subsubsection}{\numberline {7.2.1}EXAMPLE: RMZ data}{24}{subsubsection.7.2.1}
+\contentsline {section}{\numberline {8}Time Series -- GARCH model}{27}{section.8}
+\contentsline {subsection}{\numberline {8.1}Introduction}{27}{subsection.8.1}
+\contentsline {subsection}{\numberline {8.2}Fit Garch Model}{27}{subsection.8.2}
+\contentsline {subsubsection}{\numberline {8.2.1}RMZ}{27}{subsubsection.8.2.1}
+\contentsline {subsubsection}{\numberline {8.2.2}SPX}{32}{subsubsection.8.2.2}
+\contentsline {subsubsection}{\numberline {8.2.3}Best ARIMA Model for all the U.S. Assets }{38}{subsubsection.8.2.3}
+\contentsline {subsection}{\numberline {8.3}Best GARCH Model for all the U.S. Assets}{38}{subsection.8.3}
+\contentsline {section}{\numberline {9}Analysis of weekly and monthly return frequencies}{40}{section.9}
+\contentsline {subsection}{\numberline {9.1}Serial correaltion}{40}{subsection.9.1}
+\contentsline {subsection}{\numberline {9.2}Risk measures}{40}{subsection.9.2}
+\contentsline {section}{\numberline {10}Appendix: Plot and Tables}{43}{section.10}

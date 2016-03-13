@@ -75,6 +75,7 @@
 %%%%%%%%%%%%%%%%%%%%%
 
 \input{08.timeseriesGARCH.tex}
+\clearpage
 
 %%%%%%%%%%%%%%%%%%%%%
 \section{Analysis of weekly and monthly return frequencies}%%%%
@@ -91,21 +92,21 @@
 \begin{figure}[h]
 \caption{Daily Returns} 
 \centering 
-\includegraphics[width=15cm]{../results/returns}
+\includegraphics[width=15cm]{../figures/summary_daily/returns}
 \label{fig: dailyReturns}
 \end{figure}
 
 \begin{figure}[h]
 \caption{Empirical distribution of daily returns} 
 \centering 
-\includegraphics[width=15cm]{../results/returns_dist}
+\includegraphics[width=15cm]{../figures/summary_daily/returns_dist}
 \label{fig: returnsDist}
 \end{figure}
 
 \begin{figure}[h]
-\caption{Empirical distribution of maximum drawdown under 6 month rolling window} 
+\caption{Empirical distribution of maximum drawdown under 3 month rolling window} 
 \centering
-\includegraphics[width=15cm]{../results/maxdd_dist_mon6}
+\includegraphics[width=15cm]{../figures/maxDrawdown_CED/maxDrawdown3mon}
 \label{fig: dist_mdd}
 \end{figure}
 
@@ -151,33 +152,33 @@ USGG10YR & 42.88 & 48.37 & 53.96 & 54.79 & 59.14 & 62.82\\
 \begin{figure}[h]
 \caption{Volatility under 6-month rolling window} 
 \centering 
-\includegraphics[width=15cm]{../results/volatility6mon}
+\includegraphics[width=15cm]{../figures/rolling_stats/volatility6mon_scaled}
 \label{fig: variance6mon}
 \end{figure}
 
 \begin{figure}[h]
 \caption{VaR(\%) (significance level = 0.95) under 6-month rolling window}
 \centering 
-\includegraphics[width=15cm]{../results/VaR6mon_scaled}
+\includegraphics[width=15cm]{../figures/rolling_stats/VaR6mon_scaled}
 \label{fig: VaR6mon}
 \end{figure}
 
 \begin{figure}[h]
 \caption{ES(\%) (significance level = 0.95) under 6-month rolling window} 
 \centering 
-\includegraphics[width=15cm]{../results/ES6mon_scaled}
+\includegraphics[width=15cm]{../figures/rolling_stats/ES6mon_scaled}
 \label{fig: ES6mon}
 \end{figure}
 
 \begin{figure}[h]
-\caption{CED under 3-month-5-year Rolling Window (confidence level = 0.95)} 
+\caption{CED under 3-month-5-year Rolling Window (confidence level = 0.9)} 
 \centering 
-\includegraphics[width=15cm]{../results/CED_3mon_5yr_95}
-\label{fig: CED3mon5yr95}
+\includegraphics[width=15cm]{../figures/rolling_stats/CED3mon2yr_scaled}
+\label{fig: CED3mon2yr}
 \end{figure}
 
 \begin{figure}[h]
-\caption{CED (confidence level = 0.9) versus ES under 3-month-5-year Rolling Window} 
+\caption{CED (confidence level = 0.9) versus ES under 3-month-2-year Rolling Window} 
 \centering 
 \includegraphics[width=15cm]{../results/CED_ES_3mon_5yr5yr}
 \label{fig: CED_ES_3mon_5yr5yr}
