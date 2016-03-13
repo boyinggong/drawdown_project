@@ -37,6 +37,8 @@ getMaxDdDataFrame <- function(windw, Data = assetData){
 
 assign(paste(FUN = "maxDrawdown", windw = "3mon", sep = ''), 
        getMaxDdDataFrame(windw = "3mon", Data = assetData))
+assign(paste(FUN = "maxDrawdown", windw = "6mon", sep = ''), 
+       getMaxDdDataFrame(windw = "6mon", Data = assetData))
 
 ########################################################
 ### plot the empirical maximum drawdown distribution ###

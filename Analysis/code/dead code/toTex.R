@@ -76,3 +76,34 @@ cat(b0)
 
 
 
+###############################
+
+a0 <- paste(names(assetData),
+            format(round(corr_df[, 6], 2), nsmall = 2),
+            format(round(corr_df[, 3], 2), nsmall = 2),
+            format(round(corr_df[, 5], 2), nsmall = 2),
+            format(round(corr_df[, 2], 2), nsmall = 2),
+            format(round(corr_df[, 4], 2), nsmall = 2),
+            format(round(corr_df[, 1], 2), nsmall = 2),
+            sep = ' & ')
+b0 <- paste(a0, collapse = "\\\\ \n")
+cat(b0)
+
+
+a0 <- paste(names(assetData),
+            format(round(corr_CED_df[, 1], 2), nsmall = 2),
+            format(round(corr_CED_df[, 2], 2), nsmall = 2),
+            format(round(corr_CED_df[, 3], 2), nsmall = 2),
+            sep = ' & ')
+b0 <- paste(a0, collapse = "\\\\ \n")
+cat(b0)
+
+a0 <- paste(names(assetData),
+            format(round(serialCor_df[, 1], 2), nsmall = 2),
+            format(round(serialCor_df[, 2], 2), nsmall = 2),
+            format(round(serialCor_df[, 3], 2), nsmall = 2),
+            format(round(serialCor_df[, 4], 2), nsmall = 2),
+            sep = ' & ')
+b0 <- paste(a0, collapse = "\\\\ \n")
+cat(b0)
+

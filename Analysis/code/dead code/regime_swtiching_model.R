@@ -1,11 +1,8 @@
+
+source("read_data.R")
+
 library(dynlm)
 library(MSwM)
-
-# g.lm <- dynlm(retrn_dl ~ 1 + L(retrn_dl, 1), data = zooreg(data.frame(retrn_dl = AGG$retrn_dl)))
-# g.lm
-# class(g.lm)
-# testmodel = lm(retrn_dl ~ 1, data = AGG)
-# summary(testmodel)
 
 ########################################
 ######### using lag term in lm #########
