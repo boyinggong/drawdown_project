@@ -128,7 +128,7 @@ R_t &= -4.1561\times 10^{-2}\epsilon_{t-1} \\
 \sigma_t^2 & = 1.9955 \times 10^{-6} +1.1083\times 10^{-1} T_{t-1}^2 +8.8506\times 10^{-1}  \sigma_{t-1}^2
 \end{align*}
 
-The Figure: \ref{fig:RMZ_GARCH_dig1} are the plots of the standardized residuals. 
+The Figure \ref{fig:RMZ_GARCH_dig1} are the plots of the standardized residuals. 
 
 \begin{figure}
   \caption{RMZ: Diagnostic Plots of GARCH(1,1) with Gaussian Conditonal Distribution}
@@ -136,7 +136,7 @@ The Figure: \ref{fig:RMZ_GARCH_dig1} are the plots of the standardized residuals
   \label{fig:RMZ_GARCH_dig1}
 \end{figure}
 
-After fitting GARCH, the residual left is almost white noise, which is a good sign for eliminating the correlations between points, as evidented in the next two ACF plots. However, the heavy tail problem is still there. Several approach can be adopted to fix it, one of which is instead of normal, using Student t distribution as conditional distribution in the GARCH. Finding t distribution is not really solve the problem, we finally chose to use Generalize Normal Distribution (GED) as the conditional distribution. QMLE is another potential alternative. The Figure: \ref{fig:RMZ_GARCH_dig2} indicates that the heavy tail problem is almost solved in the by applying GED.
+After fitting GARCH, the residual left is almost white noise, which is a good sign for eliminating the correlations between points, as evidented in the next two ACF plots. However, the heavy tail problem is still there. Several approach can be adopted to fix it, one of which is instead of normal, using Student t distribution as conditional distribution in the GARCH. Finding t distribution is not really solve the problem, we finally chose to use Generalize Normal Distribution (GED) as the conditional distribution. QMLE is another potential alternative. The Figure \ref{fig:RMZ_GARCH_dig2} indicates that the heavy tail problem is almost solved in the by applying GED.
 
 \begin{figure}
   \caption{RMZ: Diagnostic Plots of GARCH(1,1) with GED Conditonal Distribution}
