@@ -1,5 +1,4 @@
 \iffalse
-
 %-*- program: xelatex -*-        
 %-*- program: biber -*-`        
 %-*- program: xelatex -*-
@@ -20,7 +19,6 @@
 \newenvironment{proof}{\par{\bf Proof}:}{\endproofmark\smallskip}
 \begin{document}
 \maketitle
-
 \fi
 
 
@@ -61,7 +59,7 @@ AGG & (5,0,5) \\
 HYG & (3,0,1) \\ 
 TIP &  (0,0,0)\\ 
 BCOM & (0,0,0)\\ 
-MXEA & (2,0,4) \\ 
+MXEA & (2,0,2) \\ 
 MXEF & (4,0,2)\\ 
 RAY &  (2,0,2)\\ 
 RMZ & (0,0,1) \\ 
@@ -98,7 +96,7 @@ AGG & ARMA(5,5)+GARCH(1,1) \\
 HYG & ARMA(3,1)+GARCH(1,1) \\ 
 TIP &  GARCH(1,1)\\ 
 BCOM & GARCH(1,1)\\ 
-MXEA & ARMA(2,4)+ GARCH(1,2) \\ 
+MXEA & ARMA(2,2)+ GARCH(1,2) \\ 
 MXEF & ARMA(4,2) + GARCH(1,1)\\ 
 RAY &  ARMA(2,2) + GARCH(1,1)\\ 
 RMZ & MA(1) + GARCH(1,1) \\ 
@@ -164,10 +162,20 @@ Figure \ref{fig:RMZ_GARCH_predCI} show the last 120 residuals from MA(1), we use
 In summary, instead of assuming constant variance using ARIMA, modeling the residuals from MA(1) using GARCH(1,1) seems to be more reasonable for RMZ.
 
 \subsubsection{Summary of Results}
-The steps in the previous section are repeated in this section, and results are summerized here. The stars in the equations shows the significance level of the coefficents. 
-
+This section answer the questions that what kind of model should be selected for modeling the return of financial assets. Model selection hints from the descriptive statistics are also highlighted. It gives people an intuition and helps to narrow down the potential parameter sets, and thus reduce the work load. However, this is not the general rule. In order to decide the most suitable model, one should take a close look at the time series properties and compare several possible models using model selection criterions.
 
 \begin{itemize}
+\item Essentially, ARMA component do not need to be there. For those time series, conditional means are almost fixed, such as TIP, BCOM and USGG10YR. Some of statistics are able to indicate this on some extent. For example, a very high Sharpe Ratio, meaning the low return and high standard deviation, suggests that it is hard for using ARIMA  to capture the change of conditional mean in too much noise. Moreover, based on study, we found that the returns of assets with smaller absolute skewness values are more likely free from ARMA component. As can be imagined, if an asset is high skewed, it is a highly possible situation that the returns deviate from mean value at some certain time period because of economics events.
+\item ARMA component sometimes is just not enough to characterize the timeseries, indicated a unstationary residuals even after a long lag. Based on my experience, the trial until p =5 and q = 5 is adequately detection for ARMA component. The change of model or adding GARCH component should be taken into consideration when larger lags in need.
+ \item For the financial essets we already took a close look at, the GARCH model is always required, as the evidenced by the clustered variance in the return. Financial assets tend to have higher or lower volatility in a certain period as the result of some economics events, such as a higher fluctuation around 2008 crisis.
+  \item GARCH(1,1) are always enough for charaterize the clustered variance in financial assets. Even though I select GARCH(1,2) and GARCH(1,3) for MXEA and USGG10YR based on BIC, GARCH(1,1) still works good for these two indices, showing almost no differents in diagnostic plots. 
+\end{itemize}
+
+
+Next present the model for each index. Those are from analysis that repeat over and over again in the previous section. To avoid redundancy, the full analysis is not showing out. The stars in the equations below represents the significance level of the coefficents. 
+
+
+\begin{enumerate}
 \item \textbf{AGG} (BIC = -6.8688):
 \begin{dmath*}
 R_t  = -0.0698R_{t-1} + 0.5235R_{t-2} - 0.7308R_{t-3}- 0.4478 R_{t-4}
@@ -199,7 +207,6 @@ R_t = -0.5756R_{t-1} -0.0207R_{t-2}  -0.0996R_{t-3}
 \sigma_t^2  &= 2.640 \times 10^{-7} +4.536\times 10^{-2} T_{t-1}^2(^{***}) +9.523e\times 10^{-1}  \sigma_{t-1}^2(^{***})\\
 \end{align*}
 
-
 \item \textbf{MXEA} (BIC = -6.7857):
 \begin{dmath*}
 R_t = -0.2176R_{t-1} -0.4230R_{t-2} 
@@ -208,8 +215,6 @@ R_t = -0.2176R_{t-1} -0.4230R_{t-2}
 \begin{dmath*}
 \sigma_t^2  = 1.1415\times 10^{-6} +1.2141\times 10^{-1} T_{t-1}^2(^{***}) +5.1514\times 10^{-1}  \sigma_{t-1}^2(^{***}) +3.5499\times 10^{-1}  \sigma_{t-2}^2(^{***})\\
 \end{dmath*}
-
-
 
 
 \item \textbf{MXEF} (BIC =-6.5399):
@@ -254,7 +259,61 @@ R_t =  0.3488R_{t-1}+  0.2556R_{t-2}  -0.3185\epsilon_{t-1}  -0.3083\epsilon_{t-
 +10^{-8}  \sigma_{t-2}^2(^{***}) 
 +3.9287\times 10^{-1}  \sigma_{t-3}^2(^{***}) 
 \end{dmath*}
-\end{itemize}
+\end{enumerate}
+
+\subsubsection{Serial Correlation and Risk Measurement}
+After the model selection, we now can check the relationship between serial correlations and risk measurements using the best model we get. Finding sometimes it meets some converging problem when apply the best model on subset of the data, I some times also use the second best model. For this reason, instead of  using ARMA(2,4) for MXEA, ARMA(4,2) for MXEF and (2,2) for SPX, I used MA(2) for MXEA,  AR(3) for MXEF and MA(2) for SPX. Table \ref{table:vsRiskMeasure} directly gives the correlation coefficents between first-order serial correlation and risk measurements.
+
+It shows that it generally has a negative relationship between serial correlation and risk measurements. Some of them are quite small, such as MXEF, -0.0379 for VaR even after using the best model. Some of them are comparatively high, such as RMZ, as high as 0.8621 for VaR.
+
+ Generally speaking,  relationship between between first-order serial correlation and risk measurements are very close. $\rho$'s with CED are always smaller than that with other risk measurements, considering the absolute value .Table\ref{table:vsRiskMeasure} also suggests that CED is not necessary to be negative. However, we find that for CED positively related to serial correlation, the corresponding $\rho$ with VaR or ES are also very small, though negative. 
 
 
+\begin{figure}
+  \caption{Relationship First-order Serial Correlation and VaR using Best Model}
+  \includegraphics[width = \textwidth]{../figures/SerCol-VaR2yr}
+  \label{fig:SerCol-VaR2yr}
+\end{figure}
+
+\begin{figure}
+  \caption{Relationship First-order Serial Correlation and ES using Best Model}
+  \includegraphics[width = \textwidth]{../figures/SerCol-ES2yr}
+  \label{fig:SerCol-ES2yr}
+\end{figure}
+
+\begin{figure}
+  \caption{Relationship First-order Serial Correlation and CED using Best Model}
+  \includegraphics[width = \textwidth]{../figures/SerCol-CED3mon2yr}
+  \label{fig:SerCol-CED3mon2yr}
+\end{figure}
+
+\begin{table}[!h]
+\caption{Correlation between First-order Serial Correlation and Risk Measurements}
+\centering 
+\begin{tabular}{ | c || r | r | r | r |} 
+ \hline
+Asset& Model & v.s. VaR & v.s. VaR &v.s. CED\\
+  \hline \hline
+AGG &ARMA(5,5) &-0.2456 &  -0.3605&-0.3972 \\ 
+HYG &ARMA(3,1) & -0.3162& -0.3346 & -0.2419 \\ 
+TIP & AR(1)  &-0.0369 & -0.0660 & 0.0286 \\ 
+BCOM &AR(1) & -0.4291&  -0.3897& -0.4298\\ 
+MXEA & MA(2) &-0.3358&  -0.3542& 0.1402\\ 
+MXEF & AR(3)  &-0.0379  &  -0.0084& 0.0958\\ 
+RAY & MA(1) &-0.3459 &   -0.2611&  -0.2234\\ 
+RMZ & ARMA(2,2) &-0.8621 &  -0.8763&  -0.7949\\ 
+SPX & MA(2)  &-0.1983 &  -0.2267& -0.1220\\ 
+USGG10YR &  AR(1) &-0.5578&  -0.5168& -0.3866\\
+ \hline
+\end{tabular}
+\label{table:vsRiskMeasure}
+\end{table}
+
+\subsubsection{A Small Simulation Study}
+We simulated a AR(1) time series and want to take a look at the relationship between risk measurements and serial correlations. The Figure \ref{fig:SimPart2} shows that VaR/ES has a positive relationship with first-order serial correlation. This is strange compared with the conclusion we have got in the previous section, which is in need of deeper analysis.
+\begin{figure}
+  \caption{Sim AR(1): First-order Serial Correlation and Risk Measurements}
+  \includegraphics[width = \textwidth]{../figures/sim_part2}
+  \label{fig:SimPart2}
+\end{figure}
 %\end{document}

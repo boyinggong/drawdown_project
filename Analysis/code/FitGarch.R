@@ -10,12 +10,30 @@ library("quantmod")
 require(astsa)
 library(fGarch)
 
+png("Analysis/results/clusterVariance", width = 1600, height = 1600)
+plots = list()
+for (i in assetsList){
+  plt <- data.frame(y_axis = get(paste("SerCol", windw, paras, sep = '-'))[[count]],
+                    x_axis = get(paste(RiskMs, windw ,sep = ''))[[count]])
+  plots[[i]] <- ggplot(plt, aes(x=x_axis, y=y_axis)) +
+    geom_point() +
+    ggtitle(i) + 
+    labs(y = paste("Serial Correlation")) + 
+    #ylim(0, 1) +
+    labs(x = RiskMs)
+  count = count+1
+}
+multiplot(plotlist = plots, cols = 3)
+dev.off()
+
+
 
 ##################### For RMZ ###########################
 bestorder = auto.arima(RMZ$retrn_dl)
 sarima(RMZ$retrn_dl, p=0,d=0,q=1)
 FIT_RMZ_ARMA = arima(RMZ$retrn_dl, order=c(0,0,1), include.mean = FALSE)
 summary(FIT_RMZ_ARMA)
+plot(FIT_RMZ_ARMA$residuals)
 #### fit Garch ###
 FIT_RMZ_Garch = garchFit(formula=~arma(0,1)+garch(1,1),data=RMZ$retrn_dl,trace=FALSE,include.mean=FALSE)
 summary(FIT_RMZ_Garch)
@@ -188,13 +206,112 @@ for (name in assetsList){
 }
 
 
-FIT_AGG_ARMA = arima(SPX$retrn_dl, order = c(5,0,5))
+FIT_AGG_ARMA = arima(AGG$retrn_dl, order = c(5,0,5))
 AGG_resid = FIT_AGG_ARMA$residuals
 
-FIT_AGG_Garch = garchFit(formula=~garch(1,1),data=AGG_resid,trace=FALSE,include.mean=FALSE,cond.dist="std")
+FIT_AGG_Garch = garchFit(formula=~garch(1,1),data=AGG_resid,trace=FALSE,include.mean=FALSE,cond.dist="ged")
+FIT_AGG_ARMA$coef
+summary(FIT_AGG_ARMA)
 summary(FIT_AGG_Garch)
 par(mfrow=c(2,2))
 plot(FIT_AGG_Garch,which = 9)
 plot(FIT_AGG_Garch,which = 10)
 plot(FIT_AGG_Garch,which = 11)
 plot(FIT_AGG_Garch,which = 13)
+
+# HYG
+FIT_HYG_ARMA = arima(HYG$retrn_dl, order = c(3,0,1))
+HYG_resid = FIT_HYG_ARMA$residuals
+
+FIT_HYG_Garch = garchFit(formula=~garch(1,1),data=HYG_resid,trace=FALSE,include.mean=FALSE,cond.dist="std")
+summary(FIT_HYG_ARMA)
+summary(FIT_HYG_Garch)
+
+#TIP
+FIT_TIP_ARMA = arima(TIP$retrn_dl, order = c(0,0,0))
+TIP_resid = FIT_TIP_ARMA$residuals
+
+FIT_TIP_Garch = garchFit(formula=~garch(1,1),data=TIP_resid,trace=FALSE,include.mean=FALSE,cond.dist="ged")
+summary(FIT_TIP_ARMA)
+summary(FIT_TIP_Garch)
+
+#BCOM
+FIT_BCOM_ARMA = arima(BCOM$retrn_dl, order = c(0,0,0))
+BCOM_resid = FIT_BCOM_ARMA$residuals
+
+FIT_BCOM_Garch = garchFit(formula=~garch(1,1),data=BCOM_resid,trace=FALSE,include.mean=FALSE,cond.dist="ged")
+summary(FIT_BCOM_ARMA)
+summary(FIT_BCOM_Garch)
+
+#MXEA
+FIT_MXEA_ARMA = arima(MXEA$retrn_dl, order = c(2,0,4))
+MXEA_resid = FIT_MXEA_ARMA$residuals
+
+FIT_MXEA_Garch = garchFit(formula=~garch(1,2),data=MXEA_resid,trace=FALSE,include.mean=FALSE,cond.dist="ged")
+summary(FIT_MXEA_ARMA)
+summary(FIT_MXEA_Garch)
+
+#MXEF
+FIT_MXEF_ARMA = arima(MXEF$retrn_dl, order = c(4,0,2))
+MXEF_resid = FIT_MXEF_ARMA$residuals
+
+FIT_MXEF_Garch = garchFit(formula=~garch(1,1),data=MXEF_resid,trace=FALSE,include.mean=FALSE,cond.dist="ged")
+summary(FIT_MXEF_ARMA)
+summary(FIT_MXEF_Garch)
+
+#RAY
+FIT_RAY_ARMA = arima(RAY$retrn_dl, order = c(2,0,2))
+RAY_resid = FIT_RAY_ARMA$residuals
+
+FIT_RAY_Garch = garchFit(formula=~garch(1,1),data=RAY_resid,trace=FALSE,include.mean=FALSE,cond.dist="ged")
+summary(FIT_RAY_ARMA)
+summary(FIT_RAY_Garch)
+
+#SPX
+FIT_SPX_ARMA = arima(SPX$retrn_dl, order = c(2,0,2))
+SPX_resid = FIT_SPX_ARMA$residuals
+
+FIT_SPX_Garch = garchFit(formula=~garch(1,1),data=SPX_resid,trace=FALSE,include.mean=FALSE,cond.dist="std")
+summary(FIT_SPX_ARMA)
+summary(FIT_SPX_Garch)
+
+#USGG10YR
+FIT_USGG10YR_ARMA = arima(USGG10YR$retrn_dl, order = c(0,0,0))
+USGG10YR_resid = FIT_USGG10YR_ARMA$residuals
+
+FIT_USGG10YR_Garch = garchFit(formula=~garch(1,3),data=USGG10YR_resid,trace=FALSE,include.mean=FALSE,cond.dist="std")
+summary(FIT_USGG10YR_ARMA)
+summary(FIT_USGG10YR_Garch)
+
+######################## The best order of ARMA ############################
+#bestorders = lapply(assetsList,function(i) auto.arima(get(i)$retrn_dl)$arma)
+
+bestorders = lapply(assetsList,function(i) {
+  para = auto.arima(get(i)$retrn_dl)$arma
+  return (c(para[1],para[6], para[2]))}
+)
+
+# residual left after arima
+resids = lapply(1:11,
+                function(i) arima(get(assetsList[i])$retrn_dl, order=unlist(bestorders[i]), include.mean = FALSE)$residuals)
+
+
+######################## Clustered Variance ##########################
+png("Analysis/results/resids.png", width = 1600, height = 1600)
+plots = list()
+for (i in 1:11){
+  plt <- data.frame(y_axis = unlist(resids[i]),
+                    x_axis = c(1:length(unlist(resids[i]))))
+  plots[[i]] <- ggplot(plt, aes(x=x_axis, y=y_axis)) +
+    geom_line() +
+    ggtitle(paste(assetsList[i], ": Residuals after Fitting ARMA", sep = "")) + 
+    ylab("Residual") + 
+    #ylim(0, 1) +
+    xlab("Period")
+}
+multiplot(plotlist = plots, cols = 3)
+dev.off()
+
+
+
+

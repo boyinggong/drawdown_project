@@ -13,8 +13,6 @@ MA_para <- seq(0,5)
 ######################### Find the best model given a set of parameter ############################ 
 paras_arima <- as.matrix(expand.grid(AR = AR_para, DRIFT = drift, MA = MA_para))[-1, ]
 paras_arma <- as.matrix(expand.grid(AR =AR_para, DRIFT = 0, MA = MA_para))[-1, ]
-# not all zero
-
 
 FindBestModel <- function(vec,paras){
   aics <-apply(paras, 1, function(i){arima(vec, order =unlist(i))$aic})
@@ -209,15 +207,24 @@ maxDrawdownmon3_Dd <- lapply(maxDrawdownmon3, function(i) as.data.frame(i)$Dd)
 
 windw = "5yr"
 FUN = "ES"
-calcCED <- function(val, lv, prd, FUN, ...){
-  res <- sapply(2:(length(val)-prd+1), function(x){
+calcCED <- function(val, prd, p = 0.9){
+  res <- sapply(1:(length(val)-prd+1), function(x){
     dt <- val[x:(x+prd-1)]
-    do.call(FUN, list(dt, lv))
+    mean(dt[dt > quantile(dt, probs = p)])
   })
 }
 
-CED5yr3mon <- lapply(maxDrawdownmon3_Dd, function(i)-calcCED(i, lv = 0.1, prd = prds[windw], FUN))
+
+# calcCED <- function(val, lv, prd, FUN, ...){
+#   res <- sapply(2:(length(val)-prd+1), function(x){
+#     dt <- val[x:(x+prd-1)]
+#     do.call(FUN, list(dt, lv))
+#   })
+# }
+
+CED5yr3mon <- lapply(maxDrawdownmon3_Dd, function(i)-calcCED(i, prd = prds[windw]))
 CED5yr3mon_date <- lapply(maxDrawdownmon3_date, function(i)i[(1+prds[windw]):(length(i))])
+
 
 
 windw = "5yr3mon"
@@ -238,6 +245,12 @@ for (i in assetsList){
 }
 multiplot(plotlist = plots, cols = 3)
 dev.off()
+
+
+length(get(paste(RiskMs, windw ,sep = ''))[[count]])
+length(get(paste("SerCol", windw, paras, sep = '-'))[[count]])
+
+
 
 ################ calculate the correlations ##################
 calc_corr <- function(measure1, measure2, period1, period2){
