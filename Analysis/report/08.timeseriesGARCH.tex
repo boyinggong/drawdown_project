@@ -261,7 +261,7 @@ R_t =  0.3488R_{t-1}+  0.2556R_{t-2}  -0.3185\epsilon_{t-1}  -0.3083\epsilon_{t-
 \end{dmath*}
 \end{enumerate}
 
-\subsubsection{Serial Correlation and Risk Measurement}
+\subsection{Serial Correlation and Risk Measurement}
 After the model selection, we now can check the relationship between serial correlations and risk measurements using the best model we get. Finding sometimes it meets some converging problem when apply the best model on subset of the data, I some times also use the second best model. For this reason, instead of  using ARMA(2,4) for MXEA, ARMA(4,2) for MXEF and (2,2) for SPX, I used MA(2) for MXEA,  AR(3) for MXEF and MA(2) for SPX. Table \ref{table:vsRiskMeasure} directly gives the correlation coefficents between first-order serial correlation and risk measurements.
 
 It shows that it generally has a negative relationship between serial correlation and risk measurements. Some of them are quite small, such as MXEF, -0.0379 for VaR even after using the best model. Some of them are comparatively high, such as RMZ, as high as 0.8621 for VaR.
@@ -309,7 +309,7 @@ USGG10YR &  AR(1) &-0.5578&  -0.5168& -0.3866\\
 \label{table:vsRiskMeasure}
 \end{table}
 
-\subsubsection{A Small Simulation Study}
+\subsection{A Small Simulation Study}
 We simulated a AR(1) time series and want to take a look at the relationship between risk measurements and serial correlations. The Figure \ref{fig:SimPart2} shows that VaR/ES has a positive relationship with first-order serial correlation. This is strange compared with the conclusion we have got in the previous section, which is in need of deeper analysis.
 \begin{figure}
   \caption{Sim AR(1): First-order Serial Correlation and Risk Measurements}
