@@ -172,28 +172,28 @@ AIC = 2k - ln(L)
 k is the number of parameter in the model and L is the maximum value of the likelihood function for a certain model. Intuitively, AIC rewards goodness of fit (as assessed by the likelihood function), but it also includes a penalty that is an increasing function of the number of estimated parameters \footnote{https://en.wikipedia.org/wiki/Akaike\_information\_criterion}. Therefore, we want the model with smallest AIC value.
 
 \begin{table}[!h]
-\caption{Best ARMA Model Based on AIC Value}
+\caption{Best ARIMA Model for the U.S. Assets }
 \centering 
 \begin{tabular}{ | c || r | } 
  \hline
-Asset & ARMA (p,q) \\
+Asset & ARIMA (p,d,q) \\
   \hline \hline
-AGG & (5,5)\\ 
-HYG & (5,5) \\ 
-TIP & (5,4)  \\ 
-BCOM & (4,4) \\ 
-MXEA & (5,5)  \\ 
-MXEF & (5,4) \\ 
-RAY & (4,5)  \\ 
-RMZ & (3,3)  \\ 
-SPX & (5,4) \\ 
-USGG10YR & (5,5) \\
+AGG & (5,0,5) \\ 
+HYG & (3,0,1) \\ 
+TIP &  (0,0,0)\\ 
+BCOM & (0,0,0)\\ 
+MXEA & (2,0,2) \\ 
+MXEF & (4,0,2)\\ 
+RAY &  (2,0,2)\\ 
+RMZ & (0,0,1) \\ 
+SPX & (2,0,2) \\ 
+USGG10YR & (0,0,0) \\
  \hline
 \end{tabular}
-\label{table:bestArmaModel}
+\label{table:BestArima}
 \end{table}
 
-From the Table \ref{table:bestArmaModel} almost all the assets, the parameters are as high as 4 or 5, which indicates the time series are not stationary. It also involved some converging issue is when the parameters are getting larger.
+From the Table \ref{table:BestArima} almost all the assets, the parameters are as high as 4 or 5, which indicates the time series are not stationary. It also involved some converging issue is when the parameters are getting larger.
 
 For the next step of exploring reasonable model for those assets, several potential models is there can be taken in to consideration:
 \begin{itemize}
