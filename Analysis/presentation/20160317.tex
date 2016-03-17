@@ -78,9 +78,12 @@
 
 
 
+\newcommand\Fontv{\fontsize{5}{6.2}\selectfont}
 \newcommand\Fontvi{\fontsize{6}{7.2}\selectfont}
 \newcommand\Fontvii{\fontsize{7}{8.2}\selectfont}
 \newcommand\Fontviii{\fontsize{8}{9.2}\selectfont}
+
+\setbeamerfont{caption}{series=\normalfont,size=\fontsize{6}{7.2}} 
 
 \usepackage{graphicx} % Allows including images
 \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
@@ -120,9 +123,245 @@ University of California, Berkeley \\ % Your institution for the title page
 \section{Maximum drawdown distribution and CED}
 %------------------------------------------------
 
+\begin{frame}
+\frametitle{Maximum drawdown distribution}
+\Fontviii
+
+As we move to longer period, the maximum drawdown distribution tends to:
+\begin{enumerate}
+\item have larger mean and variance
+\item be multi-mode 
+\item lack variability of values
+\item be centered around several specific values
+\end{enumerate}
+
+Take RMZ as an example. (RMZ: The MSCI US REIT Index, a free float-adjusted market capitalization index that is comprised of equity REITs.)
+
+\begin{figure}[h]
+\Fontvii
+\centering 
+\includegraphics[width = 0.8\textwidth]{../results/maxdd_RMZ}
+\caption{Maximum drawdown distribution of RMZ as rolling period increases} 
+\label{fig: dmaxdd_RMZ}
+\end{figure}
+
+Later in our project, we mainly use 3 month period.
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Maximum drawdown distribution}
+\Fontviii
+
+Maximum drawdown, expected shortfall (ES), value at risk (VaR) and volatility are highly correlated. For our 10 assets of interest, the correlation between the later three are all above 90\%. The correlation between maximum drawdown and the later three are weaker with an average around 80\%. \par
+The following figure shows the rolling risk measures of RMZ.
+
+
+\begin{figure}[h]
+\centering 
+\includegraphics[width = 0.8\textwidth]{../results/risk_measure_RMZ}
+\label{fig: risk_meausre_RMZ}
+\caption{Comparison of different risk measures of RMZ} 
+\end{figure}
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{CED}
+\Fontviii
+\begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
+
+\column{.35\textwidth} % Left column and width
+The right column shows the rolling CED under 3-month-2-year Rolling Window (confidence level = 0.9). That means, the maximum drawdowns are calculated based on a 3-month rolling window and the tail means are calculated based on 2-year maximum drawdowns.
+
+\column{.6\textwidth} % Right column and width
+\begin{figure}[h]
+\centering 
+\includegraphics[width=1\textwidth]{../figures/rolling_stats/CED3mon2yr_scaled}
+\label{fig: CED3mon2yr}
+\end{figure}
+\end{columns}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{CED}
+\Fontviii
+
+Note that CED is also highly correlated with other risk measures. The following table is calculated based on 2 year and 3 month rolling windows.
+
+\begin{table}[!h]
+\centering 
+\begin{tabular}{ p{2cm}||p{2cm}|p{2cm}|p{2cm}} 
+\hline
+Measures & Volatility & VaR & ES\\
+  \hline
+AGG & 0.94 & 0.89 & 0.95\\ 
+HYG & 0.98 & 0.97 & 0.97\\ 
+TIP & 0.77 & 0.85 & 0.85\\ 
+BCOM & 0.84 & 0.89 & 0.89\\ 
+MXEA & 0.84 & 0.83 & 0.86\\ 
+MXEF & 0.91 & 0.91 & 0.93\\ 
+RAY & 0.92 & 0.85 & 0.92\\ 
+RMZ & 0.96 & 0.96 & 0.97\\ 
+SPX & 0.84 & 0.81 & 0.84\\ 
+USGG10YR & 0.91 & 0.93 & 0.95\\
+\hline
+\end{tabular}
+\label{table:corrRiskMeasureCED}
+\caption{Correlation between CED (confidence level = 0.9) and other risk measures}
+\end{table}
+
+\end{frame}
+
 %------------------------------------------------
 \section{Regime switching models}
 %------------------------------------------------
+
+\begin{frame}
+\frametitle{Regime switching models}
+\Fontviii
+Many economic time series data tend to behave differently in adjacent time period. We use the following two-regime switching model to fit the returns:
+
+\begin{equation}
+y_t - \mu_{s^*_t} = \phi_{s^*_t} (y_{t-1} - \mu_{s^*_{t-1}}) + \epsilon_t
+\end{equation}
+where the number of autoregressive coefficient is set to 1. $s^*_t$ is a two state Markov chain. $s^*_t = 1$ represent regime 1 and $s^*_t = 2$ represent regime 2. $s^*_t$ depends on the past only through the most recent values:
+
+\begin{equation}
+P(s_t = j|s_{t-1}, s_{t-2}, \dots) = P(s_t = j|s_{t-1})  = p_{ij}
+\end{equation}
+
+\begin{table}[!h]
+\centering 
+\begin{tabular}{ | c || r  r | } 
+ \hline
+ & Regime 1  & Regime 2\\
+Asset & High volatility  & Low volatility \\
+  \hline \hline
+AGG  & -0.134 & -0.114 \\ 
+HYG & -0.010 &  0.025 \\ 
+TIP &  0.039  & -0.026 \\ 
+BCOM & -0.046 &  0.050 \\ 
+MXEA & 0.095 & 0.109 \\ 
+MXEF & 0.221 & 0.254 \\ 
+RAY& -0.039  &  0.052 \\ 
+RMZ & -0.244 &  0.007 \\ 
+SPX & -0.018 &  0.113 \\ 
+USGG10YR & -0.031 & 0.082 \\ 
+ \hline
+\end{tabular}
+\label{table:autoCoeffRegime}
+\caption{$\phi$ of high and low volatility regimes for various assets} 
+\end{table}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Regime switching models}
+\Fontviii
+
+Returns of high volatility regime has larger standard deviation, skewness and kurtosis than that of the low volatility regime. The return distribution of high volatility regimes are more like to be sknewed (both positive and negative). They also tend to have fatter tailed than the return distribution of low volatility regimes.
+
+\begin{table}[!h]
+\centering 
+\begin{tabular}{ | c || rr | rr | rr | } 
+ \hline
+& \multicolumn{2}{c|}{Volatility} & \multicolumn{2}{c|}{Skewness} & \multicolumn{2}{c|}{Kurtosis} \\
+Asset & Regime 1 & Regime 2 & Regime 1 & Regime 2 & Regime 1 & Regime 2 \\
+  \hline \hline
+AGG & 0.141 & 0.036 & -1.59 &  0.01 & 17.15 &  0.60\\ 
+HYG & 0.265 & 0.055 &  0.60 &  0.00 &  8.76 &  0.83\\ 
+TIP & 0.113 & 0.049 &  0.18 & -0.06 &  2.50 &  0.16\\ 
+BCOM & 0.205 & 0.096 & -0.25 & -0.04 &  1.92 &  0.28\\ 
+MXEA & 0.253 & 0.101 & -0.14 & -0.02 &  4.26 &  0.25\\ 
+MXEF & 0.303 & 0.119 & -0.08 & -0.06 &  2.39 &  0.38\\ 
+RAY & 0.307 & 0.114 & -0.39 & -0.06 &  6.43 &  0.55\\ 
+RMZ & 0.661 & 0.159 &  0.29 & -0.15 &  2.92 &  0.79\\ 
+SPX & 0.260 & 0.099 & -0.43 & -0.02 &  9.11 &  0.56\\ 
+USGG10YR & 0.314 & 0.098 &  0.09 & -0.05 &  2.67 &  1.17 \\
+ \hline
+\end{tabular}
+\label{table:statSumRegime}
+\caption{Summary statistics of two regimes for various assets} 
+\end{table}
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Regime switching models--Example: RMZ}
+\Fontviii
+
+\begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
+
+\column{.4\textwidth} % Left column and width
+The right panel shows the regime plot of RMZ returns and its smoothed probabilities. The regime switching model seperate the 2008 financial crisis as high volatilty regimes. The number of trading days of high and low volatility regime is 699 and 1954 seperately.
+
+\column{.55\textwidth} % Right column and width
+\begin{figure}[h]
+\centering 
+\includegraphics[width=1\textwidth]{../results/regime/RMZ}
+\label{fig: RMZregime}
+\end{figure}
+\end{columns}
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Regime switching models--Example: RMZ}
+\Fontviii
+
+In order to make a consistent comparison of risk diagnostics between two regimes, we ignore some short discontinuity and pick two longest single occurring episode for each regime. Both episode contain 530 trading days. The episode of regime 1 range from 10/30/2007 to 12/07/2009, and the episode of regime 2 range from 06/20/2013 to 07/29/2015. The right panel shows risk measures of two regimes.
+
+\begin{table}[h]
+\centering 
+\begin{tabular}{| r | r | r |} 
+ \hline
+& Regime 1 & Regime 2 \\
+& High volatility & Low volatility \\
+ \hline 
+VaR (empirical, p = 0.95) & 7.4\% & 1.5\% \\
+ES (empirical, p = 0.95) & 9.9\% & 2.1\% \\
+CED (one-month, p = 0.9) & 38.4\% & 8.4\% \\
+Serial correlation (order = 1) & -0.257 & -0.026 \\
+Serial correlation (order = 2) & -0.023 & 0.008 \\
+ \hline
+\end{tabular}
+\label{table:ridkDiagsRegimeRMZ}
+\caption{Risk diagnostics for RMZ of two equal-length episode of each regime} 
+\end{table}
+
+\end{frame}
+
+%------------------------------------------------
+
+\begin{frame}
+\frametitle{Regime switching models--Example: RMZ}
+\Fontviii
+
+\begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
+
+\column{.4\textwidth} % Left column and width
+The right panel shows the maximum drawdown distributions of two regimes. The regime with high volatility has larger mean, variance, skewness and kurtosis.
+
+\column{.55\textwidth} % Right column and width
+\begin{figure}[h]
+\centering 
+\includegraphics[width=0.8\textwidth]{../results/regime/RMZ_mon1_mdd}
+\label{fig: RMZregime_mdd}
+\end{figure}
+\end{columns}
+
+\end{frame}
 
 %------------------------------------------------
 \section{Time Series – ARMA model}
@@ -132,14 +371,28 @@ University of California, Berkeley \\ % Your institution for the title page
 \section{Time Series – GARCH model}
 %------------------------------------------------
 
-%------------------------------------------------
-\section{Analysis of weekly and monthly frequencies}
-%------------------------------------------------
+% %------------------------------------------------
+% \section{Analysis of weekly and monthly frequencies}
+% %------------------------------------------------
+% \begin{frame}
+% \frametitle{Regime switching models}
 
+
+% \end{frame}
 %------------------------------------------------
 \section{Current work: simulation}
 %------------------------------------------------
+\begin{frame}
+\frametitle{Simulation of AR(1) model}
+\Fontviii
 
+\begin{figure}[h]
+\centering 
+\includegraphics[width=0.7\textwidth]{../figures/AR1_simulation}
+\label{fig: CED3mon2yr}
+\end{figure}
+
+\end{frame}
 
 %------------------------------------------------
 
