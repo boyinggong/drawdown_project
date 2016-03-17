@@ -81,6 +81,7 @@
 \newcommand\Fontvi{\fontsize{6}{7.2}\selectfont}
 \newcommand\Fontvii{\fontsize{7}{8.2}\selectfont}
 \newcommand\Fontviii{\fontsize{8}{9.2}\selectfont}
+\newcommand\Fontviiii{\fontsize{9}{10.2}\selectfont}
 
 \usepackage{graphicx} % Allows including images
 \usepackage{booktabs} % Allows the use of \toprule, \midrule and \bottomrule in tables
@@ -127,11 +128,192 @@ University of California, Berkeley \\ % Your institution for the title page
 %------------------------------------------------
 \section{Time Series – ARMA model}
 %------------------------------------------------
+\subsection{Motivations}
+\begin{frame}
+\frametitle{Motivations}
+\Fontviii
+\begin{columns}[c]
+\column{.35\textwidth} % Left column and width
+\begin{enumerate}
+\item Find a correct model to characterize the returns of financial assets. 
+\item Check the relationship between serial correlations (here we use $\kappa(1)$) and risk measurements.
+\end{enumerate}
+
+\column{.6\textwidth} % Right column and width
+\begin{figure}[h]
+\centering 
+\includegraphics[width=6cm]{../figures/summary_daily/returns}
+\label{fig: dailyReturns}
+\caption{Daily Returns}
+\end{figure}
+
+\end{columns}
+\end{frame}
+
+\subsection{Serial Correlation and Risk Measurements under ARIMA Model}
+\begin{frame}
+\frametitle{$\kappa$(1) and Risk Measurements}
+\Fontviii
+\begin{columns}[c] % The "c" option specifies centered vertical alignment while the "t" option is used for top vertical alignment
+
+\column{.35\textwidth} % Left column and width
+\begin{enumerate}
+\item Time series models
+\begin{itemize}
+\item AR(1)
+\item MA(1)
+\item ARMA(1,1)
+\end{itemize}
+\item Risk measurements
+\begin{itemize}
+\item VaR
+\item ES
+\item CED
+\end{itemize}
+\end{enumerate}
+
+\column{.6\textwidth} % Right column and width
+\begin{figure}[h]
+\centering 
+\includegraphics[width=6cm]{../results/SerCol-VaR5yrAR1}
+\label{fig:SerCol-VaR5yrAR1}
+\caption{AR(1): $\kappa(1)$ versus VaR}
+\end{figure}
+\end{columns}
+\end{frame}
+
+
+\subsection{Summary of ARMA}
+\begin{frame}
+\frametitle{ARMA is not enough...}
+\Fontviii
+\begin{columns}[c]
+\column{.35\textwidth} % Left column and width
+\begin{enumerate}
+\item Inherently non-stationary
+\item Clustered Variance
+\begin{itemize}
+\item GARCH Model
+\item Regime Model
+\end{itemize}
+\end{enumerate}
+
+\column{.6\textwidth} % Right column and width
+\begin{figure}[h]
+\centering 
+\includegraphics[width=6cm,height = 6cm]{../results/DiagnosticRMZ}
+\label{fig: dailyReturns}
+\caption{Fit RMZ Data using MA(1)}
+\end{figure}
+
+\end{columns}
+\end{frame}
 
 %------------------------------------------------
 \section{Time Series – GARCH model}
 %------------------------------------------------
+\subsection{Summary of GARCH Model}
+\begin{frame}
+\frametitle{Summary of GARCH Model}
+\Fontviiii
 
+\begin{table}[!h]
+\caption{Best GARCH Model for the residuals after Fitting ARIMA}
+\centering 
+\begin{tabular}{ | c || r | } 
+ \hline
+Asset & ARIMA (p,q)+ GARCH(m,n) \\
+  \hline \hline
+AGG & ARMA(5,5)+GARCH(1,1) \\ 
+HYG & ARMA(3,1)+GARCH(1,1) \\ 
+TIP &  GARCH(1,1)\\ 
+BCOM & GARCH(1,1)\\ 
+MXEA & ARMA(2,2)+ GARCH(1,2) \\ 
+MXEF & ARMA(4,2) + GARCH(1,1)\\ 
+RAY &  ARMA(2,2) + GARCH(1,1)\\ 
+RMZ & MA(1) + GARCH(1,1) \\ 
+SPX & ARMA(2,2) +GARCH(1,1)\\ 
+USGG10YR & GARCH(1,3) \\
+ \hline
+\end{tabular}
+\label{table:BestGarch}
+\end{table}
+\end{frame}
+
+\subsection{Fit GARCH}
+\begin{frame}
+\frametitle{RMZ example: Workflow and Diagnostics}
+\Fontviii
+\begin{columns}[c]
+\column{.4\textwidth}
+\begin{enumerate}
+\item Fit Best ARIMA model, and extract residuals.
+\item Select proper GARCH model for the residuals, based on BIC.
+\item Check the diagnostic plots
+\begin{itemize}
+\item Good in general.
+\item Heavy Tail.
+\end{itemize}
+\end{enumerate}
+ 
+ 
+\column{.6\textwidth} % Right column and width
+\begin{figure}[h]
+\centering 
+\includegraphics[width=6cm,height = 6cm]{../results/RMZ_GARCH_dig1}
+\label{fig:RMZ_GARCH_dig1}
+\caption{RMZ example: Diagnostics after Fitting Residual with GARCH(1,1)}
+\end{figure}
+
+\end{columns}
+\end{frame}
+
+\begin{frame}
+\frametitle{RMZ example: Predictions}
+\Fontviii
+\begin{columns}[c]
+\column{.4\textwidth}
+\begin{enumerate}
+\item Empirical results are similar to the estimation.
+\item The second plot give a confident interval for residuals
+\item Several steps forward estimation.
+\end{enumerate}
+ 
+ 
+\column{.6\textwidth} % Right column and width
+\begin{figure}[h]
+\centering 
+\includegraphics[width=6cm,height = 6cm]{../figures/RMZeg_pred}
+\label{fig: dailyReturns}
+\caption{RMZ example: Some Prediction Results}
+\end{figure}
+
+\end{columns}
+\end{frame}
+
+\subsection{Serial Correlation and Risk Measurements}
+\begin{frame}
+\frametitle{$\kappa(1)$ and CED Using the ``Best" Model}
+\Fontviii
+\begin{columns}[c]
+\column{.4\textwidth}
+\begin{enumerate}
+\item Almost no pattern there.
+\item Correlations are small, and almost negative.
+\item Similar to other risk measurement, but less significant
+\end{enumerate}
+ 
+ 
+\column{.6\textwidth} % Right column and width
+\begin{figure}[h]
+\centering 
+\includegraphics[width=6cm,height = 6cm]{../figures/SerCol-CED3mon2yr}
+\label{fig:SerCol-CED3mon2yr}
+\caption{$\kappa(1)$ versus CED}
+\end{figure}
+
+\end{columns}
+\end{frame}
 %------------------------------------------------
 \section{Analysis of weekly and monthly frequencies}
 %------------------------------------------------
