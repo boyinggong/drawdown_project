@@ -1,13 +1,18 @@
+%-*- program: xelatex -*-        
+%-*- program: biber -*-`        
+%-*- program: xelatex -*-
 \documentclass[12pt]{article}
 \usepackage{amsmath,textcomp,amssymb,geometry,graphicx,enumerate,upquote,color}
 \usepackage{hyperref}
+\usepackage{breqn}
 \usepackage{float}
 \usepackage{tikz}
 \usepackage{array}
+\usepackage{float}
 \usepackage{amsfonts}
 \def\Session{Fall 2015}
 \usepackage[english]{babel}
-\title{Exploratory Analysis of Various Assets}
+\title{Analysis of Various Assets}
 \author{Boying Gong, Xinyue Zhou}
 \newenvironment{qparts}{\begin{enumerate}[{(}a{)}]}{\end{enumerate}}
 \def\endproofmark{$\Box$}
@@ -15,297 +20,210 @@
 \begin{document}
 \maketitle
 
-\section{Description}
-\subsection{US Equity}
+\tableofcontents
 
-\begin{itemize}
-\item AGG: iShares Core US Aggregate Bond\\
-Date ranges: 2003-09-29 to 2015-12-31\\
-Components: US Treasuries (37.7\%);
-US Agencies (2.5\%); US Municipals (0.8\%);
-Corporates (24.2\%); Non-Corporate Credit (4.4\%); Mortgage-Backed Securities (MBS) (28.4\%); Commercial Mortgage-Backed Securities (CMBS) (1.7\%); Adjusted Rate Mortgages (ARMs) (0.2\%)
-\\
-Description: AGG provides access to 4,000+ bonds and offers exposure to 7 unique sectors as represented in the broad U.S. bond market. \footnote{https://www.ishares.com/us/literature/product-brief/ishares-core-us-aggregate-bond-etf-product-brief-en-us.pdf}
-\item HYG: iShares iBoxx \$ High Yield Corporate Bd\\
-Date ranges: 2007-04-12 to 2015-12-31\\
-Components:The sector breakdown data  shows that four sectors occupied more than 10\% high yield bond, those are: Communications(25.8\%), Consumer Non-cyclical(14.2\%), Energy(11.4\%), Technology(10.7\%)\footnote{https://www.ishares.com/us/literature/product-brief/ishares-iboxx-high-yield-corporate-bond-etf-profile-en-us.pdf}\\
-Description: The iShares iBoxx \$ High Yield Corporate Bond ETF seeks to track the investment results of an index composed of U.S. dollar-denominated, high yield corporate bonds. \footnote{https://www.ishares.com/us/products/239565/ishares-iboxx-high-yield-corporate-bond-etf}
+\clearpage
 
-\item TIP: iShares TIPS Bond\\
-Date ranges: 2003-12-08 to 2015-12-31\\
-Components: government bonds. \\
-Description: Seeks to track the investment results of an index composed of inflation-protected U.S. Treasury bonds.\footnote{https://www.ishares.com/us/literature/fact-sheet/tip-ishares-tips-bond-etf-fund-fact-sheet-en-us.pdf}
-\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Background of Serial Correlation}%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{Index}
+\input{01.background.tex}
 
-\begin{itemize}
-\item BCOM: Bloomberg Commodity Index\\
-Date ranges: 1991-01-03 to 2015-12-31\\
-Description: Bloomberg Commodity Index (BCOM) is calculated on an excess return basis and reflects commodity futures price movements. The index rebalances annually weighted 2/3 by trading volume and 1/3 by world production and weight-caps are applied at the commodity, sector and group level for diversification. Roll period typically occurs from 6th-10th business day based on the roll schedule.\footnote{http://www.bloomberg.com/quote/BCOM:IND}
-\item BUHY: Bloomberg USD High Yield Corporate Bond Index\\
-Date ranges: 2010-01-04 to 2015-12-31 \\
-Description: The Bloomberg USD High Yield Corporate Bond Index is a rules-based, market-value weighted index engineered to measure publicly issued non-investment grade USD fixed-rate, taxable, corporate bonds. To be included in the index a security must have a minimum par amount of 250MM.\footnote{http://www.bloomberg.com/quote/BUHY:IND}
-\item G0O1: 3-Month U.S. Treasury Bill Index\\
-Date ranges: 1992-04-01 to 2015-12-31 \\
-Description: The US 3-Month Treasury Bill Index is comprised of a single issue purchased at the beginning of the
-month and held for a full month. At the end of the month that issue is sold and rolled into a newly selected issue. The
-issue selected at each month-end rebalancing is the outstanding Treasury Bill that matures closest to, but not beyond, three
-months from the rebalancing date. To qualify for selection, an issue must have settled on or before the month-end
-rebalancing date. While the index will often hold the Treasury Bill issued at the most recent 3-month auction, it is also
-possible for a seasoned 6-month Bill to be selected.\footnote{Merrill Lynch: http://www.mlindex.ml.com/GISPublic/bin/getdoc.asp?fn=G0O1\&source=indexrules}
-\item LTP5TRUU: iShares 0-5 Year TIPS Bond ETF\\
-Date ranges: 2010-06-03 to 2015-12-31 \\
-Components: \\
-Description:
-\item MXEA: MSCI EAFE Index \\
-Date ranges: 1970-01-07 to 2015-12-31 \\
-Description: The MSCI EAFE Index is an equity index which captures large and mid cap representation across Developed Markets countries* around
-the world, excluding the US and Canada. With 926 constituents, the index covers approximately 85\% of the free float-adjusted market
-capitalization in each country.\footnote{https://www.msci.com/documents/10199/762896de-ebf3-49aa-89ec-e72c7592fd6b}
-\item MXEF: MSCI Emerging Markets Index\\
-Date ranges: 1988-01-01 to 2015-12-31 \\
-Description: The MSCI Emerging Markets Index captures large and mid cap representation across 23 Emerging Markets (EM) countries*. With 838
-constituents, the index covers approximately 85\% of the free float-adjusted market capitalization in each country.\footnote{https://www.msci.com/documents/10199/10c3f32f-4565-4a92-aa1c-edf6f3a4e03f}
-\item RAY: Russell 3000 Index\\
-Date ranges: 1979-01-02 to 2015-12-31 \\
-Description: The Russell 3000 Index is composed of 3000 large U.S. companies, as determined by market capitalization. This portfolio of Securities represents approximately 98\% of the investable U.S. equity market. The Russell 3000 Index is comprised of stocks within the Russell 1000 and the Russell 2000 Indices. The index was developed with a base value of 140.00 as of December 31, 1986.\footnote{http://www.bloomberg.com/quote/RAY:IND}
-\item RMZ: MSCI US REIT Index\\
-Date ranges: 2005-06-20 to 2015-12-31 \\
-Description: The MSCI US REIT Index is a free float-adjusted market capitalization index that is comprised of equity REITs. The index is based on MSCI
-USA Investable Market Index (IMI) its parent index which captures large, mid and small caps securities. With 151 constituents, it represents
-about 99\% of the US REIT universe and securities are classified in the REIT sector according to the Global Industry Classification Standard
-(GICS). It however excludes Mortgage REIT and selected Specialized REITs.\footnote{https://www.msci.com/documents/10199/7da6d18a-fdcb-47b6-b407-cec6cc4303bb}
-\item SPX: S\&P 500 Index\\
-Date ranges: 1950-01-04 to 2015-12-31 \\
-Description: Standard and Poor's 500 Index is a capitalization-weighted index of 500 stocks. The index is designed to measure performance of the broad domestic economy through changes in the aggregate market value of 500 stocks representing all major industries. The index was developed with a base level of 10 for the 1941-43 base period.\footnote{http://www.bloomberg.com/quote/SPX:IND}
-\item USGG10YR: US Generic Govt 10 Year\\
-Date ranges: 1962-01-03 to 2015-12-31 \\
-Components:  The index of US government bonds with a 10-year maturity (10-year bonds or in general 10-year treasuries). It measures the generic government 10-year yield for US issues of treasuries and provides the benchmark for various fixed-income instruments from corporate bonds to mortgages. \\
-Description: It is typically used to find out yield spreads for a host of fixed-income instruments with 10-year maturities. \footnote{http://investment-and-finance.net/finance/u/usgg10yr.html}
-\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%
+\section{Asset Description}%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%
+
+\input{02.asset_discription}
 
 
-\section{Statistical summary}
-
-\subsection{Annualized return}
-
-Annualised return are calculated based on the daily returns. 
-\begin{equation}
-R_a = (1+R_d)^{N} -1
-\end{equation}
-where $R_a$ is the annualized returns, $R_d$ is the daily returns, N is the number of trading days in one year (N = 252).
-
-\subsection{Sharpe Ratio, Standard deviation, Skewnes and Kurtosis}
-Symbol explanation:
-
-i: represents different index.
-
-t: time period.
-
-\begin{itemize}
-\item Sharpe Ratio
-\begin{equation}
-sharpe\_ratio = \frac{\bar{r}_i-Rf}{\sigma_i}
-\end{equation}
-Here we let $Rf = 0$
-\item Standard deviation
-\begin{equation}
-standard\_deviation_i =\sqrt{ \frac{1}{n-1}\sum_{t=1}^n{(r_i^t-\bar{r}_i)^2}} 
-\end{equation}
-\item Skewness
-\begin{equation}
-skewness_i = E_t \left[ \left( \frac{r_i^t-\bar{r}_i}{\sigma_i} \right)^3 \right]
-\end{equation}
-\item Kurtosis
-\begin{equation}
-kurtosis_i = \frac{E_t \left[ \left( r_i^t-\bar{r}_i \right)^4 \right]}{\left(E_t \left[ \left( r_i^t-\bar{r}_i \right)^2 \right]\right)^2}
-\end{equation}
-\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%
+\section{Statistical Summary}%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%
 
 
+\input{03.statitical_summary.tex}
 
+%%%%%%%%%%%%%%%%%%%%%
+\section{Risk Diagnostics}%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%
 
-\section{Risk diagnostics}
+\input{04.risk_diagnostics.tex}
 
-In this section, all the risk diagnostics are calculated based on daily returns.
+%%%%%%%%%%%%%%%%%%%%%
+\section{Time Varying Risk Diagnostics}%%
+%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{VaR \& ES}
+\input{05.time_varying_risk_diagnostics.tex}
 
-\begin{itemize}
-\item VaR
+%%%%%%%%%%%%%%%%%%%%%
+\section{Regime Switching Model}%%%%
+%%%%%%%%%%%%%%%%%%%%%
 
-$\textit{Value at Risk (VaR)} $  is a measure of the risk of investments. It estimates how much a set of investments might lose, given normal market conditions, in a set time period such as a day. VaR is typically used by firms and regulators in the financial industry to gauge the amount of assets needed to cover possible losses. The mathematicial representation of VaR under $\alpha$ was shown below. \footnote{https://en.wikipedia.org/wiki/Value\_at\_risk}
-\begin{equation}
-VaR_{\alpha}(L) = inf\{l \in \mathbb{R} : P(L < l) \leq 1-\alpha \} = 
-inf\{l \in \mathbb{R} : F_L(l) \geq \alpha \}
-\end{equation}
-\item ES
+\input{06.regime.tex}
 
-$\textit{Expected shortfall (ES)}$ is a risk measure -- a concept used in the field of financial risk measurement to evaluate the market risk or credit risk of a portfolio. The ``expected shortfall at q\% level" is the expected return on the portfolio in the worst q\% of cases. ES is an alternative to Value at Risk that is more sensitive to the shape of the loss distribution in the tail of the distribution. The mathematicial representation of ES was shown below.\footnote{https://en.wikipedia.org/wiki/Expected\_shortfall}
-\begin{equation}
-ES_{\alpha}(L) = E\left[ L \vert L<VaR_{\alpha}(L) \right]
-\end{equation}
+\clearpage
 
-\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%
+\section{Time Series -- ARMA model}%%%%
+%%%%%%%%%%%%%%%%%%%%%
 
+\input{07.timeseriesARMA.tex}
+\clearpage
 
+%%%%%%%%%%%%%%%%%%%%%
+\section{Time Series -- GARCH model}%%%%
+%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{CED}
+\input{08.timeseriesGARCH.tex}
+\clearpage
 
-Maximum drawdown is the largest cumulative loss from peak to trough. Conditional Expected Drawdown (CED) is the tail mean of maximum drawdown distributions.\footnote{On a Convex Measure of Drawdown Risk. Lisa R. Goldberg, Ola Mahmoud} Under confidence level $\alpha$, the conditional expected drawdown is defined as:
-\begin{equation}
-CED_\alpha(X_{T_n}) = \textbf{E}(\mathbf{\mu}(X_{T_n})|\mathbf{\mu}(X_{T_n}) > DT_\alpha)
-\end{equation}
-where $\mathbf{\mu}(X_{T_n})$ is the maximum drawdown distribution over a finite path.
+%%%%%%%%%%%%%%%%%%%%%
+\section{Analysis of weekly and monthly return frequencies}%%%%
+%%%%%%%%%%%%%%%%%%%%%
 
-We calculate the CED of various assets under 0.9, 0.95, 0.99 confidence level for different path length (3 months, 6 months, 1 year, 2 years, 5 years) separately. Note that for longer path length such as 2-year and 5-year, there might be some missing values under large confidence levels. CED data tend to be lack of variance under long time period. In such cases, the empirical quantile no longer exits without some distribution or polynomial assumption of the tail. Since we do not familiar the performance of CED, it becomes impropriate to make such assumptions.
+\input{09.different_freq.tex}
 
-\section{Time varying risk diagnostics}
+\clearpage
 
-We calculate the time varying variance(Figure \ref{fig: variance6mon}), VaR{fig: VaR6mon} and ES{fig: ES6mon}  for different assets over a 6-month and a 1-year rolling window (confidence level: 0.95) seperately, to see how these two risk diagnostics changing over time. 
+%%%%%%%%%%%%%%%%%%%%%
+\section{Appendix: Plot and Tables}%%%
+%%%%%%%%%%%%%%%%%%%%%
 
+\begin{figure}[h]
+\caption{Daily Returns} 
+\centering 
+\includegraphics[width=15cm]{../figures/summary_daily/returns}
+\label{fig: dailyReturns}
+\end{figure}
 
-\section{Appendix: Tables and Plots}
+\begin{figure}[h]
+\caption{Empirical distribution of daily returns} 
+\centering 
+\includegraphics[width=15cm]{../figures/summary_daily/returns_dist}
+\label{fig: returnsDist}
+\end{figure}
 
+\begin{figure}[h]
+\caption{Empirical distribution of maximum drawdown under 3 month rolling window} 
+\centering
+\includegraphics[width=15cm]{../figures/maxDrawdown_CED/maxDrawdown3mon}
+\label{fig: dist_mdd}
+\end{figure}
 
 \begin{table}[!h]
-\caption{Statistical Summary of Assets} % title of Table
 \centering 
-\begin{tabular}{ | c || p{1.5cm} p{1.5cm} r r | } 
- \hline
-Asset & Sharpe  & Sd. & Skewnes & Kurtosis \\
-  \hline \hline
-AGG & 0.0516 & 0.0032 & -2.5102 & 81.3606\\ 
-HYG & 0.0250 & 0.0084 &  0.8657 & 36.7430\\ 
-TIP & 0.0402 & 0.0041 &  0.0954 &  6.4866\\ 
-BCOM & 0.0008 & 0.0094 & -0.2718 &  4.3366\\ 
-BUHY & 0.1237 & 0.0019 & -1.7849 & 11.2806\\ 
-G0O1 & 0.7167 & 0.0001 &  0.6853 & 26.7670\\ 
-LTP5TRUU & 0.0402 & 0.0011 &  0.1615 &  1.7925\\ 
-MXEA & 0.0300 & 0.0097 & -0.3153 & 10.7456\\ 
-MXEF & 0.0307 & 0.0113 & -0.3933 &  7.7139\\ 
-RAY & 0.0360 & 0.0109 & -0.6614 & 17.2216\\ 
-RMZ & 0.0162 & 0.0230 &  0.3566 & 13.6886\\ 
-SPX & 0.0348 & 0.0097 & -0.6493 & 21.1192\\ 
-USGG10YR & 0.0031 & 0.0127 &  0.1159 &  8.8116 \\
- \hline
-\end{tabular}
-\label{table:statSum}
-\end{table}
-
-
-\begin{table}[!h]
-\caption{VaR and ES under various probabilities} % title of Table
-\centering 
-\begin{tabular}{ | r || r r r || r r r | } 
- \hline
- & & VaR(\%) &&& ES(\%) & \\
-Asset& 0.9 & 0.95 & 0.99 & 0.9 & 0.95 & 0.99 \\
-  \hline \hline
-AGG & -0.2906 & -0.4011 & -0.6911 & -0.5014 & -0.6641 & -1.2317\\ 
-HYG & -0.6189 & -1.0301 & -2.5006 & -1.4125 & -2.0298 & -4.0129\\ 
-TIP & -0.4417 & -0.6220 & -1.0146 & -0.7178 & -0.9100 & -1.4712\\ 
-BCOM & -1.0405 & -1.4740 & -2.6157 & -1.7128 & -2.1974 & -3.5476\\ 
-BUHY & -0.1634 & -0.2910 & -0.6573 & -0.3690 & -0.5252 & -0.9751\\ 
-G0O1 & -0.0003 & -0.0020 & -0.0126 & -0.0056 & -0.0099 & -0.0313\\ 
-LTP5TRUU & -0.1233 & -0.1800 & -0.2922 & -0.1979 & -0.2476 & -0.3501\\ 
-MXEA & -1.0210 & -1.4619 & -2.5908 & -1.7372 & -2.2568 & -3.7602\\ 
-MXEF & -1.2088 & -1.7587 & -3.3164 & -2.1061 & -2.7544 & -4.6707\\ 
-RAY & -1.1064 & -1.6239 & -2.9659 & -1.9500 & -2.5554 & -4.4182\\ 
-RMZ & -1.9079 & -3.0008 & -7.5575 & -3.9925 & -5.6189 & -9.9890\\ 
-SPX & -0.9889 & -1.4350 & -2.5757 & -1.7055 & -2.2255 & -3.7960\\ 
-USGG10YR & -1.2640 & -1.9492 & -3.5935 & -2.2764 & -2.9939 & -4.8875 \\
- \hline
-\end{tabular}
-\label{table:VaRES}
-\end{table}
-
-
-\begin{table}[!h]
-\caption{CED(\%) under 3-month and 6-month rolling window} % title of Table
-\centering 
+\caption{tail mean of maximum drawdown distribution under 3-month, 6-month, 1-year and 2-year rolling window} 
 \begin{tabular}{ | r || r r r || r r r |} 
  \hline
  & & 3 month & & & 6 month & \\
 Asset& 0.9 & 0.95 & 0.99 & 0.9 & 0.95 & 0.99  \\
   \hline \hline
-AGG &  5.5963 &  7.7247 & 12.8352 &  8.1267 & 11.4473 & 12.8352\\ 
-HYG & 18.4178 & 24.0716 & 29.6567 & 26.4347 & 30.7734 & 32.2557\\ 
-TIP &  7.4759 &  9.8950 & 13.0980 & 11.1487 & 12.9095 & 14.3882\\ 
-BCOM & 18.1428 & 22.5428 & 38.0340 & 26.6136 & 33.6615 & 51.7358\\ 
-BUHY &  5.8071 &  6.2709 &  7.5793 &  7.3357 &  7.6693 &  7.7419\\ 
-G0O1 &  0.0913 &  0.1435 &  0.2550 &  0.1421 &  0.2275 &  0.2550\\ 
-LTP5TRUU &  2.0623 &  2.3847 &  2.9234 &  2.9711 &  3.0336 &  3.0336\\ 
-MXEA & 20.3909 & 23.7338 & 33.3246 & 27.2116 & 31.7875 & 47.1070\\ 
-MXEF & 26.2108 & 30.8033 & 48.0295 & 36.3525 & 43.2999 & 59.6300\\ 
-RAY & 20.6454 & 25.6426 & 35.9454 & 27.8068 & 34.0752 & 45.0762\\ 
-RMZ & 37.3016 & 48.4088 & 63.4499 & 52.0427 & 62.4088 & 67.6148\\ 
-SPX & 18.3513 & 22.6740 & 32.4618 & 25.1835 & 30.6548 & 40.6872\\ 
-USGG10YR & 23.2814 & 28.1128 & 41.8330 & 32.7772 & 38.9966 & 49.2822\\
- \hline
-\end{tabular}
-\label{table:CED3}
-\end{table}
-
-
-\begin{table}[!h]
-\caption{CED(\%) under 1-year and 2-year rolling window} % title of Table
-\centering 
-\begin{tabular}{ | r || r r r || r r r |} 
- \hline
+AGG &  5.60 &  7.72 & 12.84 &  8.12 & 11.45 & 12.84\\ 
+HYG & 18.41 & 24.07 & 29.67 & 26.43 & 30.77 & 32.26\\ 
+TIP &  7.48 &  9.90 & 13.10 & 11.14 & 12.91 & 14.39\\ 
+BCOM & 18.14 & 22.54 & 38.03 & 26.61 & 33.66 & 51.74\\ 
+G0O1 &  0.10 &  0.145 &  0.26 &  0.14 &  0.23 &  0.26\\ 
+MXEA & 20.39 & 23.73 & 33.32 & 27.21 & 31.79 & 47.11\\ 
+MXEF & 26.21 & 30.80 & 48.03 & 36.35 & 43.30 & 59.63\\ 
+RAY & 20.65 & 25.64 & 35.95 & 27.81 & 34.08 & 45.08\\ 
+RMZ & 37.30 & 48.41 & 63.45 & 52.04 & 62.41 & 67.61\\ 
+SPX & 18.35 & 22.67 & 32.46 & 25.18 & 30.65 & 40.69\\ 
+USGG10YR & 23.28 & 28.11 & 41.83 & 32.78 & 39.00 & 49.28\\
+ \hline \hline
  & & 1 year & & & 2 year & \\
 Asset& 0.9 & 0.95 & 0.99 & 0.9 & 0.95 & 0.99  \\
   \hline \hline
-AGG & 12.1134 & 12.8352 & 12.8352 & 12.8352 & 12.8352 & 12.8352\\ 
-HYG & 33.1492 & 34.1998 &      & 34.2351 & 34.2468 &       \\ 
-TIP & 13.7306 & 14.4965 & 14.5672 & 14.5672 & 14.5672 &       \\ 
-BCOM & 39.9050 & 49.2600 & 57.1350 & 53.3762 & 57.1350 &       \\ 
-BUHY &  7.9337 &  7.9337 &  8.6125 &  7.8038 &  8.6125 &  8.6357\\ 
-G0O1 &  0.2300 &  0.2547 &  0.2550 &  0.2534 &  0.2550 &  0.2550\\ 
-LTP5TRUU &  3.1477 &  3.1687 &       &  3.3047 &  3.3368 &  3.4207\\ 
-MXEA & 36.1482 & 42.6131 & 56.7041 & 50.2113 & 58.0784 & 61.8464\\ 
-MXEF & 48.6320 & 58.8060 & 64.5608 & 62.4461 & 65.9026 &       \\ 
-RAY & 37.5629 & 44.0617 & 52.4163 & 47.9463 & 54.3345 &       \\ 
-RMZ & 67.0848 & 69.8554 & 70.0164 & 73.7026 & 74.5588 & 74.9273\\ 
-SPX & 34.0712 & 39.1464 & 50.3037 & 44.6205 & 50.4657 & 56.7688\\ 
-USGG10YR & 42.8817 & 48.3664 & 53.9551 & 54.7912 & 59.1359 & 62.8237\\
+AGG & 12.11 & 12.84 & 12.84 & 12.84 & 12.84 & 12.83\\ 
+HYG & 33.15 & 34.20 &      & 34.24 & 34.25 &       \\ 
+TIP & 13.73 & 14.50 & 14.57 & 14.57 & 14.57 &       \\ 
+BCOM & 39.91 & 49.26 & 57.14 & 53.38 & 57.14 &       \\ 
+G0O1 &  0.23 &  0.25 &  0.26 &  0.26 &  0.26 &  0.26\\ 
+MXEA & 36.15 & 42.61 & 56.70 & 50.21 & 58.08 & 61.85\\ 
+MXEF & 48.63 & 58.81 & 64.56 & 62.45 & 65.90 &       \\ 
+RAY & 37.56 & 44.06 & 52.42 & 47.95 & 54.33 &       \\ 
+RMZ & 67.09 & 69.86 & 70.02 & 73.70 & 74.56 & 74.92\\ 
+SPX & 34.07 & 39.15 & 50.30 & 44.62 & 50.47 & 56.77\\ 
+USGG10YR & 42.88 & 48.37 & 53.96 & 54.79 & 59.14 & 62.82\\
  \hline
 \end{tabular}
-\label{table:CED3}
+\label{table:tail_maxdrawdown}
 \end{table}
 
 \begin{figure}[h]
-\caption{CED under various time periods and confidence levels}
+\caption{Volatility under 6-month rolling window} 
 \centering 
-\includegraphics[width=18cm]{../results/CED}
-\label{fig: CED}
-\end{figure}
-
-\begin{figure}[h]
-\caption{Variance under 6-month rolling window} 
-\centering 
-\includegraphics[width=18cm]{../results/variance6mon}
+\includegraphics[width=15cm]{../figures/rolling_stats/volatility6mon_scaled}
 \label{fig: variance6mon}
 \end{figure}
 
 \begin{figure}[h]
-\caption{VaR(\%) under 6-month rolling window}
+\caption{VaR(\%) (significance level = 0.95) under 6-month rolling window}
 \centering 
-\includegraphics[width=18cm]{../results/VaR6mon}
+\includegraphics[width=15cm]{../figures/rolling_stats/VaR6mon_scaled}
 \label{fig: VaR6mon}
 \end{figure}
 
 \begin{figure}[h]
-\caption{ES(\%) under 6-month rolling window} 
+\caption{ES(\%) (significance level = 0.95) under 6-month rolling window} 
 \centering 
-\includegraphics[width=18cm]{../results/ES6mon}
+\includegraphics[width=15cm]{../figures/rolling_stats/ES6mon_scaled}
 \label{fig: ES6mon}
 \end{figure}
 
+\begin{figure}[h]
+\caption{CED under 3-month-5-year Rolling Window (confidence level = 0.9)} 
+\centering 
+\includegraphics[width=15cm]{../figures/rolling_stats/CED3mon2yr_scaled}
+\label{fig: CED3mon2yr}
+\end{figure}
 
+\begin{figure}[h]
+\caption{CED (confidence level = 0.9) versus ES under 3-month-2-year Rolling Window} 
+\centering 
+\includegraphics[width=15cm]{../results/CED_ES_3mon_5yr5yr}
+\label{fig: CED_ES_3mon_5yr5yr}
+\end{figure}
 
-% \bibliographystyle{unsrt}
-% \bibliography{analysis}
+\begin{figure}
+  \caption{First-order serial correlation calculated using AR(1) model versus VaR}
+  \includegraphics[width = 1\textwidth]{../results/SerCol-VaR5yrAR1}
+  \label{fig:SerCol-VaR5yrAR1}
+\end{figure}
+
+\begin{figure}
+  \caption{First-order serial correlation calculated using AR(1) model versus ES}
+  \includegraphics[width = 1\textwidth]{../results/SerCol-ES5yrAR1}
+  \label{fig:SerCol-ES5yrAR1}
+\end{figure}
+
+\begin{figure}
+  \caption{First-order serial correlation calculated using AR(1) model versus CED}
+  \includegraphics[width = 1\textwidth]{../results/SerCol-CED5yr3monAR1}
+  \label{fig:SerCol-CED5yr3monAR1}
+\end{figure}
+
+\begin{figure}
+  \caption{First-order serial correlation calculated using MA(1) model versus VaR}
+  \includegraphics[width = 1\textwidth]{../results/SerCol-ES5yrMA1}
+  \label{fig:SerCol-ES5yrMA1}
+\end{figure}
+
+\begin{figure}
+  \caption{First-order serial correlation calculated using MA(1) model versus CED}
+  \includegraphics[width = 1\textwidth]{../results/SerCol-CED5yr3monMA1}
+  \label{fig:SerCol-CED5yr3monMA1}
+\end{figure}
+
+\begin{figure}
+  \caption{First-order serial correlation calculated using ARMA(1) model versus CED}
+  \includegraphics[width = 1\textwidth]{../results/SerCol-CED5yr3monARMA11}
+  \label{fig:SerCol-CED5yr3monARMA1}
+\end{figure}
+
+\clearpage
+
+\bibliographystyle{unsrt}
+\bibliography{analysis}
 
 \end{document}

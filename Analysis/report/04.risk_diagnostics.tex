@@ -1,0 +1,72 @@
+In this section, we calculated the risk diagnostics based on the whole available data set of each asset. The value of risk diagnostics increases as the significant level increases.  
+
+\subsection{VaR \& ES}
+
+\begin{itemize}
+\item VaR
+
+$\textit{Value at Risk (VaR)} $  is a measure of the risk of investments. It estimates how much a set of investments might lose, given normal market conditions, in a set time period such as a day. VaR is typically used by firms and regulators in the financial industry to gauge the amount of assets needed to cover possible losses. The mathematicial representation of VaR under $\alpha$ was shown below. \footnote{https://en.wikipedia.org/wiki/Value\_at\_risk}
+\begin{equation}
+VaR_{\alpha}(L) = inf\{l \in \mathbb{R} : P(L > l) \leq 1-\alpha \} = 
+inf\{l \in \mathbb{R} : F_L(l) \geq \alpha \}
+\end{equation}
+\item ES
+
+$\textit{Expected shortfall (ES)}$ is a risk measure -- a concept used in the field of financial risk measurement to evaluate the market risk or credit risk of a portfolio. The ``expected shortfall at q\% level" is the expected return on the portfolio in the worst q\% of cases. ES is an alternative to Value at Risk that is more sensitive to the shape of the loss distribution in the tail of the distribution. The mathematicial representation of ES was shown below.\footnote{https://en.wikipedia.org/wiki/Expected\_shortfall}
+\begin{equation}
+ES_{\alpha}(L) = E\left[ L \vert L<VaR_{\alpha}(L) \right]
+\end{equation}
+
+\end{itemize}
+
+As shown in Table \ref{table:VaRES}, here we calculate the VaR and ES based on different significance levels (0.9, 0.95, 0.99) for various assets. ES is generally bigger than VaR, and the value increases as the significant level increases. RMZ has largest VaR and ES thus the largest risk. AGG, HYG and TIP has smallest VaR and ES thus the smallest risk. 
+
+Note that all the risk diagnostics are calculated based on the empirical distribution of daily returns. Another commonly used method is based on a normal distribution assumption. However, in our case all asset returns have fat tails, it would be rather inappropriate to calculate use normal distribution. Figure \ref{table:VaRESNormal} shows the VaR and ES calculated based on a normal assumption. It turns out VaR and ES is being overestimate at a lower confidence level and being underestimate at a higher confidence level. This discrepancy phenomenon is rather obvious when the return distribution has a fatter tail (a bigger kurtosis).
+
+% https://www.riskprep.com/all-tutorials/37-exam-31/64-var-and-heavy-tails
+
+\begin{table}[!h]
+\caption{Empirical VaR and ES under various probabilities} % title of Table
+\centering 
+\begin{tabular}{ | r || p{1cm} p{1cm} p{1cm} || p{1cm} p{1cm} p{1cm} | } 
+ \hline
+ & & VaR(\%) &&& ES(\%) & \\
+Asset& 0.90 & 0.95 & 0.99 & 0.90 & 0.95 & 0.99 \\
+  \hline \hline
+AGG & 0.29 & 0.40 & 0.69 & 0.50 & 0.66 & 1.23\\ 
+HYG & 0.62 & 1.03 & 2.50 & 1.41 & 2.03 & 4.01\\ 
+TIP & 0.44 & 0.62 & 1.01 & 0.72 & 0.91 & 1.47\\ 
+BCOM & 1.04 & 1.47 & 2.62 & 1.71 & 2.20 & 3.55\\ 
+MXEA & 1.02 & 1.46 & 2.59 & 1.74 & 2.26 & 3.76\\ 
+MXEF & 1.21 & 1.76 & 3.32 & 2.11 & 2.75 & 4.67\\ 
+RAY & 1.11 & 1.62 & 2.97 & 1.95 & 2.56 & 4.42\\ 
+RMZ & 1.91 & 3.00 & 7.56 & 3.99 & 5.62 & 9.99\\ 
+SPX & 0.99 & 1.43 & 2.58 & 1.71 & 2.23 & 3.80\\ 
+USGG10YR & 1.26 & 1.95 & 3.59 & 2.28 & 2.99 & 4.89\\
+ \hline
+\end{tabular}
+\label{table:VaRES}
+\end{table}
+
+\begin{table}[!h]
+\caption{Normal VaR and ES under various probabilities} % title of Table
+\centering 
+\begin{tabular}{ | r || p{1cm} p{1cm} p{1cm} || p{1cm} p{1cm} p{1cm} | } 
+ \hline
+ & & VaR(\%) &&& ES(\%) & \\
+Asset& 0.90 & 0.95 & 0.99 & 0.90 & 0.95 & 0.99 \\
+  \hline \hline
+AGG & 0.39 & 0.51 & 0.72 & 0.57 & 0.67 & 0.86\\ 
+HYG & 1.06 & 1.36 & 1.94 & 1.50 & 1.76 & 2.26\\ 
+TIP & 0.51 & 0.66 & 0.94 & 0.74 & 0.86 & 1.11\\ 
+BCOM & 1.20 & 1.54 & 2.18 & 1.65 & 1.94 & 2.50\\ 
+MXEA & 1.22 & 1.57 & 2.24 & 1.74 & 2.04 & 2.62\\ 
+MXEF & 1.42 & 1.83 & 2.61 & 2.03 & 2.38 & 3.06\\ 
+RAY & 1.36 & 1.75 & 2.49 & 1.95 & 2.29 & 2.94\\ 
+RMZ & 2.92 & 3.75 & 5.32 & 4.08 & 4.79 & 6.18\\ 
+SPX & 1.21 & 1.57 & 2.22 & 1.73 & 2.03 & 2.61\\ 
+USGG10YR & 1.62 & 2.08 & 2.95 & 2.23 & 2.62 & 3.39\\
+ \hline
+\end{tabular}
+\label{table:VaRESNormal}
+\end{table}

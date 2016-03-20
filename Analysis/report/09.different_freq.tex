@@ -1,0 +1,82 @@
+\iffalse
+
+%-*- program: xelatex -*-        
+%-*- program: biber -*-`        
+%-*- program: xelatex -*-
+\documentclass[12pt]{article}
+\usepackage{amsmath,textcomp,amssymb,geometry,graphicx,enumerate,upquote,color}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{array}
+\usepackage{amsfonts}
+\def\Session{Fall 2015}
+\usepackage[english]{babel}
+\title{Model Selection for the US Indices}
+\author{Boying Gong, Xinyue Zhou}
+\newenvironment{qparts}{\begin{enumerate}[{(}a{)}]}{\end{enumerate}}
+\def\endproofmark{$\Box$}
+\newenvironment{proof}{\par{\bf Proof}:}{\endproofmark\smallskip}
+\begin{document}
+\maketitle
+
+\fi
+
+\subsection{Serial correaltion}
+
+\ref{table:serialCorRegime} shows the serial correlation of lag 1 and lag 2 for weekly and daily returns. The serial correlation of daily returns and weekly returns are closely related (correlation between daily returns lag 1 and weekly returns lag 1: 0.752; correlation between daily returns lag 1 and weekly returns lag 2: 0.957). Assets with large serial correaltion in daily returns also have large serial correlation in weekly returns.
+
+\begin{table}[!h]
+\caption{Serial Correlation of lag 1 and lag 2 for weekly and daily returns} 
+\centering 
+\begin{tabular}{ | c || r| r | r | r |} 
+ \hline
+  & \multicolumn{2}{c|}{Daily returns} & \multicolumn{2}{c|}{Weekly returns} \\ 
+  \hline
+Asset & Lag 1 & Lag 2 & Lag 1 & Lag 2 \\
+  \hline \hline
+AGG & -0.12 & -0.05 & -0.25 &  0.12\\ 
+HYG &  0.00 & -0.02 &  0.07 &  0.05\\ 
+TIP &  0.01 & -0.02 & -0.06 & -0.02\\ 
+BCOM & -0.02 &  0.00 &  0.00 &  0.01\\ 
+MXEA &  0.10 & -0.02 &  0.04 &  0.05\\ 
+MXEF &  0.24 &  0.03 &  0.05 &  0.13\\ 
+RAY &  0.00 & -0.04 & -0.04 &  0.05\\ 
+RMZ & -0.21 & -0.01 & -0.06 & -0.01\\ 
+SPX &  0.03 & -0.04 & -0.05 &  0.02\\ 
+USGG10YR & -0.01 & -0.02 & -0.06 &  0.08 \\
+ \hline
+\end{tabular}
+\label{table:serialCorRegime}
+\end{table}
+
+
+\subsection{Risk measures}
+
+
+In this section, we focus on diffrent risk measures under different return frequencies. As we move to longer period such as weekly data, the risk measures such as VaR and ES become unreliable since they are based on the tail of distributions and require a comparatively large amount of dataset. Here we only focused on the comparison of daily and weekly data. 
+
+Figure \ref{fig: mdd_dist_daily_weekly} shows the maximum drawdown distribution of daily (upper panel) and weekly returns (lower panel). Here we use three assets AGG, HYG and TIP as examples. The maximum drawdown distribution of weekly returns are smaller and have lighter tails than the distribution of daily returns.
+
+\begin{figure}[h]
+\caption{Maximum drawdown (3 month) density of returns based on daily (upper panel) and weekly (lower panel) frequencies} 
+\centering 
+\includegraphics[width=0.9\textwidth]{../figures/maxDrawdown_CED/daily_mdd}
+\includegraphics[width=0.9\textwidth]{../figures/maxDrawdown_CED/weekly_mdd}
+\label{fig: mdd_dist_daily_weekly}
+\end{figure}
+
+We now move to other risk mesures. As we can see from last several sections, ES, VaR and volatility are every closely related. Here I use expected shortfall as an illustration. Figure \ref{fig: ES_daily_weekly_monthly} shows the ES values based on daily (upper panel), weekly (midlle panel) and monthly (lower panel) frequencies. As we expected, there are missing values for the tail mean when we move to longer period such as monthly data. The values of ES of weekly data are nearly as twice as the daily data since they are based on weeekly returns. However, after annualizing the returns, we can see that the number calculated using weekly reeturns are actually smaller. This phenomenon is more obvious when we move to monthly data. The ES calculated using annualized monthly returns are even smaller than its weekly counterpart.
+
+\begin{figure}[h]
+\caption{ES (6 month) based on daily (upper panel), weekly (midlle panel) and monthly (lower panel) frequencies} 
+\centering 
+\includegraphics[width=0.9\textwidth]{../figures/rolling_stats/daily_ES}
+\includegraphics[width=0.9\textwidth]{../figures/rolling_stats/weekly_ES}
+\includegraphics[width=0.9\textwidth]{../figures/rolling_stats/monthly_ES}
+\label{fig: ES_daily_weekly_monthly}
+\end{figure}
+
+
+
+%\end{document}

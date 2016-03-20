@@ -1,6 +1,16 @@
+*.aux
+*.fdb_latexmk
+*.fls
+*.log
+*.nav
+*.out
+*.snm
+*.synctex.gz
+*.toc
+*.vrb
+
 *.Rproj.user
 *.Rhistory
-*.RData
 *.Rproj
 *.dvi
 .Rproj.user
