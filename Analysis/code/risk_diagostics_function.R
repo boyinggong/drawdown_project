@@ -18,6 +18,8 @@ volatility <- function(R, freq_option = "Daily"){
     return(sqrt(52)*sqrt(var(R)))
   }else if(freq_option == "Monthly"){
     return(sqrt(12)*sqrt(var(R)))    
+  }else if(freq_option =="All"){
+    return(sqrt(252/length(R))*sqrt(var(R)))
   }
   sqrt(252)*sqrt(var(R))
 }

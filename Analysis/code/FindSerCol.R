@@ -44,6 +44,7 @@ FindBestModel(AGG$retrn_dl, paras_arma)
 #### Calculate Serial Correlation ####
 ######################################
 CalcTrtcAcf <- function(vec, best_para) {
+  if (best_para[1]== 0 & best_para[3] ==0){ return (0)}
   return_vec <- ts(vec)
   fit <- arima(return_vec, order = unlist(best_para), method="ML")
   if (best_para[1] == 0){
@@ -193,3 +194,5 @@ length(SerCol2yr)
 # residual left after arima
 resids = lapply(1:11,
                 function(i) arima(get(assetsList[i])$retrn_dl, order=unlist(bestorders[i]), include.mean = FALSE)$residuals)
+
+
