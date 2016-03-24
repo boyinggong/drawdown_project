@@ -18,8 +18,8 @@ source("read_data.R")
 # calculation are based on daily returns
 
 lvs <- c(.9, .95, .99)
-prds <- c(63, 126, 252, 504, 1260, 63+1260)
-names(prds) <- c("3mon", "6mon", "1yr", "2yr", "5yr", "3mon5yr")
+prds <- c(21, 63, 126, 252, 504, 1260, 63+1260)
+names(prds) <- c("1mon", "3mon", "6mon", "1yr", "2yr", "5yr", "3mon5yr")
 
 calcMaxDd <- function(val, prd){
   res <- sapply(1:(nrow(val)-prd+1), function(x){

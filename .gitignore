@@ -12,5 +12,7 @@
 *.Rproj.user
 *.Rhistory
 *.Rproj
+.DS_Store
+.Rapp.history
 *.dvi
 .Rproj.user
