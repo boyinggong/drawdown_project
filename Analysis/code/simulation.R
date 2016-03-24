@@ -81,11 +81,12 @@ rownames(ts.param.2) = NULL
 # calculate the autocorrelation
 sim.ar.2.acf = t(apply(ts.param.2, 1,
                  function(x) ARMAacf(ar = x, lag.max = 3)[2:4]))
+colnames(sim.ar.2.acf) = c("ac1", "ac2", "ac3")
 # simulation
 sim.risk.ar.2 = apply(ts.param.2, 1, 
                        function(x){rep_sim_ts(model=list(ar=x), n=1000, 
                                               rand.gen = function(n) rnorm(n, sd = 0.01))})
-sim.risk.ar.2 = data.frame(cbind(t(sim.risk.ar.2), ar.2.acf))
+sim.risk.ar.2 = data.frame(cbind(t(sim.risk.ar.2), sim.ar.2.acf))
 
 ## MA(1) ##
 ###########
@@ -105,6 +106,21 @@ plot_grid(ggplot(sim.risk.ma.1, aes(x = ts.param, y = ES)) + geom_point() + them
           ggplot(sim.risk.ma.1, aes(x = ts.param, y = CED)) + geom_point() + theme_bw() + 
             xlab("MA(1) Coefficient"),
           ncol = 2, align = 'v')
+
+## MA(2) ##
+###########
+
+ts.param.2 = expand.grid(seq(from = -0.9, to = 0.9, by = 0.1), 
+                         seq(from = -0.9, to = 0.9, by = 0.1))
+# calculate the autocorrelation
+sim.ma.2.acf = t(apply(ts.param.2, 1,
+                       function(x) ARMAacf(ma = x, lag.max = 2)[2:3]))
+colnames(sim.ma.2.acf) = c("ac1", "ac2")
+# simulation
+sim.risk.ma.2 = apply(ts.param.2, 1, 
+                      function(x){rep_sim_ts(model=list(ma=x), n=1000, 
+                                             rand.gen = function(n) rnorm(n, sd = 0.01))})
+sim.risk.ma.2 = data.frame(cbind(t(sim.risk.ma.2), sim.ma.2.acf))
 
 ##################
 ## rolling stat ##
