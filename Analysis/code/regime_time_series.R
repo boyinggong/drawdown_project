@@ -7,9 +7,9 @@
 regimes_boundary = matrix(0, nr = length(assetData), nc = 4)
 rownames(regimes_boundary) = names(assetData)
 risk_regime1 = regimes_boundary
-names(risk_regime1) = c("VaR", "ES", "Volatility", "CED")
+colnames(risk_regime1) = c("VaR", "ES", "Volatility", "CED")
 risk_regime2 = regimes_boundary
-names(risk_regime2) = c("VaR", "ES", "Volatility", "CED")
+colnames(risk_regime2) = c("VaR", "ES", "Volatility", "CED")
 
 assign(paste(FUN = "maxDrawdown", windw = "1mon", sep = ''), 
        getMaxDdDataFrame(windw = "1mon", Data = assetData))
