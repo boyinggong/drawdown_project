@@ -28,71 +28,103 @@ for (asset in names(assetData)){
 
 # Kappa for each model
 # AR(1)
-Kappa_ar1_all <- numeric(length(assetData))
-names(Kappa_ar1_all) <- names(assetData)
-for (asset in names(assetData)){
-  Kappa_ar1_all[asset] <-arima(assetData[[asset]]$retrn_dl, order = c(1,0,0))$coef["ar1"]
-}
+orderList <- list()
+orderList[["ar1"]] <- c(1,0,0)
+orderList[["ma1"]] <- c(0,0,1)
+orderList[["arma11"]] <- c(1,0,1)
 
+findkappa1 <- function(order, assetList){
+  ret <- numeric(length(assetList))
+  names(ret) <- names(assetList)
+  for (asset in names(assetList)){
+    if (order == "ma1"){
+      ret[asset] <-arima(assetList[[asset]]$retrn_dl, order = orderList[[order]])$coef["ma1"]
+    }else {
+      ret[asset] <-arima(assetList[[asset]]$retrn_dl, order = orderList[[order]])$coef["ar1"]}
+  }
+  return(ret)
+}
+# temp3 = findkappa1("ar1", assetData)
+# temp4 = findkappa1("ma1",assetData)
+# temp5 = findkappa1("arma11",assetData)
+
+Kappa_ar1_all <- findkappa1("ar1", assetData)
 # MA(1)
-Kappa_ma1_all <- numeric(length(assetData))
-names(Kappa_ma1_all) <- names(assetData)
-for (asset in names(assetData)){
-  Kappa_ma1_all[asset] <-arima(assetData[[asset]]$retrn_dl, order = c(0,0,1))$coef["ma1"]
-}
-
+Kappa_ma1_all <- findkappa1("ma1",assetData)
 # ARMA(1,1)
-Kappa_arma11_all <- numeric(length(assetData))
-names(Kappa_arma11_all) <- names(assetData)
-for (asset in names(assetData)){
-  Kappa_arma11_all[asset] <-arima(assetData[[asset]]$retrn_dl, order = c(1,0,1))$coef["ar1"]
-}
-#rm(Kappa_arma1_all)
+Kappa_arma11_all <- findkappa1("arma11",assetData)
+
+
 # BEST MODEL
-BestOrder_all <- rep(list(numeric(3)),11)
-names(BestOrder_all) <- names(assetData)
-
-for (asset in names(assetData)){
-  temp = auto.arima(assetData[[asset]]$retrn_dl)$arma
-  BestOrder_all[asset] = list(c(temp[1],temp[6],temp[2]))
+findBestModel <- function(assetList){
+ # browser()
+  BestOrder_all <- list()
+  for (asset in names(assetList)){
+    # print(asset)
+    temp = auto.arima(assetList[[asset]]$retrn_dl)$arma
+    BestOrder_all[[asset]] = c(temp[1],temp[6],temp[2])
+  }
+  return (BestOrder_all)
 }
+# temp6 <- findBestModel(assetData)
+BestOrder_all <- findBestModel(assetData)
 
-Kappa_best_all <- numeric(length(assetData))
-names(Kappa_best_all) <- names(assetData)
-for (asset in names(assetData)){
-  Kappa_best_all[asset] <- arima(assetData[[asset]]$retrn_dl, order = BestOrder_all[[asset]])$coef["ar1"]
+findkappa2 <- function(BestOrder_all,assetList){
+  Kappa_best_all <- numeric(length(assetList))
+  names(Kappa_best_all) <- names(assetList)
+  for (asset in names(assetList)){
+    tmp <- arima(assetList[[asset]]$retrn_dl, order = BestOrder_all[[asset]])$coef["ar1"]
+    if (is.na(tmp)){
+      Kappa_best_all[asset] = 0
+    }else{
+    Kappa_best_all[asset] <- arima(assetList[[asset]]$retrn_dl, order = BestOrder_all[[asset]])$coef["ar1"]}
+  }
+  return (Kappa_best_all)
 }
+#temp7 <- findkappa2(BestOrder_all, assetData)
+
+Kappa_best_all <- findkappa2(BestOrder_all, assetData)
 
 ############################# First Order Serial Correlation ##############################
 # AR(1)
-rho_ar1_all <- numeric(length(assetData))
-names(rho_ar1_all) <- names(assetData)
-for (asset in names(assetData)){
-  rho_ar1_all[asset] <- SerCol_single_period(assetData[[asset]]$retrn_dl,c(1,0,0),ser_order = 1)
+findrho1 <- function(order, assetList){
+  ret <- numeric(length(assetList))
+  names(ret) <- names(assetList)
+  for (asset in names(assetList)){
+    ret[asset] <- SerCol_single_period(assetList[[asset]]$retrn_dl,orderList[[order]],ser_order = 1)
+  }
+  return(ret)
 }
+#temp8 <- findrho1("ar1",assetData)
+# temp9 <- findrho1("ma1",assetData)
+# temp9 <- findrho1("arma11",assetData)
 
+
+rho_ar1_all <- findrho1("ar1",assetData)
 
 # MA(1)
-rho_ma1_all <- numeric(length(assetData))
-names(rho_ma1_all) <- names(assetData)
-for (asset in names(assetData)){
-  rho_ma1_all[asset] <- SerCol_single_period(assetData[[asset]]$retrn_dl,c(0,0,1),ser_order = 1)
-}
+rho_ma1_all <- findrho1("ma1",assetData)
 
 # ARMA(1,1)
-rho_arma11_all <- numeric(length(assetData))
-names(rho_arma11_all) <- names(assetData)
-for (asset in names(assetData)){
-  rho_arma11_all[asset] <- SerCol_single_period(assetData[[asset]]$retrn_dl,c(1,0,1),ser_order = 1)
-}
+rho_arma11_all <- findrho1("arma11",assetData)
 
 # Bestorder
-rho_best_all <- numeric(length(assetData))
-names(rho_best_all) <- names(assetData)
-for (asset in names(assetData)){
-  print(asset)
-  rho_best_all[asset] <- SerCol_single_period(assetData[[asset]]$retrn_dl,BestOrder_all[[asset]],ser_order = 1)
+findrho2 <- function(BestOrder_all,assetList){
+  rho_best_all <- numeric(length(assetList))
+  names(rho_best_all) <- names(assetList)
+  for (asset in names(assetList)){
+    tmp2 <- SerCol_single_period(assetList[[asset]]$retrn_dl,BestOrder_all[[asset]],ser_order = 1)
+    if (is.na(tmp2)){
+      rho_best_all[asset] = 0
+    }else{
+    rho_best_all[asset] <- tmp2}
+  }
+  return(rho_best_all)
 }
+# temp1 <- findrho2(BestOrder_all,assetData)
+# all.equal(temp1, rho_best_all)
+
+rho_best_all <- findrho2(BestOrder_all,assetData)
 
 
 ############################ create dataframe and order ################################
