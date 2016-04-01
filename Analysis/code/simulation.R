@@ -343,6 +343,162 @@ sim.risk.ma.2 = apply(ts.param.ma2, 1,
                                              rand.gen = function(n) rnorm(n, sd = 0.01))})
 sim.risk.ma.2 = data.frame(cbind(t(sim.risk.ma.2), sim.ma.2.acf))
 
+png("../figures/simulation/MA2_risk_measures_pos.png", width = 800, height = 400)
+subset = ts.param.ma2[, 2] > 0
+plot_grid(ggplot(data.frame(cbind(ts.param.ma2[subset, ], sim.risk.ma.2[subset, ])), 
+                 aes(x = ac1, y = ES, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) +
+            scale_colour_gradient2(high="steelblue", mid="darksalmon") ,
+          ggplot(data.frame(cbind(ts.param.ma2[subset, ], sim.risk.ma.2[subset, ])), 
+                 aes(x = ac1, y = VaR, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) +
+            scale_colour_gradient2(high="steelblue", mid="darksalmon"),
+          ggplot(data.frame(cbind(ts.param.ma2[subset, ], sim.risk.ma.2[subset, ])), 
+                 aes(x = ac1, y = sd, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) + ylab("Volatility") + 
+            scale_colour_gradient2(high="steelblue", mid="darksalmon"),
+          ggplot(data.frame(cbind(ts.param.ma2[subset, ], sim.risk.ma.2[subset, ])), 
+                 aes(x = ac1, y = CED, group = factor(Var2))) + geom_line(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) +
+            scale_colour_gradient2(high="steelblue", mid="darksalmon"),
+          ncol = 2, align = 'v')
+dev.off()
+
+png("../figures/simulation/MA2_risk_measures_neg.png", width = 800, height = 400)
+subset = ts.param.ma2[, 2] < 0
+plot_grid(ggplot(data.frame(cbind(ts.param.ma2[subset, ], sim.risk.ma.2[subset, ])), 
+                 aes(x = ac1, y = ES, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) +
+            scale_colour_gradient2(mid="darksalmon", low="steelblue") ,
+          ggplot(data.frame(cbind(ts.param.ma2[subset, ], sim.risk.ma.2[subset, ])), 
+                 aes(x = ac1, y = VaR, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) +
+            scale_colour_gradient2(mid="darksalmon", low="steelblue"),
+          ggplot(data.frame(cbind(ts.param.ma2[subset, ], sim.risk.ma.2[subset, ])), 
+                 aes(x = ac1, y = sd, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) + ylab("Volatility") + 
+            scale_colour_gradient2(mid="darksalmon", low="steelblue"),
+          ggplot(data.frame(cbind(ts.param.ma2[subset, ], sim.risk.ma.2[subset, ])), 
+                 aes(x = ac1, y = CED, group = factor(Var2))) + geom_line(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) +
+            scale_colour_gradient2(mid="darksalmon", low="steelblue"),
+          ncol = 2, align = 'v')
+dev.off()
+
+## simulation ##
+################
+
+subset.ma2 = seq(from = -0.9, to = 0.9, by = 0.1)
+subset.ma2 = subset.ar2[abs(subset.ar2 - 0) > 0.001]
+sim.risk.ma.2.df = lapply(subset.ma2, 
+                          function(x){rep_sim_ts(model=list(ma=c(0.2, x)), n=1000, 
+                                                 rand.gen = function(n) rnorm(n, sd = 0.01), return_df = TRUE)})
+
+png("../figures/simulation/MA2_maxDrawdown_dist_theta1_02.png", width = 800, height = 400)
+sim.risk.ma.2.densityList <- list()
+for (i in 2:13){
+  sim.risk.ma.2.densityList[[toString(i)]] = 
+    ggplot(df <- data.frame(maxDrawdown = sim.risk.ma.2.df[[i]]['maxDrawdown',]), 
+           aes(x = maxDrawdown)) + geom_density(fill = 'snow3', colour = 'snow3') + theme_bw() + 
+    xlab(substitute(paste(theta[1], "= 0.2, ", theta[2], "=", m), list(m = subset.ma2[i]))) +
+    xlim(0, 1)
+}
+do.call("plot_grid", c(sim.risk.ma.2.densityList,
+                       ncol = 4, align = 'v'))
+dev.off()
+
+
+subset.ma2 = seq(from = -0.9, to = 0.9, by = 0.1)
+subset.ma2 = subset.ar2[abs(subset.ar2 - 0) > 0.001]
+sim.risk.ma.2.df = lapply(subset.ma2, 
+                          function(x){rep_sim_ts(model=list(ma=c(-0.2, x)), n=1000, 
+                                                 rand.gen = function(n) rnorm(n, sd = 0.01), return_df = TRUE)})
+
+png("../figures/simulation/MA2_maxDrawdown_dist_theta1_-02.png", width = 800, height = 400)
+sim.risk.ma.2.densityList <- list()
+for (i in 2:13){
+  sim.risk.ma.2.densityList[[toString(i)]] = 
+    ggplot(df <- data.frame(maxDrawdown = sim.risk.ma.2.df[[i]]['maxDrawdown',]), 
+           aes(x = maxDrawdown)) + geom_density(fill = 'snow3', colour = 'snow3') + theme_bw() + 
+    xlab(substitute(paste(theta[1], "= -0.2, ", theta[2], "=", m), list(m = subset.ma2[i]))) +
+    xlim(0, 1)
+}
+do.call("plot_grid", c(sim.risk.ma.2.densityList,
+                       ncol = 4, align = 'v'))
+dev.off()
+
+
+subset.ma2 = seq(from = -0.9, to = 0.9, by = 0.1)
+subset.ma2 = subset.ar2[abs(subset.ar2 - 0) > 0.001]
+sim.risk.ma.2.df = lapply(subset.ma2, 
+                          function(x){rep_sim_ts(model=list(ma=c(x, 0.2)), n=1000, 
+                                                 rand.gen = function(n) rnorm(n, sd = 0.01), return_df = TRUE)})
+
+png("../figures/simulation/MA2_maxDrawdown_dist_theta2_02.png", width = 800, height = 400)
+sim.risk.ma.2.densityList <- list()
+for (i in 2:13){
+  sim.risk.ma.2.densityList[[toString(i)]] = 
+    ggplot(df <- data.frame(maxDrawdown = sim.risk.ma.2.df[[i]]['maxDrawdown',]), 
+           aes(x = maxDrawdown)) + geom_density(fill = 'snow3', colour = 'snow3') + theme_bw() + 
+    xlab(substitute(paste(theta[2], "= 0.2, ", theta[1], "=", m), list(m = subset.ma2[i]))) +
+    xlim(0, 1)
+}
+do.call("plot_grid", c(sim.risk.ma.2.densityList,
+                       ncol = 4, align = 'v'))
+dev.off()
+
+
+subset.ma2 = seq(from = -0.9, to = 0.9, by = 0.1)
+subset.ma2 = subset.ar2[abs(subset.ar2 - 0) > 0.001]
+sim.risk.ma.2.df = lapply(subset.ma2, 
+                          function(x){rep_sim_ts(model=list(ma=c(x, -0.2)), n=1000, 
+                                                 rand.gen = function(n) rnorm(n, sd = 0.01), return_df = TRUE)})
+
+png("../figures/simulation/MA2_maxDrawdown_dist_theta2_-02.png", width = 800, height = 400)
+sim.risk.ma.2.densityList <- list()
+for (i in 2:13){
+  sim.risk.ma.2.densityList[[toString(i)]] = 
+    ggplot(df <- data.frame(maxDrawdown = sim.risk.ma.2.df[[i]]['maxDrawdown',]), 
+           aes(x = maxDrawdown)) + geom_density(fill = 'snow3', colour = 'snow3') + theme_bw() + 
+    xlab(substitute(paste(theta[2], "= 0.2, ", theta[1], "=", m), list(m = subset.ma2[i]))) +
+    xlim(0, 1)
+}
+do.call("plot_grid", c(sim.risk.ma.2.densityList,
+                       ncol = 4, align = 'v'))
+dev.off()
+
+################
+################
+## ARMA(1, 1) ##
+################
+################
+
+ts.param.ar1.ma1 = expand.grid(seq(from = -0.9, to = 0.9, by = 0.1), 
+                            seq(from = -0.9, to = 0.9, by = 0.1))
+ts.param.ar1.ma1 = ts.param.ar1.ma1[ts.param.ar1.ma1[, 1] != 0, ]
+ts.param.ar1.ma1 = ts.param.ar1.ma1[ts.param.ar1.ma1[, 2] != 0, ]
+
+# calculate the autocorrelation
+sim.ar1.ma1.acf = t(apply(ts.param.ar1.ma1, 1,
+                       function(x) ARMAacf(ar = x[1], ma = x[2], lag.max = 3)[2:4]))
+colnames(sim.ar1.ma1.acf) = c("ac1", "ac2", "ac3")
+
+# simulation
+sim.risk.ar1.ma1 = apply(ts.param.ar1.ma1, 1, 
+                      function(x){rep_sim_ts(model=list(ar = x[1], ma = x[2]), n=1000, 
+                                             rand.gen = function(n) rnorm(n, sd = 0.01))})
+sim.risk.ar1.ma1 = data.frame(cbind(t(sim.risk.ar1.ma1), sim.ar1.ma1.acf))
+
+
+
+
+
+
+
+
+
+
+
 
 ##################
 ## rolling stat ##
