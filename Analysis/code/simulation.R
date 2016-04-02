@@ -85,6 +85,10 @@ do.call("plot_grid", c(sim.risk.ar.1.densityList,
                         ncol = 4, align = 'v'))
 dev.off()
 
+
+
+
+
 ###########
 ###########
 ## AR(2) ##
@@ -164,7 +168,7 @@ dev.off()
 
 ts.param.ar2[abs(ts.param.ar2[, 1] - 0.2)<0.001,]
 subset.ar2 = seq(from = -0.7, to = 0.7, by = 0.1)
-subset.ar2 = subset.ar2[abs(subset.ar2 - 0) > 0.001]
+subset.ar2 = subset.ar2[abs(subset.ar2 - 0.2) > 0.001]
 sim.risk.ar.2.df = lapply(subset.ar2, 
                           function(x){rep_sim_ts(model=list(ar=c(0.2, x)), n=1000, 
                                                  rand.gen = function(n) rnorm(n, sd = 0.01), return_df = TRUE)})
@@ -489,11 +493,52 @@ sim.risk.ar1.ma1 = apply(ts.param.ar1.ma1, 1,
                                              rand.gen = function(n) rnorm(n, sd = 0.01))})
 sim.risk.ar1.ma1 = data.frame(cbind(t(sim.risk.ar1.ma1), sim.ar1.ma1.acf))
 
+png("../figures/simulation/AR1MA1_risk_measures_pos.png", width = 800, height = 400)
+subset = ts.param.ar1.ma1[, 2] > 0
+plot_grid(ggplot(data.frame(cbind(ts.param.ar1.ma1[subset, ], sim.risk.ar1.ma1[subset, ])), 
+                 aes(x = ac1, y = ES, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) +
+            scale_colour_gradient2(high="steelblue", mid="darksalmon") ,
+          ggplot(data.frame(cbind(ts.param.ar1.ma1[subset, ], sim.risk.ar1.ma1[subset, ])), 
+                 aes(x = ac1, y = VaR, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) +
+            scale_colour_gradient2(high="steelblue", mid="darksalmon"),
+          ggplot(data.frame(cbind(ts.param.ar1.ma1[subset, ], sim.risk.ar1.ma1[subset, ])), 
+                 aes(x = ac1, y = sd, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) + ylab("Volatility") + 
+            scale_colour_gradient2(high="steelblue", mid="darksalmon"),
+          ggplot(data.frame(cbind(ts.param.ar1.ma1[subset, ], sim.risk.ar1.ma1[subset, ])), 
+                 aes(x = ac1, y = CED, group = factor(Var2))) + geom_line(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) +
+            scale_colour_gradient2(high="steelblue", mid="darksalmon"),
+          ncol = 2, align = 'v')
+dev.off()
 
 
+png("../figures/simulation/AR1MA1_risk_measures_neg.png", width = 800, height = 400)
+subset = ts.param.ar1.ma1[, 2] < 0
+plot_grid(ggplot(data.frame(cbind(ts.param.ar1.ma1[subset, ], sim.risk.ar1.ma1[subset, ])), 
+                 aes(x = ac1, y = ES, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) +
+            scale_colour_gradient2(mid="steelblue", low="darksalmon") ,
+          ggplot(data.frame(cbind(ts.param.ar1.ma1[subset, ], sim.risk.ar1.ma1[subset, ])), 
+                 aes(x = ac1, y = VaR, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) +
+            scale_colour_gradient2(mid="steelblue", low="darksalmon"),
+          ggplot(data.frame(cbind(ts.param.ar1.ma1[subset, ], sim.risk.ar1.ma1[subset, ])), 
+                 aes(x = ac1, y = sd, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) + ylab("Volatility") + 
+            scale_colour_gradient2(mid="steelblue", low="darksalmon"),
+          ggplot(data.frame(cbind(ts.param.ar1.ma1[subset, ], sim.risk.ar1.ma1[subset, ])), 
+                 aes(x = ac1, y = CED, group = factor(Var2))) + geom_line(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) +
+            scale_colour_gradient2(mid="steelblue", low="darksalmon"),
+          ncol = 2, align = 'v')
+dev.off()
 
 
-
+## simulation ##
+################
 
 
 
