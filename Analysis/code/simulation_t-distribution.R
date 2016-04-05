@@ -55,6 +55,21 @@ ts.param.ar.1 = ts.param.ar.1[ts.param.ar.1 != 0]
 sim.risk.ar.1 = sapply(ts.param.ar.1, 
                        function(x){rep_sim_ts(rep = 1000, model=list(ar=x), n=63, 
                                               rand.gen = function(n) 0.01*rt(n, df = 4))})
+
+return_dist = lapply(ts.param.ar.1, 
+                     function(x) as.vector(replicate(1000, arima.sim(model=list(ar=x), n = 63, 
+                                                          rand.gen = function(n) 0.01*rt(n, df = 4)))) )
+
+return_dist_stat = lapply(return_dist, function(x){c(mean(x), sd(x), skewness(x), kurtosis(x))})
+
+format(round(return_dist_stat[[1]], 3), nsmall = 3)
+format(round(return_dist_stat[[6]], 3), nsmall = 3)
+format(round(return_dist_stat[[11]], 3), nsmall = 3)
+format(round(return_dist_stat[[20]], 3), nsmall = 3)
+format(round(return_dist_stat[[25]], 3), nsmall = 3)
+format(round(return_dist_stat[[30]], 3), nsmall = 3)
+
+
 sim.risk.ar.1 = data.frame(cbind(t(sim.risk.ar.1), ts.param.ar.1))
 sim.risk.ar.1.df = lapply(ts.param.ar.1, 
                           function(x){rep_sim_ts(rep = 1000, model=list(ar=x), n=63, 
@@ -111,6 +126,24 @@ sim.risk.ar.2 = data.frame(cbind(t(sim.risk.ar.2), sim.ar.2.acf))
 plot_df = data.frame(cbind(ts.param.ar2, sim.risk.ar.2))
 plot_df[abs(plot_df$Var2 - 0.1) < 1e-3, ]
 
+
+## return distribution
+######################
+
+return_dist = lapply(c(-0.3, -0.2, -0.1, 0.1, 0.2, 0.3), 
+                     function(x) as.vector(replicate(1000, arima.sim(model=list(ar=c(0.1, x)), n = 63, 
+                                                                     rand.gen = function(n) 0.01*rt(n, df = 4)))) )
+
+return_dist_stat = lapply(return_dist, function(x){c(mean(x), sd(x), skewness(x), kurtosis(x))})
+
+format(round(return_dist_stat[[1]], 3), nsmall = 3)
+format(round(return_dist_stat[[2]], 3), nsmall = 3)
+format(round(return_dist_stat[[3]], 3), nsmall = 3)
+format(round(return_dist_stat[[4]], 3), nsmall = 3)
+format(round(return_dist_stat[[5]], 3), nsmall = 3)
+format(round(return_dist_stat[[6]], 3), nsmall = 3)
+
+
 png("../figures/simulation/T_dist_AR2_risk_measures.png", width = 800, height = 400)
 plot_grid(ggplot(data.frame(cbind(ts.param.ar2, sim.risk.ar.2)), 
                  aes(x = ac1, y = ES, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
@@ -134,23 +167,22 @@ dev.off()
 ## maxDrawdown distribution ##
 ##############################
 
-subset.ar2 = seq(from = -0.3, to = 0.3, by = 0.02)
-subset.ar2 = subset.ar2[abs(subset.ar2 - 0.2) > 0.001]
+subset.ar2 = c(-0.3, -0.2, -0.1, 0.1, 0.2, 0.3)
 sim.risk.ar.2.df = lapply(subset.ar2, 
                           function(x){rep_sim_ts(model=list(ar=c(0.2, x)), n=63, 
                                                  rand.gen = function(n) 0.01*rt(n, df = 4), return_df = TRUE)})
 
 png("../figures/simulation/T_dist_AR2_maxDrawdown_dist_kappa1_02.png", width = 800, height = 400)
 sim.risk.ar.2.densityList <- list()
-for (i in 2:13){
+for (i in 1:6){
   sim.risk.ar.2.densityList[[toString(i)]] = 
     ggplot(df <- data.frame(maxDrawdown = sim.risk.ar.2.df[[i]]['maxDrawdown',]), 
            aes(x = maxDrawdown)) + geom_density(fill = 'snow3', colour = 'snow3') + theme_bw() + 
-    xlab(substitute(paste(kappa[1], "= 0.2, ", kappa[2], "=", m), list(m = subset.ar2[i]))) +
+    xlab(expression(paste(kappa[1], "= 0.2, ", kappa[2], "=", subset.ar2[i]))) +
     xlim(0, 1) + ylim(0, 10)
 }
 do.call("plot_grid", c(sim.risk.ar.2.densityList,
-                       ncol = 4, align = 'v'))
+                       ncol = 3, align = 'v'))
 dev.off()
 
 ###########
@@ -204,6 +236,22 @@ plot_grid(ggplot(data.frame(cbind(sim.risk.ma.1, sim.ma.1.acf)),
           ncol = 2, align = 'v')
 dev.off()
 
+## return distribution
+######################
+
+return_dist = lapply(c(-0.3, -0.2, -0.1, 0.1, 0.2, 0.3), 
+                     function(x) as.vector(replicate(1000, arima.sim(model=list(ma=c(x)), n = 63, 
+                                                                     rand.gen = function(n) 0.01*rt(n, df = 4)))) )
+
+return_dist_stat = lapply(return_dist, function(x){c(mean(x), sd(x), skewness(x), kurtosis(x))})
+
+format(round(return_dist_stat[[1]], 3), nsmall = 3)
+format(round(return_dist_stat[[2]], 3), nsmall = 3)
+format(round(return_dist_stat[[3]], 3), nsmall = 3)
+format(round(return_dist_stat[[4]], 3), nsmall = 3)
+format(round(return_dist_stat[[5]], 3), nsmall = 3)
+format(round(return_dist_stat[[6]], 3), nsmall = 3)
+
 
 ## maxDrawdown distribution ##
 ##############################
@@ -225,5 +273,126 @@ for (i in 1:6){
 }
 do.call("plot_grid", c(sim.risk.ma.1.densityList,
                        ncol = 3, align = 'v'))
+dev.off()
+
+###########
+###########
+## MA(2) ##
+###########
+###########
+
+ts.param.ma2 = expand.grid(seq(from = -0.3, to = 0.3, by = 0.05), 
+                           seq(from = -0.3, to = 0.3, by = 0.05))
+ts.param.ma2 = ts.param.ma2[ts.param.ma2[, 1] != 0, ]
+ts.param.ma2 = ts.param.ma2[ts.param.ma2[, 2] != 0, ]
+
+# calculate the autocorrelation
+sim.ma.2.acf = t(apply(ts.param.ma2, 1,
+                       function(x) ARMAacf(ma = x, lag.max = 2)[2:3]))
+colnames(sim.ma.2.acf) = c("ac1", "ac2")
+
+# simulation
+sim.risk.ma.2 = apply(ts.param.ma2, 1, 
+                      function(x){ rep_sim_ts(model=list(ma=x), n=63, 
+                                              rand.gen = function(n) 0.01*rt(n, df = 4)) })
+sim.risk.ma.2 = data.frame(cbind(t(sim.risk.ma.2), sim.ma.2.acf))
+
+## return distribution
+######################
+
+return_dist = lapply(c(-0.3, -0.2, -0.1, 0.1, 0.2, 0.3), 
+                     function(x) as.vector(replicate(1000, arima.sim(model=list(ma=c(0.1, x)), n = 63, 
+                                                                     rand.gen = function(n) 0.01*rt(n, df = 4)))) )
+
+return_dist_stat = lapply(return_dist, function(x){c(mean(x), sd(x), skewness(x), kurtosis(x))})
+
+format(round(return_dist_stat[[1]], 3), nsmall = 3)
+format(round(return_dist_stat[[2]], 3), nsmall = 3)
+format(round(return_dist_stat[[3]], 3), nsmall = 3)
+format(round(return_dist_stat[[4]], 3), nsmall = 3)
+format(round(return_dist_stat[[5]], 3), nsmall = 3)
+format(round(return_dist_stat[[6]], 3), nsmall = 3)
+
+png("../figures/simulation/T_dist_MA2_risk_measures.png", width = 800, height = 400)
+plot_grid(ggplot(data.frame(cbind(ts.param.ma2, sim.risk.ma.2)), 
+                 aes(x = ac1, y = ES, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) +
+            scale_colour_gradient2(high="steelblue", mid="darksalmon", low="steelblue") ,
+          ggplot(data.frame(cbind(ts.param.ma2, sim.risk.ma.2)), 
+                 aes(x = ac1, y = VaR, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) +
+            scale_colour_gradient2(high="steelblue", mid="darksalmon", low="steelblue"),
+          ggplot(data.frame(cbind(ts.param.ma2, sim.risk.ma.2)), 
+                 aes(x = ac1, y = sd, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) + ylab("Volatility") + 
+            scale_colour_gradient2(high="steelblue", mid="darksalmon", low="steelblue"),
+          ggplot(data.frame(cbind(ts.param.ma2, sim.risk.ma.2)), 
+                 aes(x = ac1, y = CED, group = factor(Var2))) + geom_line(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) +
+            scale_colour_gradient2(high="steelblue", mid="darksalmon", low="steelblue"),
+          ncol = 2, align = 'v')
+dev.off()
+
+## maxDrawdown distribution ##
+##############################
+
+subset.ma2 = c(-0.3, -0.2, -0.1, 0.1, 0.2, 0.3)
+sim.risk.ma.2.df = lapply(subset.ma2, 
+                          function(x){rep_sim_ts(model=list(ma=c(0.1, x)), n=63, 
+                                                 rand.gen = function(n) 0.01*rt(n, df = 4), return_df = TRUE)})
+
+png("../figures/simulation/T_dist_MA2_maxDrawdown_dist_theta1_01.png", width = 800, height = 400)
+sim.risk.ma.2.densityList <- list()
+for (i in 1:6){
+  sim.risk.ma.2.densityList[[toString(i)]] = 
+    ggplot(df <- data.frame(maxDrawdown = sim.risk.ma.2.df[[i]]['maxDrawdown',]), 
+           aes(x = maxDrawdown)) + geom_density(fill = 'snow3', colour = 'snow3') + theme_bw() + 
+    xlab(substitute(paste(theta[1], "= 0.1, ", theta[2], "=", m), list(m = subset.ma2[i]))) +
+    xlim(0, 1) + ylim(0, 10)
+}
+do.call("plot_grid", c(sim.risk.ma.2.densityList,
+                       ncol = 3, align = 'v'))
+dev.off()
+
+################
+################
+## ARMA(1, 1) ##
+################
+################
+
+ts.param.ar1.ma1 = expand.grid(seq(from = -0.3, to = 0.3, by = 0.05), 
+                               seq(from = -0.3, to = 0.3, by = 0.05))
+ts.param.ar1.ma1 = ts.param.ar1.ma1[ts.param.ar1.ma1[, 1] != 0, ]
+ts.param.ar1.ma1 = ts.param.ar1.ma1[ts.param.ar1.ma1[, 2] != 0, ]
+
+# calculate the autocorrelation
+sim.ar1.ma1.acf = t(apply(ts.param.ar1.ma1, 1,
+                          function(x) ARMAacf(ar = x[1], ma = x[2], lag.max = 3)[2:4]))
+colnames(sim.ar1.ma1.acf) = c("ac1", "ac2", "ac3")
+
+# simulation
+sim.risk.ar1.ma1 = apply(ts.param.ar1.ma1, 1, 
+                         function(x){rep_sim_ts(model=list(ar = x[1], ma = x[2]), n=63, 
+                                                rand.gen = function(n) 0.01*rt(n, df = 4))})
+sim.risk.ar1.ma1 = data.frame(cbind(t(sim.risk.ar1.ma1), sim.ar1.ma1.acf))
+
+png("../figures/simulation/T_dist_AR1MA1_risk_measures.png", width = 800, height = 400)
+plot_grid(ggplot(data.frame(cbind(ts.param.ar1.ma1, sim.risk.ar1.ma1)), 
+                 aes(x = ac1, y = ES, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) +
+            scale_colour_gradient2(high="steelblue", mid="darksalmon") ,
+          ggplot(data.frame(cbind(ts.param.ar1.ma1, sim.risk.ar1.ma1)), 
+                 aes(x = ac1, y = VaR, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) +
+            scale_colour_gradient2(high="steelblue", mid="darksalmon"),
+          ggplot(data.frame(cbind(ts.param.ar1.ma1, sim.risk.ar1.ma1)), 
+                 aes(x = ac1, y = sd, group = factor(Var2))) + geom_point(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) + ylab("Volatility") + 
+            scale_colour_gradient2(high="steelblue", mid="darksalmon"),
+          ggplot(data.frame(cbind(ts.param.ar1.ma1, sim.risk.ar1.ma1)), 
+                 aes(x = ac1, y = CED, group = factor(Var2))) + geom_line(aes(colour = Var2)) + theme_light() +
+            xlab(expression(rho[1])) +
+            scale_colour_gradient2(high="steelblue", mid="darksalmon"),
+          ncol = 2, align = 'v')
 dev.off()
 
