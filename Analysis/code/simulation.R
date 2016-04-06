@@ -1,6 +1,7 @@
 
 library(ggplot2)
 library(cowplot)
+library(xts)
 
 source("risk_diagostics_function.R")
 
