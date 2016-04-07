@@ -546,8 +546,37 @@ $\kappa_1 = 0.1, \kappa_2 = 0.3$ & 0.0 & 0.015 & -0.097 & 9.9\\
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Thoughts}  %%%%%
+\section{Findings}  %%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
+
+\subsection{CED distinguishes negative from positive autocorrelation}
+
+For time series with positive autocorrelation, return is very likely to have the same sign as the return in the previous day. For example, if return in April 5 is -1\% and there is a positive autocorrelation, the return in April 6 is more likely to be negative rather than positive. As a consequence, returns tend to keep they current profit or loss status for a period of time. If the current status is loss, then unfortunately, the price of the asset may continuously go down, which results in a large CED.
+
+For time series with negative autocorrelation, return is very likely to have the different sign as the return in the previous day. That is, if the the price of one assets goes down in one day, it is more likely that the price would bounce back in the next day, which leads to a small CED. 
+
+Figure \ref{fig:Comparison_pos_neg_autocorrelation} shows the comparison of simluated returns and prices when serial correlation is 0.5 and -0.5. They maximum dradown of simlulated series is 14.17\% and 8.24\% separately. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.8\textwidth]{../figures/simulation/Comparison_pos_neg_autocorrelation}
+\caption{Comparison of returns with positive and negative serial correlation}
+(Simulation length: 100; upper panel: AR(1) with $\kappa=0.5$; lower panel: AR(1) with $\kappa=-0.5$, $\epsilon\sim N(0, 0.0001)$)
+\label{fig:Comparison_pos_neg_autocorrelation}
+\end{figure}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Thoughts} %%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+For time series with negative autocorrelation, return is very likely to have the different sign as the return in the previous day. That is, if the the price of one assets goes down in one day, it is more likely that the price would bounce back in the next day, which leads to a small CED.
+
+I found a figure online just for illustration, where the upper panel shows positive autocorrelation and lower panel shows negative autocorrelation.
+
+
+
 
 The relationship between serial correlation is complicated even for simple models such as AR(2), MA(2) and ARMA(1, 1). We tried several ways to present the relationship. Plots in this report are the best we came up with.
 

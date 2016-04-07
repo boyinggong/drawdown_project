@@ -360,6 +360,8 @@ format(round(return_dist_stat[[4]], 3), nsmall = 3)
 format(round(return_dist_stat[[5]], 3), nsmall = 3)
 format(round(return_dist_stat[[6]], 3), nsmall = 3)
 
+###########################
+
 png("../figures/simulation/MA1_risk_measures_coefficient.png", width = 800, height = 400)
 plot_grid(ggplot(data.frame(cbind(sim.risk.ma.1, sim.ma.1.acf)), 
                             aes(x = ts.param.ma.1, y = ES)) + geom_point() + theme_bw() + 
