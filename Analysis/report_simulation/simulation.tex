@@ -354,12 +354,51 @@ Figure \ref{fig:AR1MA1_risk_measures_pos} and Figure Figure \ref{fig:AR1MA1_risk
 \label{fig:AR1MA1_risk_measures_neg_coef}
 \end{figure}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Simulation with standard error adjusted} %%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Standardize the simulated time series by deviding certain factors such that the time series have same standard deviation. Currently our simulation studies are based on fixed distribution of the noice term. For example, for normal distribution noice we use $\epsilon \sim N(0, 0.0001)$ and for t-distribuiton we use $\epsilon \sim 0.01T(df =4)$. We could also do our simulation based on fixed standard deviation of the simulated time series sequences.
+
+In our simulation, the standard deviation for each our simulated time series is different. Say for AR(1), the standard deviation of time series $X_t = 0.5  X_{t-1} + \epsilon_t$ and $X_t = 0.1  X_{t-1} + \epsilon_t$ is different since we use the same distribution for $\epsilon_t$. Then what if we compare two time series with different distribution of $\epsilon_t$ but the same standard deviation? Since standard deviation is one risk measures (volatility), this equals to fixing other risk measures to one level, say volatility = 1.2\%, and to see how CED changes with the serial correlation. Ideally, we may see the correlation between CED and serial correlation. Then we may conclude that CED is better in detecting serial correlation because under this case using other risk measures would get the same risk value, but CED would not and can reflect the change of serial correlation
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.5\textwidth]{../figures/simulation/AR1_adjsd}
+\caption{AR(1): Relationship between serial correlation $\rho_1$ and CED with adjusted standard error}
+(Simulation path length: 1000)
+\label{fig:AR1_adjsd}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.5\textwidth]{../figures/simulation/MA1_adjsd}
+\caption{MA(1): Relationship between serial correlation $\rho_1$ and CED with adjusted standard error}
+(Simulation path length: 1000)
+\label{fig:MA1_adjsd}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 1\textwidth]{../figures/simulation/aggregated_adjsd}
+\caption{Relationship between serial correlation $\rho_1$ and CED with adjusted standard error}
+(Simulation path length: 1000, from left to right: AR(2), MA(2), ARMA(1, 1))
+\label{fig:aggregated_adjsd}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 1\textwidth]{../figures/simulation/aggregated_adjsd_subset}
+\caption{Relationship between serial correlation $\rho_1$ and CED with adjusted standard error}
+(Simulation path length: 1000, from left to right: AR(2), MA(2), ARMA(1, 1), model coefficient $\leq$ 0.5)
+\label{fig:aggregated_adjsd_subset}
+\end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 \section{Noice term with student t distribution}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In this section, parameters used are close to what we've encountered in the empirical studies. 
 \begin{enumerate}
@@ -549,43 +588,52 @@ $\kappa_1 = 0.1, \kappa_2 = 0.3$ & 0.0 & 0.015 & -0.097 & 9.9\\
 \section{Findings}  %%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-\subsection{CED distinguishes negative from positive autocorrelation}
+\subsection{Finding 1}
+
+\textbf{CED distinguishes negative from positive autocorrelation}
 
 For time series with positive autocorrelation, return is very likely to have the same sign as the return in the previous day. For example, if return in April 5 is -1\% and there is a positive autocorrelation, the return in April 6 is more likely to be negative rather than positive. As a consequence, returns tend to keep they current profit or loss status for a period of time. If the current status is loss, then unfortunately, the price of the asset may continuously go down, which results in a large CED.
 
 For time series with negative autocorrelation, return is very likely to have the different sign as the return in the previous day. That is, if the the price of one assets goes down in one day, it is more likely that the price would bounce back in the next day, which leads to a small CED. 
 
-Figure \ref{fig:Comparison_pos_neg_autocorrelation} shows the comparison of simluated returns and prices when serial correlation is 0.5 and -0.5. They maximum dradown of simlulated series is 14.17\% and 8.24\% separately. 
+Figure \ref{fig:Comparison_pos_neg_autocorrelation} shows the comparison of simluated returns and prices when serial correlation is 0.5 and -0.5. They maximum dradown of simlulated series is 22.76\% and 9.49\% separately. 
 
 \begin{figure}[H]
 \centering
 \includegraphics[width = 0.8\textwidth]{../figures/simulation/Comparison_pos_neg_autocorrelation}
 \caption{Comparison of returns with positive and negative serial correlation}
-(Simulation length: 100; upper panel: AR(1) with $\kappa=0.5$; lower panel: AR(1) with $\kappa=-0.5$, $\epsilon\sim N(0, 0.0001)$)
+(Simulation length: 100; upper panel: AR(1) with $\kappa=0.7$; lower panel: AR(1) with $\kappa=-0.7$, $\epsilon\sim N(0, 0.0001)$)
 \label{fig:Comparison_pos_neg_autocorrelation}
 \end{figure}
 
+\subsection{Finding 2}
 
+\textbf{Change standard deviation but fix everything in time series simulation would result in linear change of risk measures}
+
+The following simulation result for AR(1) model shows a linear relationship for all risk measures. I simulate the model $X_t = 0.3X_{t-1} + \epsilon_t$ and change the $\epsilon_t$ from 0.001 to 0.015. The simulated path length is 63, which is the number of trading days in three months. 
+
+\includegraphics[width = 0.8\textwidth]{../figures/simulation/AR1_risk_measures_change_sd}
+
+This make sense. Fixing everything but changing the standard deviation of the noise term would simply multiply the simulated time series model by a constant. If for $\epsilon_t = 0.001$, we simulated the time series $X_1, X_2, \cdots, X_n$. Then the simulated sequence for $\epsilon_t = 0.01$ would be something like $10X_1, 10X_2, \cdots, 10X_n$. For volatility, ES and VaR, it is easy to see they would be multiplied 10. For CED, I will show below that it would also approximately be multiplied by 10. 
+
+For accumulated returns in a path, the return is approximately the sum of all returns for each day in this time period if the return is small (which is often the case):
+
+\begin{eqnarray}
+R & = & \prod_{i=1}^n (1+r_i) - 1\\
+& \simeq & \prod_{i=1}^n e^{r_i} - 1 \\
+& = & e^{\sum_{i=1}^n r_i} - 1 \\
+& \simeq & \sum_{i=1}^n r_i
+\end{eqnarray}
+
+Because all the returns in every subpath would be multiplied by approximately 10. Thus the domain of the maximum drawdown distribution and CED would also become 10 times as the counterpart for $\epsilon_t = 0.001$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Thoughts} %%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-For time series with negative autocorrelation, return is very likely to have the different sign as the return in the previous day. That is, if the the price of one assets goes down in one day, it is more likely that the price would bounce back in the next day, which leads to a small CED.
-
-I found a figure online just for illustration, where the upper panel shows positive autocorrelation and lower panel shows negative autocorrelation.
-
-
-
-
-The relationship between serial correlation is complicated even for simple models such as AR(2), MA(2) and ARMA(1, 1). We tried several ways to present the relationship. Plots in this report are the best we came up with.
-
-We did not move to more sophisticated time series models with higher orders. The patterns in some sense explained why we hardly get informative relationship in our empirical data analysis. Real word data sets are usually more complex than simulation.\\
-
 \textit{Potential efforts}:
 \begin{enumerate}
 \item Add Garch model.
-\item Standardize the simulated time series by deviding certain factors such that the time series have same standard deviation. Currently our simulation studies are based on fixed distribution of the noice term. For example, for normal distribution noice we use $\epsilon \sim N(0, 0.0001)$ and for t-distribuiton we use $\epsilon \sim 0.01T(df =4)$. We could also do our simulation based on fixed standard deviation of the simulated time series sequences.
 \item So far we have been working on the first order serial correlation $\rho_1$, we have also looked at the relationship between higher order serial correlation and risk measures. There are some complex relationship for different time series models. We may look into that in the future. 
 \end{enumerate}
 
