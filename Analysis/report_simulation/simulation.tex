@@ -584,6 +584,159 @@ $\kappa_1 = 0.1, \kappa_2 = 0.3$ & 0.0 & 0.015 & -0.097 & 9.9\\
 \label{fig:T_dist_AR1MA1_risk_measures}
 \end{figure}
 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{More Complex Noice Term}  %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%
+The previous several sections have already stated general ideas that how magnitude of risk measurements correlated with serial correlation and ARMA coeffients. However, the inspiring results should not encourage us ignore the complexity of the market: it always does not produce such regular time series. The ocational events shock the market and the returns always shows clustered variance. As has been analyzed in the previous reports, a normal way to handle the complex variance in the return is using generalized autoregressive conditional heteroskedasticity (GARCH) model. In this section, common ARMA time series are simulated with GARCH noise term, to which we expect analysis the extent of effect that complex noise term having on the relationship between serial correlation and risk measurements.
+
+\begin{enumerate}
+\item At this level, we limit our analysis on GARCH(1,1), for the reason that in the empirical study on thirteen American indices, GARCH(1,1) is good enough catch the varience anormly in the return.
+\item The GARCH model is based on the Gaussian conditional distribution. Although in the empirical study on thirteen Amercian indices, we showed that a student t conditional distribution seems to be more able to approximate the true market, Gaussian enable us to analyze more properties in the return without losing the generality
+\item For GARCH(1,1), recall  that:
+\[
+\sigma^2_t = \omega + \alpha y_{t-1}^2 + \beta \sigma^2_{t-1}
+\]
+ We choose the potential parameters on the basis of  the study of the American financial indices. In summary, we choose $\omega \in \{10^{-7}, 10^{-8}\}$, $\alpha \in \{0.05, 0.08, 0.11, 0.14, 0.17, 0.20\}$, $\beta  \in \{0.1,0.2,\dots, 0.7\}$.
+\end{enumerate}
+
+\subsection{AR(1) + GARCH(1,1)}
+How $\omega$, $\alpha$ and $\beta$ affect the magnitude of risk measurement is kind of unconspicuous. As $y_{t-1}^2$, $\sigma_{t-1}^2$ and $\beta$ are positive number, the only thing we can ensure is that all the GARCH parameters are positively correlated with variance, thus the `` risk'' in some sense. However, there are more questions in need of taking care: 1) which parameter within $\omega$, $\alpha$ and $\beta$ are more responsible for the change in risk measurements? 2) Comparing the extent that the risk measurements changing with serial correlation or coefficients, does $\alpha$ and $\beta$ counts a lots?
+
+The Figure \ref{fig:garch_rm_alpha1} varifies our guess. The higher $\omega$, $\alpha$ or $\beta$ are all partial responsible for a highly risk measurements, in general. The eight lines with in the plots are clearly separate into two groups, upper and lower. The higher four curves have a higher $\omega$, which indicates a general magnitude of variance. Therefore, $\omega$ is dominant with in parameters.
+
+ES, VaR and Volatility are monotonically increasing with $alpha$. When the $\beta$ is relatively small, this relationship is almost linear, while when the $\beta$ is large, the relationship is more likely to be a higher order polynomial shape.
+
+In general, the CED has a similar trend with other risk measurements, while it less smoother. Especially, when the $\beta$ is low, $\alpha's$ effect is even more unclear. Showing in the plot is the lowest three lines are twisting together. 
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.9\textwidth]{../figures/simulation_garch/garch_AR1_risk_measures_neg_alpha.png}
+\caption{AR(1): Relationship between $\alpha$ parameter in the GARCH(1,1) and risk measures. The plots are produced under $\kappa_1 = -0.25$. The tend and pattern under $\kappa_1 = 0.25$ is almost the same.}
+%(Simulation path length: 1000, $\epsilon_t \sim 0.01T(df = 4)$)
+\label{fig:garch_rm_alpha1}
+\end{figure}
+
+Figure \ref{fig:garch_rm_coef1} explores the how large $\omega$, $\alpha$ or $\beta$ affect the risk measurements comparing with changing in serial correlation. As proved, we only choose the positive coefficients to see the clear trend. With in $\alpha$ and $\beta$, the $\beta$ is dominant, especially in the first three plots, the 0.5 change in $beta$ is larger than 0.7 change in $\kappa$, fixed $\alpha$. A more exciting pattern shown in the CED plot. It shows that the complex variance, $\alpha$ or $\beta$ less affect CED, comparing the other risk measurements. In general, the curve in last plot is steeper, suggesting that CED is more sensitive to$\kappa$ in AR(1) +GARCH(1,1) model.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.9\textwidth]{../figures/simulation_garch/garch_AR1_risk_measures_ar1}
+\caption{AR(1): Relationship between serial correlation in the GARCH(1,1) and risk measures. $\kappa_1 \in \{0.1,0.2, \dots, 0.8 \}$}
+%(Simulation path length: 1000, $\epsilon_t \sim 0.01T(df = 4)$)
+\label{fig:garch_rm_coef1}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.9\textwidth]{../figures/simulation_garch/garch_AR1_alpha_beta}
+\caption{AR(1): maximum drawdown distributions under different $\alpha$ and $\beta$. $\kappa = 0.25$, $\omega = 10^{-7}$ is fixed }
+%(Simulation path length: 1000, $\epsilon_t \sim 0.01T(df = 4)$)
+\label{fig:garch_ar1_ddd}
+\end{figure}
+
+Figure \ref{fig:garch_ar1_ddd} show the maximum drawdown distribution's change with the different $\alpha$ and $\beta$. Clearly a higher $\beta$ responsible for a more spread-out distribution, while $\alpha$ is less determinant. Table \ref{table:dist_garch_ar1_return} further confirms this point.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{|r |r r r r|}
+\hline
+& Mean & Sd & Sknewness & Kurtosis \\
+\hline
+$\alpha = 0.05 $ & 0.0 & 0.029 & -0.003 & 0.088\\
+$\alpha = 0.08 $ & 0.0 & 0.013 & 0.001 & -0.033\\
+$\alpha = 0.11 $ & 0.0 & 0.011 & -0.000 & -0.001\\
+$\alpha = 0.14 $ & 0.0 & 0.011& -0.004 &  0.006\\
+$\alpha = 0.17 $ & 0.0 & 0.013 & -0.014 & -0.004\\
+$\alpha = 0.20 $ & 0.0 & 0.029 & 0.005 & 0.054\\
+\hline
+\end{tabular}
+\caption{Statistics of simulated return distribution of AR(1)+ GARCH(1,1)}
+\label{table:dist_garch_ar1_return}
+\end{table}
+
+
+%%%%%%%%%%%% MA(1) + GARCH(1,1) %%%%%%%%%%%%%%%%
+\subsection{MA(1) + GARCH(1,1)}
+There is no much special in need of highlighting comparing with AR(1) + GARCH(1,1) model. Figure \ref{fig:garch_rm_alpha1_ma} and Figure \ref{fig:garch_rm_coef_ma} indicates a similar effect of $omega$, $alpha$ and $\beta$ on risk measurements.  However, at this time, the CED plots is less noisy than that in AR(1) model.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.9\textwidth]{../figures/simulation_garch/garch_MA1_risk_measures_neg_alpha.png}
+\caption{MA(1): Relationship between $\alpha$ parameter in the GARCH(1,1) and risk measures. The plots are produced under $\theta_1 = -0.25$. The tend and pattern under $\theta_1 = 0.25$ is almost the same.}
+%(Simulation path length: 1000, $\epsilon_t \sim 0.01T(df = 4)$)
+\label{fig:garch_rm_alpha1_ma}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.9\textwidth]{../figures/simulation_garch/garch_MA1_risk_measures_ma1}
+\caption{MA(1): Relationship between serial correlation in the GARCH(1,1) and risk measures. $\theta_1 \in \{0.1,0.2, \dots, 0.8 \}$}
+%(Simulation path length: 1000, $\epsilon_t \sim 0.01T(df = 4)$)
+\label{fig:garch_rm_coef_ma}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.9\textwidth]{../figures/simulation_garch/garch_MA1_alpha_beta}
+\caption{MA(1): maximum drawdown distributions under different $\alpha$ and $\beta$. $\theta = 0.25$, $\omega = 10^{-7}$ is fixed }
+%(Simulation path length: 1000, $\epsilon_t \sim 0.01T(df = 4)$)
+\label{fig:garch_ma1_ddd}
+\end{figure}
+
+%%%%%%%%%%%% ARMA(1,1) + GARCH(1,1) %%%%%%%%%%%%%%
+\subsection{ARMA(1,1) + GARCH(1,1)}
+ARMA(1,1) adds complexity of the model compared with pure AR or MA, while it is also very commonly used in the finance area. We examine the GARCH(1,1) with various GARCH parameters on ARMA(1,1), with $\kappa_1 \in \{0.25, -0.25\}$, $\theta_1 \in \{0.25, -0.25\}$ fixed, thus four combinations in total. Figure \ref{fig:garch_ARMA11_risk_measures_4_alpha} and Figure \ref{fig:garch_ARMA11_risk_measures_3_alpha} are two case showing the extreme difference in CED. The other two cases are put in the appendix later, which are shows a similar pattern as mentioned in the previous section.
+
+\ref{fig:garch_ARMA11_risk_measures_4_alpha} shows when both ARMA parameters are positive, the change $\alpha$ does not add "trend" in the CED, only more noisy than before.  However, in Figure \ref{fig:garch_ARMA11_risk_measures_3_alpha} where $\kappa_1 = 0.25$, $\theta_1 = -0.25$, the CED increases with the $\alpha$ and more sensitive when $\beta$ is high. Again, the $\omega$ is also the dominant factor compared with $\alpha$ and $\beta$.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.9\textwidth]{../figures/simulation_garch/garch_ARMA11_risk_measures_4_alpha}
+\caption{ARMA(1,1): Relationship between $\alpha$ parameter in the GARCH(1,1) and risk measurements. The plots are produced under $\kappa_1 = 0.25$, $\theta_1 = 0.25$. }
+%(Simulation path length: 1000, $\epsilon_t \sim 0.01T(df = 4)$)
+\label{fig:garch_ARMA11_risk_measures_4_alpha}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.9\textwidth]{../figures/simulation_garch/garch_ARMA11_risk_measures_3_alpha}
+\caption{ARMA(1,1): Relationship between $\alpha$ parameter in the GARCH(1,1) and risk measurements. The plots are produced under $\kappa_1 = 0.25$, $\theta_1 = -0.25$. }
+%(Simulation path length: 1000, $\epsilon_t \sim 0.01T(df = 4)$)
+\label{fig:garch_ARMA11_risk_measures_3_alpha}
+\end{figure}
+
+The following the two plots shows the ARMA parameters effects on the risk measurements, and also compare the magnitude with the GARCH parameters. For ES, VaR and volatility, the plots shows that the they are linearly increasing with the $\theta_1$, while non-linearly (probably quadratic, positive first derivative) increasing with the $\kappa_1$. Compared with traditional risk measurements, the plots of CED are more dended. Similarly to the previous conclusions, CED seems to be more sensitive to $\kappa$ and less sensitive to $\theta$. More over, when $\omega$, or the general trend, is small, the CED is very closed for different alpha.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.9\textwidth]{../figures/simulation_garch/garch_ARMA11_risk_measures_ar1}
+\caption{ARMA(1,1): Relationship between AR coefficients in the GARCH(1,1) and risk measures. $\kappa_1 \in \{0.1,0.2, \dots, 0.8 \}$. The $\omega$  is fixed as $10^{-7}$, and $\theta_1 = 0.5$}
+%(Simulation path length: 1000, $\epsilon_t \sim 0.01T(df = 4)$)
+\label{fig:garch_rm_coef_ar}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.9\textwidth]{../figures/simulation_garch/garch_ARMA11_risk_measures_ma1}
+\caption{MA(1): Relationship between MA coefficient in the GARCH(1,1) and risk measures. $\theta_1 \in \{0.1,0.2, \dots, 0.8 \}$. The $\omega$  is fixed as $10^{-7}$, and $\kappa_1 = 0.5$}
+%(Simulation path length: 1000, $\epsilon_t \sim 0.01T(df = 4)$)
+\label{fig:garch_rm_coef_ma}
+\end{figure}
+
+
+The following is the maximum drawdown distribution for various combination of $\alpha$ and $\beta$. Again, the $\beta$ has a greater effect the distribution comparing with $alpha$. However, it may be partially resulted from we chose $\alpha$ from a smaller range, although it is more close to the real market.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.9\textwidth]{../figures/simulation_garch/garch_ARMA11_alpha_beta_3}
+\caption{MA(1): maximum drawdown distributions under different $\alpha$ and $\beta$. $\theta = 0.25$, $\omega = 10^{-7}$, $\kappa_1 = 0.25$,$\theta_1 = -0.25$ is fixed }
+%(Simulation path length: 1000, $\epsilon_t \sim 0.01T(df = 4)$)
+\label{fig:garch_ma1_ddd}
+\end{figure}
+
+
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Findings}  %%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
