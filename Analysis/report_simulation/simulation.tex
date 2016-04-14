@@ -560,6 +560,8 @@ SD(X_t) = \Big(\frac{Var(\epsilon_t)}{1-\kappa_1^2}\Big)^{1/2}
 
  Then what if we compare two time series with different distribution of $\epsilon_t$ but the same standard deviation? Since standard deviation is one risk measures (volatility), this equals to fixing other risk measures to one level, say volatility = 1.2\%, and to see how CED changes with the serial correlation. 
 
+ Since our simulation is based on normal distribution of the noise term, volatility would be proportional to ES and VaR, which means fixed volatility also means fixed volatility. 
+
  Figure \ref{fig:AR1_adjsd} and \ref{fig:MA1_adjsd} shows the result for AR(1) and MA(1) separately. and Figure \ref{fig:aggregated_adjsd} shows the results for AR(2), MA(2) and ARMA(1, 1). There is clearer upward trends than the last two sections. These figures suggests that CED is a better metric in describing the returns with serial correlation. For the same volatility level, CED increases as the serial correlation increases, which means CED captures the changes in serial correlation while volatility, VaR and ES do not. 
 
 \begin{figure}[H]
@@ -697,7 +699,7 @@ There is no much special in need of highlighting comparing with AR(1) + GARCH(1,
 \subsection{ARMA(1,1) + GARCH(1,1)}
 ARMA(1,1) adds complexity of the model compared with pure AR or MA, while it is also very commonly used in the finance area. We examine the GARCH(1,1) with various GARCH parameters on ARMA(1,1), with $\kappa_1 \in \{0.25, -0.25\}$, $\theta_1 \in \{0.25, -0.25\}$ fixed, thus four combinations in total. Figure \ref{fig:garch_ARMA11_risk_measures_4_alpha} and Figure \ref{fig:garch_ARMA11_risk_measures_3_alpha} are two case showing the extreme difference in CED. The other two cases are put in the appendix later, which are shows a similar pattern as mentioned in the previous section.
 
-\ref{fig:garch_ARMA11_risk_measures_4_alpha} shows when both ARMA parameters are positive, the change $\alpha$ does not add "trend" in the CED, only more noisy than before.  However, in Figure \ref{fig:garch_ARMA11_risk_measures_3_alpha} where $\kappa_1 = 0.25$, $\theta_1 = -0.25$, the CED increases with the $\alpha$ and more sensitive when $\beta$ is high. Again, the $\omega$ is also the dominant factor compared with $\alpha$ and $\beta$.
+\ref{fig:garch_ARMA11_risk_measures_4_alpha} shows when both ARMA parameters are positive, the change $\alpha$ does not add ``trend" in the CED, only more noisy than before.  However, in Figure \ref{fig:garch_ARMA11_risk_measures_3_alpha} where $\kappa_1 = 0.25$, $\theta_1 = -0.25$, the CED increases with the $\alpha$ and more sensitive when $\beta$ is high. Again, the $\omega$ is also the dominant factor compared with $\alpha$ and $\beta$.
 
 \begin{figure}[H]
 \centering
@@ -744,9 +746,6 @@ The following is the maximum drawdown distribution for various combination of $\
 \label{fig:garch_ma1_ddd}
 \end{figure}
 
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Findings}  %%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -759,7 +758,9 @@ For time series with positive autocorrelation, return is very likely to have the
 
 For time series with negative autocorrelation, return is very likely to have the different sign as the return in the previous day. That is, if the the price of one assets goes down in one day, it is more likely that the price would bounce back in the next day, which leads to a small CED. 
 
-Figure \ref{fig:Comparison_pos_neg_autocorrelation} shows the comparison of simulated returns and prices when serial correlation is 0.7 and -0.7. The maximum drawdown of simulated series is 22.76\% and 9.49\% separately. 
+However, other risk measures such as VaR, ES and volatility are obtained from the empirical distribution of returns. If we shuffle the return sequence, we would get the same value for VaR, ES, and volatility but not for CED.
+
+Figure \ref{fig:Comparison_pos_neg_autocorrelation} shows the comparison of simulated returns and prices when serial correlation is 0.7 and -0.7. The maximum drawdown of simulated series is 22.76\% and 9.49\% separately. And these two return series have the same VaR, ES and volatility.
 
 \begin{figure}[H]
 \centering
