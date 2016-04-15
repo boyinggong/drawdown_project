@@ -26,12 +26,12 @@
 
 \clearpage
 
-\section{Noice term with normal distribution}
+\section{Noise term with normal distribution}
 
-To better understand the behaviour of conditional expected drawdown (CED) and the maximum drawdown distribution, we use some simple assumptions and paramters in this section as follows:
+To better understand the behaviour of conditional expected drawdown (CED) and the maximum drawdown distribution, we use some simple assumptions and parameters in this section as follows:
 
 \begin{enumerate}
-\item Noice term in the time series model follows Normal distribution with standard deviation of 0.01: $\epsilon \sim N(0, 0.0001)$.
+\item Noise terms in the time series model follow Normal distribution with standard deviation of 0.01: $\epsilon \sim N(0, 0.0001)$.
 \item Risk measures including volatility, VaR, ES and maximum drawdown are calculated based on simulated time series with path length 1000. The calculation of maximum drawdown is replicated 1000 times in order to obtain the maximum drawdown distribution and its tail mean (CED).
 \item All time series parameters in this section range from -0.9 to 0.9. For time series with multiple parameters such as AR(2), ARMA(1, 1), the parameters are cartesian product of arithmetic progressions range from -0.9 to 0.9. Note that to take the stationary of AR and ARMA models into consideration (all moving averages are stationary, but the AR and ARMA model have to meet certain criteria to be stationary), not all parameters in the cartesian product are used in the simulation.
 \end{enumerate}
@@ -54,7 +54,7 @@ For VaR, ES and CED, the derivative of risk measure values to $\kappa_1$ approac
 
 Figure \ref{fig:AR1_maxDrawdown_dist} shows the maximum drawdown distribution for various $\kappa_1$. Same as revealed in Figure \ref{fig:AR1_risk_measures}, the mean and tail mean of maximum drawdown distribution increases as we increase $\kappa_1$ from negative values to positive values.
 
-Table \ref{table: AR1_return} shows the basic summary statistics of the simulated return sequences. The standard deviation increases as we increase the absolute values of the coefficient. The sknewness and kurtosis are close to zeros. Kolmogorov-Smirnov Tests indicate that they all follow normal distribution. 
+Table \ref{table: AR1_return} shows the basic summary statistics of the simulated return sequences. The standard deviation increases as we increase the absolute values of the coefficient. The skewness and kurtosis are close to zeros. Kolmogorov-Smirnov Tests indicate that they all follow normal distribution. 
 
 \begin{figure}[H]
 \centering
@@ -76,7 +76,7 @@ Table \ref{table: AR1_return} shows the basic summary statistics of the simulate
 \centering
 \begin{tabular}{|r |r r r r|}
 \hline
-& Mean & Sd & Sknewness & Kurtosis \\
+& Mean & Sd & Skewness & Kurtosis \\
 \hline
 $\kappa_1 = -0.75$ & 0.0 & 0.015 & 0.009 & 0.032\\
 $\kappa_1 = -0.5$ & 0.0 & 0.012 & 0.006 & 0.021\\
@@ -104,7 +104,7 @@ Figure \ref{fig:AR2_risk_measures_pos} and \ref{fig:AR2_risk_measures_neg} shows
 
 Figure \ref{fig:AR2_maxDrawdown_dist_kappa2_02} and \ref{fig:AR2_maxDrawdown_dist_kappa2_-02} shows the maximum drawdown distribution as we fix $\kappa_2$ to 0.2 and -0.2 respectively and change $\kappa_1$. Again the maximum drawdown distribution shows monotonicity as we increase $\kappa_1$ from negative to positive for both $\kappa_2 = 0.2 $ and $\kappa_2 = -0.2$. It would be the similar if we fix $\kappa_1$ and examine the maximum drawdown distribution for different $\kappa_2$ values.  
 
-Table \ref{table: AR2_return} shows the summary statistics for the simulated return sequences. As indicated above, the standard deviation value increases as we increase the absolute values of the coefficient. The sknewness and kurtosis are close to zeros.
+Table \ref{table: AR2_return} shows the summary statistics for the simulated return sequences. As indicated above, the standard deviation value increases as we increase the absolute values of the coefficient. The skewness and kurtosis are close to zeros.
 
 \begin{figure}[H]
 \centering
@@ -158,7 +158,7 @@ Table \ref{table: AR2_return} shows the summary statistics for the simulated ret
 \centering
 \begin{tabular}{|r |r r r r|}
 \hline
-& Mean & Sd & Sknewness & Kurtosis \\
+& Mean & Sd & Skewness & Kurtosis \\
 \hline
 $\kappa_1 = -0.75, \kappa_2 = 0.2$ & 0.0 & 0.029 & -0.005 & 0.039\\
 $\kappa_1 = -0.5, \kappa_2 = 0.2$ & 0.0 & 0.013 & 0.000 & 0.004\\
@@ -214,7 +214,7 @@ Figure \ref{fig:MA1_maxDrawdown_dist} shows the maximum drawdown distribution as
 \centering
 \begin{tabular}{|r |r r r r|}
 \hline
-& Mean & Sd & Sknewness & Kurtosis \\
+& Mean & Sd & Skewness & Kurtosis \\
 \hline
 $\theta_1 = -0.75$ & 0.0 & 0.012 & -0.002 & -0.008\\
 $\theta_1 = -0.5$ & 0.0 & 0.011 & -0.004 & -0.009\\
@@ -242,7 +242,7 @@ As shown in Figure \ref{fig:MA2_risk_measures_pos} and Figure \ref{fig:AR2_risk_
 
 Figure \ref{fig:MA2_maxDrawdown_dist_theta1_02} shows the change of maximum drawdown distribution when we fix $\theta_1=0.2$, and Figure \ref{fig:MA2_maxDrawdown_dist_theta2_02} shows the maximum drawdown distribution when we fix $\theta_2=0.2$. When fixing one parameter and change the other parameter value from negative to positive, the maximum drawdown distributions are monotonic increasing, which indicates that the tail mean of the distribution (CED) increases.
 
-Same as the AR(1), AR(2), and MA(1) model above, the mean, sknewness and kurtosis is small for our simulated return sequences. The standard deviation increase as we increase the absolute value of the coefficient, which can be explained by the theoretical calculation.
+Same as the AR(1), AR(2), and MA(1) model above, the mean, skewness and kurtosis is small for our simulated return sequences. The standard deviation increase as we increase the absolute value of the coefficient, which can be explained by the theoretical calculation.
 
 \begin{figure}[H]
 \centering
@@ -296,7 +296,7 @@ Same as the AR(1), AR(2), and MA(1) model above, the mean, sknewness and kurtosi
 \centering
 \begin{tabular}{|r |r r r r|}
 \hline
-& Mean & Sd & Sknewness & Kurtosis \\
+& Mean & Sd & Skewness & Kurtosis \\
 \hline
 $\theta_1 = -0.75, \theta_2 = 0.2$ & 0.0 & 0.013 & 0.004 & -0.015\\
 $\theta_1 = -0.5, \theta_2 = 0.2$ & 0.0 & 0.011 & -0.006 & -0.002\\
@@ -320,7 +320,7 @@ For the most simple ARMA model:
 X_t = \kappa_1X_{t-1} + \epsilon_t + \theta_1\epsilon_{t-1}
 \end{equation}
 
-Figure \ref{fig:AR1MA1_risk_measures_pos} and Figure Figure \ref{fig:AR1MA1_risk_measures_neg} shows the relationship between serial correlation $\rho_1$ and risk measures for positive and negative $\theta_1$ respectively. For positive $\theta_1$, the time series is more likely to be positively correlated while for negative $\theta_1$ it is mode likely to be negative correlated. Interestingly, for positive $\theta_1$ values, the relationship between CED and serial correlation $\rho_1$ is not influenced by the value of $\rho_1$. CED shows an increasing trend as we increase the value of serial correlation. Similar as the above subsections for other time series models, CED is a good tool to distinguish the postitive and negative seiral correlation.
+Figure \ref{fig:AR1MA1_risk_measures_pos} and Figure Figure \ref{fig:AR1MA1_risk_measures_neg} shows the relationship between serial correlation $\rho_1$ and risk measures for positive and negative $\theta_1$ respectively. For positive $\theta_1$, the time series is more likely to be positively correlated while for negative $\theta_1$ it is mode likely to be negative correlated. Interestingly, for positive $\theta_1$ values, the relationship between CED and serial correlation $\rho_1$ is not influenced by the value of $\rho_1$. CED shows an increasing trend as we increase the value of serial correlation. Similar as the above subsections for other time series models, CED is a good tool to distinguish the positive and negative serial correlation.
 
 \begin{figure}[H]
 \centering
@@ -354,66 +354,27 @@ Figure \ref{fig:AR1MA1_risk_measures_pos} and Figure Figure \ref{fig:AR1MA1_risk
 \label{fig:AR1MA1_risk_measures_neg_coef}
 \end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Simulation with standard error adjusted} %%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-Standardize the simulated time series by deviding certain factors such that the time series have same standard deviation. Currently our simulation studies are based on fixed distribution of the noice term. For example, for normal distribution noice we use $\epsilon \sim N(0, 0.0001)$ and for t-distribuiton we use $\epsilon \sim 0.01T(df =4)$. We could also do our simulation based on fixed standard deviation of the simulated time series sequences.
-
-In our simulation, the standard deviation for each our simulated time series is different. Say for AR(1), the standard deviation of time series $X_t = 0.5  X_{t-1} + \epsilon_t$ and $X_t = 0.1  X_{t-1} + \epsilon_t$ is different since we use the same distribution for $\epsilon_t$. Then what if we compare two time series with different distribution of $\epsilon_t$ but the same standard deviation? Since standard deviation is one risk measures (volatility), this equals to fixing other risk measures to one level, say volatility = 1.2\%, and to see how CED changes with the serial correlation. Ideally, we may see the correlation between CED and serial correlation. Then we may conclude that CED is better in detecting serial correlation because under this case using other risk measures would get the same risk value, but CED would not and can reflect the change of serial correlation
-\begin{figure}[H]
-\centering
-\includegraphics[width = 0.5\textwidth]{../figures/simulation/AR1_adjsd}
-\caption{AR(1): Relationship between serial correlation $\rho_1$ and CED with adjusted standard error}
-(Simulation path length: 1000)
-\label{fig:AR1_adjsd}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width = 0.5\textwidth]{../figures/simulation/MA1_adjsd}
-\caption{MA(1): Relationship between serial correlation $\rho_1$ and CED with adjusted standard error}
-(Simulation path length: 1000)
-\label{fig:MA1_adjsd}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width = 1\textwidth]{../figures/simulation/aggregated_adjsd}
-\caption{Relationship between serial correlation $\rho_1$ and CED with adjusted standard error}
-(Simulation path length: 1000, from left to right: AR(2), MA(2), ARMA(1, 1))
-\label{fig:aggregated_adjsd}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width = 1\textwidth]{../figures/simulation/aggregated_adjsd_subset}
-\caption{Relationship between serial correlation $\rho_1$ and CED with adjusted standard error}
-(Simulation path length: 1000, from left to right: AR(2), MA(2), ARMA(1, 1), model coefficient $\leq$ 0.5)
-\label{fig:aggregated_adjsd_subset}
-\end{figure}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Noice term with student t distribution}
+\section{Noise term with student t distribution}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 In this section, parameters used are close to what we've encountered in the empirical studies. 
 \begin{enumerate}
-\item White noice terms are simulated using t-distribution (degree of freedom = 4). Finanical return usually have fat-tail distributions.
+\item White noise terms are simulated using t-distribution (degree of freedom = 4). Financial return usually have fat-tail distributions.
 \item Set path length to 63, which is the number of trading days in three month.
-\item Time series parameters all range from -0.3 to 0.3, which is similar to the financial time series data in the real world. Usually financial data does not show strong serial correlation. If we could narrow down our scope to smaller serial correlations we may found that the serial correlation is more closely related with vaious risk measures.
+\item Time series parameters all range from -0.3 to 0.3, which is similar to the financial time series data in the real world. Usually financial data does not show strong serial correlation. If we could narrow down our scope to smaller serial correlations we may found that the serial correlation is more closely related with various risk measures.
 \end{enumerate}
 
-The relationship between serial correlation and risk measures revealed in this section resembles that of the last section where noice terms follow normal distribution. There are some differences due to the heavy-tail distribution. We illustrate more in the specific model part.
+The relationship between serial correlation and risk measures revealed in this section resembles that of the last section where noise terms follow normal distribution. There are some differences due to the heavy-tail distribution. We illustrate more in the specific model part.
 
 \subsection{AR(1)}
 
-Models using time series with t-distribution white noice show more randomness as shown in Figure \ref{table: T_dist_AR1_return}. The relationship between AR(1) coefficients (which is the serial correlation $\rho_1$) and risk measures is similar to the model with normal distribution. However, the points are not lies prefectly in a curve probably bacause the heavy tail introduce more randomness of the quantile and tail mean values. 
+Models using time series with t-distribution white noise show more randomness as shown in Figure \ref{table: T_dist_AR1_return}. The relationship between AR(1) coefficients (which is the serial correlation $\rho_1$) and risk measures is similar to the model with normal distribution. However, the points are not lies perfectly in a curve probably because the heavy tail introduce more randomness of the quantile and tail mean values. 
 
-Table \ref{table: T_dist_AR1_return} shows the summary statisitcs of the simulated return distribution. Their mean and skewness are close to zeor. And they have high kurtosis which implies the fat tail.
+Table \ref{table: T_dist_AR1_return} shows the summary statistics of the simulated return distribution. Their mean and skewness are close to zero. And they have high kurtosis which implies the fat tail.
 
 \begin{figure}[H]
 \centering
@@ -438,7 +399,7 @@ Table \ref{table: T_dist_AR1_return} shows the summary statisitcs of the simulat
 \centering
 \begin{tabular}{|r |r r r r|}
 \hline
-& Mean & Sd & Sknewness & Kurtosis \\
+& Mean & Sd & Skewness & Kurtosis \\
 \hline
 $\kappa_1 = -0.3$ & 0.0 & 0.015 & -0.53 & 18.8\\
 $\kappa_1 = -0.2$ & 0.0 & 0.014 & -0.13 & 6.4\\
@@ -454,7 +415,7 @@ $\kappa_1 = 0.3$ & 0.0 & 0.015 & -0.06 & 7.4\\
 
 \subsection{AR(2)}
 
-Same as presented in the last section, ES, VaR and volatility increases as we increase the absolute values of $\kappa_2$. And CED increases as we change $\kappa_2$ from negative to positive. This shows that CED values are inherently not symmetric not only for the serial correlation but for the coefficents. The summary statistics in Table \ref{table: T_dist_AR2_return} also indicate the fat tail distribution.
+Same as presented in the last section, ES, VaR and volatility increases as we increase the absolute values of $\kappa_2$. And CED increases as we change $\kappa_2$ from negative to positive. This shows that CED values are inherently not symmetric not only for the serial correlation but for the coefficients. The summary statistics in Table \ref{table: T_dist_AR2_return} also indicate the fat tail distribution.
 
 \begin{figure}[H]
 \centering
@@ -476,7 +437,7 @@ Same as presented in the last section, ES, VaR and volatility increases as we in
 \centering
 \begin{tabular}{|r |r r r r|}
 \hline
-& Mean & Sd & Sknewness & Kurtosis \\
+& Mean & Sd & Skewness & Kurtosis \\
 \hline
 $\kappa_1 = 0.1, \kappa_2 = -0.3$ & 0.0 & 0.015 & -0.024 & 16.7\\
 $\kappa_1 = 0.1, \kappa_2 = -0.2$ & 0.0 & 0.014 & -0.030 & 8.0\\
@@ -492,7 +453,7 @@ $\kappa_1 = 0.1, \kappa_2 = 0.3$ & 0.0 & 0.015 & -0.009 & 5.8\\
 
 \subsection{MA(1)}
 
-Again the relationship between serial correlation and risk measures for MA(1) model greatly resembles the relationship in last section for the normal distributed noice term. The difference lies in the large randomness caused by the fat tail. 
+Again the relationship between serial correlation and risk measures for MA(1) model greatly resembles the relationship in last section for the normal distributed noise term. The difference lies in the large randomness caused by the fat tail. 
 
 \begin{figure}[H]
 \centering
@@ -522,7 +483,7 @@ Again the relationship between serial correlation and risk measures for MA(1) mo
 \centering
 \begin{tabular}{|r |r r r r|}
 \hline
-& Mean & Sd & Sknewness & Kurtosis \\
+& Mean & Sd & Skewness & Kurtosis \\
 \hline
 $\kappa_1 = 0.1, \kappa_2 = -0.3$ & 0.0 & 0.015 & -0.401 & 22.9\\
 $\kappa_1 = 0.1, \kappa_2 = -0.2$ & 0.0 & 0.014 & -0.312 & 12.3\\
@@ -560,7 +521,7 @@ Since we have narrowed down our scope to time series coefficients which range be
 \centering
 \begin{tabular}{|r |r r r r|}
 \hline
-& Mean & Sd & Sknewness & Kurtosis \\
+& Mean & Sd & Skewness & Kurtosis \\
 \hline
 $\kappa_1 = 0.1, \kappa_2 = -0.3$ & 0.0 & 0.015 & -0.204 & 10.7\\
 $\kappa_1 = 0.1, \kappa_2 = -0.2$ & 0.0 & 0.015 & 0.162 & 8.9\\
@@ -584,15 +545,66 @@ $\kappa_1 = 0.1, \kappa_2 = 0.3$ & 0.0 & 0.015 & -0.097 & 9.9\\
 \label{fig:T_dist_AR1MA1_risk_measures}
 \end{figure}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Simulation with standard error adjusted} %%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+So far our simulation studies are based on fixed distribution of the noise term. For example, for normal distribution noise we use $\epsilon \sim N(0, 0.0001)$ and for t-distribution we use $\epsilon \sim 0.01T(df =4)$. In this section, we standardize the simulated time series by dividing certain factors such that the time series have same standard deviation. 
+
+In our simulation, the standard deviation for each our simulated time series is different. Say for AR(1), the standard deviation of time series $X_t = 0.5  X_{t-1} + \epsilon_t$ and $X_t = 0.1  X_{t-1} + \epsilon_t$ is different since we use the same distribution for $\epsilon_t$. The standard deviation for AR(1) model is :
+
+\begin{equation}
+SD(X_t) = \Big(\frac{Var(\epsilon_t)}{1-\kappa_1^2}\Big)^{1/2}
+\end{equation}
+
+ Then what if we compare two time series with different distribution of $\epsilon_t$ but the same standard deviation? Since standard deviation is one risk measures (volatility), this equals to fixing other risk measures to one level, say volatility = 1.2\%, and to see how CED changes with the serial correlation. 
+
+ Since our simulation is based on normal distribution of the noise term, volatility would be proportional to ES and VaR, which means fixed volatility also means fixed volatility. 
+
+ Figure \ref{fig:AR1_adjsd} and \ref{fig:MA1_adjsd} shows the result for AR(1) and MA(1) separately. and Figure \ref{fig:aggregated_adjsd} shows the results for AR(2), MA(2) and ARMA(1, 1). There is clearer upward trends than the last two sections. These figures suggests that CED is a better metric in describing the returns with serial correlation. For the same volatility level, CED increases as the serial correlation increases, which means CED captures the changes in serial correlation while volatility, VaR and ES do not. 
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.5\textwidth]{../figures/simulation/AR1_adjsd}
+\caption{AR(1): Relationship between serial correlation $\rho_1$ and CED with adjusted standard error}
+(Simulation path length: 1000)
+\label{fig:AR1_adjsd}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.5\textwidth]{../figures/simulation/MA1_adjsd}
+\caption{MA(1): Relationship between serial correlation $\rho_1$ and CED with adjusted standard error}
+(Simulation path length: 1000)
+\label{fig:MA1_adjsd}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 1\textwidth]{../figures/simulation/aggregated_adjsd}
+\caption{Relationship between serial correlation $\rho_1$ and CED with adjusted standard error}
+(Simulation path length: 1000, from left to right: AR(2), MA(2), ARMA(1, 1))
+\label{fig:aggregated_adjsd}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 1\textwidth]{../figures/simulation/aggregated_adjsd_subset}
+\caption{Relationship between serial correlation $\rho_1$ and CED with adjusted standard error}
+(Simulation path length: 1000, from left to right: AR(2), MA(2), ARMA(1, 1), model coefficient $\in(-0.5, 0.5)$)
+\label{fig:aggregated_adjsd_subset}
+\end{figure}
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
-\section{More Complex Noice Term}  %%%%%
+\section{More Complex noise Term}  %%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
-The previous several sections have already stated general ideas that how magnitude of risk measurements correlated with serial correlation and ARMA coeffients. However, the inspiring results should not encourage us ignore the complexity of the market: it always does not produce such regular time series. The ocational events shock the market and the returns always shows clustered variance. As has been analyzed in the previous reports, a normal way to handle the complex variance in the return is using generalized autoregressive conditional heteroskedasticity (GARCH) model. In this section, common ARMA time series are simulated with GARCH noise term, to which we expect analysis the extent of effect that complex noise term having on the relationship between serial correlation and risk measurements.
+The previous several sections have already stated general ideas that how magnitude of risk measurements correlated with serial correlation and ARMA coefficients. However, the inspiring results should not encourage us ignore the complexity of the market: it always does not produce such regular time series. The occasional events shock the market and the returns always shows clustered variance. As has been analyzed in the previous reports, a normal way to handle the complex variance in the return is using generalized autoregressive conditional heteroskedasticity (GARCH) model. In this section, common ARMA time series are simulated with GARCH noise term, to which we expect analysis the extent of effect that complex noise term having on the relationship between serial correlation and risk measurements.
 
 \begin{enumerate}
-\item At this level, we limit our analysis on GARCH(1,1), for the reason that in the empirical study on thirteen American indices, GARCH(1,1) is good enough catch the varience anormly in the return.
-\item The GARCH model is based on the Gaussian conditional distribution. Although in the empirical study on thirteen Amercian indices, we showed that a student t conditional distribution seems to be more able to approximate the true market, Gaussian enable us to analyze more properties in the return without losing the generality
+\item At this level, we limit our analysis on GARCH(1,1), for the reason that in the empirical study on thirteen American indices, GARCH(1,1) is good enough catch the variance anomaly in the return.
+\item The GARCH model is based on the Gaussian conditional distribution. Although in the empirical study on thirteen American indices, we showed that a student t conditional distribution seems to be more able to approximate the true market, Gaussian enable us to analyze more properties in the return without losing the generality
 \item For GARCH(1,1), recall  that:
 \[
 \sigma^2_t = \omega + \alpha y_{t-1}^2 + \beta \sigma^2_{t-1}
@@ -601,9 +613,9 @@ The previous several sections have already stated general ideas that how magnitu
 \end{enumerate}
 
 \subsection{AR(1) + GARCH(1,1)}
-How $\omega$, $\alpha$ and $\beta$ affect the magnitude of risk measurement is kind of unconspicuous. As $y_{t-1}^2$, $\sigma_{t-1}^2$ and $\beta$ are positive number, the only thing we can ensure is that all the GARCH parameters are positively correlated with variance, thus the `` risk'' in some sense. However, there are more questions in need of taking care: 1) which parameter within $\omega$, $\alpha$ and $\beta$ are more responsible for the change in risk measurements? 2) Comparing the extent that the risk measurements changing with serial correlation or coefficients, does $\alpha$ and $\beta$ counts a lots?
+How $\omega$, $\alpha$ and $\beta$ affect the magnitude of risk measurement is kind of inconspicuous. As $y_{t-1}^2$, $\sigma_{t-1}^2$ and $\beta$ are positive number, the only thing we can ensure is that all the GARCH parameters are positively correlated with variance, thus the `` risk'' in some sense. However, there are more questions in need of taking care: 1) which parameter within $\omega$, $\alpha$ and $\beta$ are more responsible for the change in risk measurements? 2) Comparing the extent that the risk measurements changing with serial correlation or coefficients, does $\alpha$ and $\beta$ counts a lots?
 
-The Figure \ref{fig:garch_rm_alpha1} varifies our guess. The higher $\omega$, $\alpha$ or $\beta$ are all partial responsible for a highly risk measurements, in general. The eight lines with in the plots are clearly separate into two groups, upper and lower. The higher four curves have a higher $\omega$, which indicates a general magnitude of variance. Therefore, $\omega$ is dominant with in parameters.
+The Figure \ref{fig:garch_rm_alpha1} verifies our guess. The higher $\omega$, $\alpha$ or $\beta$ are all partial responsible for a highly risk measurements, in general. The eight lines with in the plots are clearly separate into two groups, upper and lower. The higher four curves have a higher $\omega$, which indicates a general magnitude of variance. Therefore, $\omega$ is dominant with in parameters.
 
 ES, VaR and Volatility are monotonically increasing with $alpha$. When the $\beta$ is relatively small, this relationship is almost linear, while when the $\beta$ is large, the relationship is more likely to be a higher order polynomial shape.
 
@@ -640,7 +652,7 @@ Figure \ref{fig:garch_ar1_ddd} show the maximum drawdown distribution's change w
 \centering
 \begin{tabular}{|r |r r r r|}
 \hline
-& Mean & Sd & Sknewness & Kurtosis \\
+& Mean & Sd & Skewness & Kurtosis \\
 \hline
 $\alpha = 0.05 $ & 0.0 & 0.029 & -0.003 & 0.088\\
 $\alpha = 0.08 $ & 0.0 & 0.013 & 0.001 & -0.033\\
@@ -687,7 +699,7 @@ There is no much special in need of highlighting comparing with AR(1) + GARCH(1,
 \subsection{ARMA(1,1) + GARCH(1,1)}
 ARMA(1,1) adds complexity of the model compared with pure AR or MA, while it is also very commonly used in the finance area. We examine the GARCH(1,1) with various GARCH parameters on ARMA(1,1), with $\kappa_1 \in \{0.25, -0.25\}$, $\theta_1 \in \{0.25, -0.25\}$ fixed, thus four combinations in total. Figure \ref{fig:garch_ARMA11_risk_measures_4_alpha} and Figure \ref{fig:garch_ARMA11_risk_measures_3_alpha} are two case showing the extreme difference in CED. The other two cases are put in the appendix later, which are shows a similar pattern as mentioned in the previous section.
 
-\ref{fig:garch_ARMA11_risk_measures_4_alpha} shows when both ARMA parameters are positive, the change $\alpha$ does not add "trend" in the CED, only more noisy than before.  However, in Figure \ref{fig:garch_ARMA11_risk_measures_3_alpha} where $\kappa_1 = 0.25$, $\theta_1 = -0.25$, the CED increases with the $\alpha$ and more sensitive when $\beta$ is high. Again, the $\omega$ is also the dominant factor compared with $\alpha$ and $\beta$.
+\ref{fig:garch_ARMA11_risk_measures_4_alpha} shows when both ARMA parameters are positive, the change $\alpha$ does not add ``trend" in the CED, only more noisy than before.  However, in Figure \ref{fig:garch_ARMA11_risk_measures_3_alpha} where $\kappa_1 = 0.25$, $\theta_1 = -0.25$, the CED increases with the $\alpha$ and more sensitive when $\beta$ is high. Again, the $\omega$ is also the dominant factor compared with $\alpha$ and $\beta$.
 
 \begin{figure}[H]
 \centering
@@ -734,9 +746,6 @@ The following is the maximum drawdown distribution for various combination of $\
 \label{fig:garch_ma1_ddd}
 \end{figure}
 
-
-
-
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Findings}  %%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
@@ -749,7 +758,9 @@ For time series with positive autocorrelation, return is very likely to have the
 
 For time series with negative autocorrelation, return is very likely to have the different sign as the return in the previous day. That is, if the the price of one assets goes down in one day, it is more likely that the price would bounce back in the next day, which leads to a small CED. 
 
-Figure \ref{fig:Comparison_pos_neg_autocorrelation} shows the comparison of simluated returns and prices when serial correlation is 0.5 and -0.5. They maximum dradown of simlulated series is 22.76\% and 9.49\% separately. 
+However, other risk measures such as VaR, ES and volatility are obtained from the empirical distribution of returns. If we shuffle the return sequence, we would get the same value for VaR, ES, and volatility but not for CED.
+
+Figure \ref{fig:Comparison_pos_neg_autocorrelation} shows the comparison of simulated returns and prices when serial correlation is 0.7 and -0.7. The maximum drawdown of simulated series is 22.76\% and 9.49\% separately. And these two return series have the same VaR, ES and volatility.
 
 \begin{figure}[H]
 \centering
@@ -784,10 +795,21 @@ Because all the returns in every subpath would be multiplied by approximately 10
 \section{Thoughts} %%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%
 
-\textit{Potential efforts}:
-\begin{enumerate}
-\item Add Garch model.
-\item So far we have been working on the first order serial correlation $\rho_1$, we have also looked at the relationship between higher order serial correlation and risk measures. There are some complex relationship for different time series models. We may look into that in the future. 
-\end{enumerate}
+In the thoughts section above, we focused on the how noise term variance and order 1 serial correlation related with CED. After the simulation of various time series models, we found that CED is correlated with the autocorrelation function. To be more specific, if we simulate two time series model $\{X_t\}$ and $\{Y_t\}$ with the same autocorrelation function $\rho_X(t) = \rho_Y(t)$ for $ t = 0, 1, \cdots, m-1, m+1, \cdots$, but $\rho_X(m) > \rho_Y(m)$, Then the CED of $\{X_t\}$ will be larger than $\{Y_t\}$. However, for real world price data, it is more likely that there will be more complex pattern of the autocorrelation function which results in more complicated variation of CED values. For example, for asset X and asset Y if $\rho_X(1) < \rho_Y(1)$, but $\rho_X(0) > \rho_Y(0)$, it would be harder to decide the relationship between CED of X and CED of Y.
+
+We haven't prove the above idea since simulating two time series with only one term in the autocorrelation function different is hard. But in section 3, we fixed $\rho(0)$ and simulated time series with various $\rho(t), t = 1, 2, \cdots$ and looked at the relationship between $\rho(1)$ and CED. The results are close to what we proposed above. 
 
 \end{document}
+
+
+
+
+
+
+
+
+
+
+
+
+
