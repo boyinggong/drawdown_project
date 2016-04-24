@@ -3,7 +3,7 @@ source("risk_diagostics_function.R")
 
 library(PerformanceAnalytics)
 
-max_drawdown = function(r){
+max_drawdown = function(r, denominator = "start"){
   log_r = log(r + 1)
   sum = 0
   this_sum = 0
@@ -23,29 +23,42 @@ max_drawdown = function(r){
       this_Ri = i + 1
     }
   }
-  max_drawdown = -(exp(sum)-1)
-  return(list(max_drawdown=max_drawdown, Ri=Ri, Rj=Rj))
+  if (denominator == "start"){
+    max_drawdown = exp(sum(log_r[1:(Ri-1)])) - exp(sum(log_r[1:Rj]))
+    return(list(max_drawdown=max_drawdown, Ri=Ri, Rj=Rj))
+  }else if (denominator == "peak"){
+    max_drawdown = -(exp(sum)-1)
+  }
 }
 
-## r: data frame or matrix, each column represents the return series of one asset class
-## weight: length equal to the number of columns in r, 
-## represents the weight of each assets in the portfolio
-## return: maximum drawdown, a vector of drawdown contributions(length = number of asset class)
-
-### CHECK CORRECTNESS!!!!!!!
-
 drawdown_contribution = function(r, weight){
+  ## r: data frame or matrix, each column represents the return series of one asset class
+  r = as.matrix(r)
   if (!all.equal(sum(weight), 1)) stop("weight must sum to one")
-  r_all = r%*%weight
+  price = apply(r+1, 2, cumprod)%*%weight
+  r_all = (price - c(1, price[-length(price)]))/c(1, price[-length(price)])
   max_d = max_drawdown(r_all)
-  contribution = (1-apply(r[maxD$Ri:max_d$Rj, ]+1, 2, prod)) * weight
-  contribution = max_d_asset/sum(max_d_asset)
+  contribution = (apply(r[1:(max_d$Ri-1), ]+1, 2, prod)-apply(r[1:max_d$Rj, ]+1, 2, prod)) * weight
   return(list(max_drawdown = max_d$max_drawdown, contribution = contribution))
 }
 
-drawdown_contribution(r, c(0.4, 0.6))
+###################
+# Test data frame #
+###################
+
+SPX = assetData$SPX$retrn_dl[which(assetData$SPX$Date == "2007-01-03"):
+                               (which(assetData$SPX$Date == "2008-01-03")-1)]
+RMZ = assetData$RMZ$retrn_dl[which(assetData$RMZ$Date == "2007-01-03"):
+                               (which(assetData$RMZ$Date == "2008-01-03")-1)]
+test_r = data.frame(SPX=SPX, RMZ=RMZ)
+
+max_drawdown(test_r$SPX)
+test_contr = drawdown_contribution(r=test_r, weight=c(0.4, 0.6))
+
 
 ## calculate risk contribution (rolling and )
+
+max_drawdown(SPX)
 
 risk_contribution = function(){
   
@@ -62,41 +75,3 @@ risk_contribution = function(){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## TESTS
-
-# r = matrix(returns, nc =2)
-# weight = c(0.4, 0.6)
-# r%*%weight
-# 
-# a1 = 1
-# a2 = 100
-# 
-# dt <- as.data.frame(assetData$AGG$retrn_dl[a1:a2])
-# rownames(dt) <- assetData$AGG$Date[a1:a2] 
-# maxDrawdown(dt)
-# 
-# returns = assetData$AGG[a1:a2, ]$retrn_dl
-# myfunc = max_drawdown(returns)
-# myfunc$max_drawdown
-# 
-# return_series = assetData$AGG$retrn_dl[(myfunc$Ri+a1-1):(myfunc$Rj+a1-1)]
-# -(exp(sum(log(return_series+1)))-1)
-# 
-# 
-# library(rbenchmark)
-# benchmark(maxDrawdown(dt), max_drawdown(returns))
