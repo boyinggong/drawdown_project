@@ -53,6 +53,11 @@ risk_contribution = function(){
 
 
 
+### risk contributions of VaR, ES and volatility
+### Reference: 
+### ES http://braverock.com/brian/R/PerformanceAnalytics/html/ES.html
+### VaR http://braverock.com/brian/R/PerformanceAnalytics/html/VaR.html
+### volatility page3 https://cran.r-project.org/web/packages/PortRisk/PortRisk.pdf
 
 
 
@@ -62,25 +67,36 @@ risk_contribution = function(){
 
 
 
-r = matrix(returns, nc =2)
-weight = c(0.4, 0.6)
-r%*%weight
 
 
-a1 = 1
-a2 = 100
-
-dt <- as.data.frame(assetData$AGG$retrn_dl[a1:a2])
-rownames(dt) <- assetData$AGG$Date[a1:a2] 
-maxDrawdown(dt)
-
-returns = assetData$AGG[a1:a2, ]$retrn_dl
-myfunc = max_drawdown(returns)
-myfunc$max_drawdown
-
-return_series = assetData$AGG$retrn_dl[(myfunc$Ri+a1-1):(myfunc$Rj+a1-1)]
--(exp(sum(log(return_series+1)))-1)
 
 
-library(rbenchmark)
-benchmark(maxDrawdown(dt), max_drawdown(returns))
+
+
+
+
+
+
+## TESTS
+
+# r = matrix(returns, nc =2)
+# weight = c(0.4, 0.6)
+# r%*%weight
+# 
+# a1 = 1
+# a2 = 100
+# 
+# dt <- as.data.frame(assetData$AGG$retrn_dl[a1:a2])
+# rownames(dt) <- assetData$AGG$Date[a1:a2] 
+# maxDrawdown(dt)
+# 
+# returns = assetData$AGG[a1:a2, ]$retrn_dl
+# myfunc = max_drawdown(returns)
+# myfunc$max_drawdown
+# 
+# return_series = assetData$AGG$retrn_dl[(myfunc$Ri+a1-1):(myfunc$Rj+a1-1)]
+# -(exp(sum(log(return_series+1)))-1)
+# 
+# 
+# library(rbenchmark)
+# benchmark(maxDrawdown(dt), max_drawdown(returns))
