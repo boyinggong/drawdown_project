@@ -79,6 +79,9 @@ return_dist_garch_AR1 = lapply(seq(from = 0.05, to = 0.2,by = 0.03),function(s){
   garch.sim = garchSim(spec, n = 1000)
 }) 
 return_dist_stat_garch_AR1 = lapply(return_dist_garch_AR1, function(x){c(mean(x), sd(x), skewness(x), kurtosis(x))})
+
+length(return_dist_garch_AR1[[1]])
+
 format(round(return_dist_stat[[1]], 3), nsmall = 3)
 format(round(return_dist_stat[[2]], 3), nsmall = 3)
 format(round(return_dist_stat[[3]], 3), nsmall = 3)
