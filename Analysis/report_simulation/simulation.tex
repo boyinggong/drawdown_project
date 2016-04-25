@@ -745,6 +745,16 @@ The following is the maximum drawdown distribution for various combination of $\
 %(Simulation path length: 1000, $\epsilon_t \sim 0.01T(df = 4)$)
 \label{fig:garch_ma1_ddd}
 \end{figure}
+\subsection{Short Summary about ARMA-GARCH Model}
+In this section, we have analyzed the impact of complex variance on the evaluation relationship of serial correlation($\kappa$ or $\rho$) and risk measurements. It is more straightforward to see this effect through the simulation study other than tedious derivations. Through the plots shown above, we have several conclusions as followed.
+
+\begin{enumerate}
+\item The larger value of $\omega$, $\alpha$ and $\beta$ are all partially responsible for a higher risk measurements, in general, given the ARMA model.
+\item Among three parameters, the effect of $\omega$ dominates. As $\omega$ indicates the general change of variance of the model, which is a counterpart of $\sigma^2$ in the pure ARMA.
+\item When the $\beta$ is small, the effect of $\alpha$ on risk measurements are weak. Especially for CED, it is insensitive to the change of $\alpha$. However, when the $\beta$ value is large, the ES, VaR and Volatility increase sharply with $\alpha$. For CED, it has a upward trend, but more indented than other risk measurements.
+\item From the plots with $\kappa$ as axis, we found that in the time series with a GARCH variance, $\alpha$ and $\beta$ less affect CED comparing with other risk measurements.
+\item Last but not least, we found that $\alpha$ value of the GARCH model does not change the shape of maximun drawdown distribution a lot compare with $\beta$ values. Therefore, in summary, for CED, the ranking magitude of effect from GARCH parameters are: $\alpha < \beta < \omega$
+\end{enumerate}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Findings}  %%%%%
