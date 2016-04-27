@@ -1,7 +1,12 @@
-source("Analysis/code/read_data.R")
-source("Analysis/code/risk_diagostics_function.R")
+source("read_data.R")
+source("risk_diagostics_function.R")
 
 library(PerformanceAnalytics)
+library(ggplot2)
+library(reshape)
+library(PortRisk)
+library(cowplot)
+
 
 max_drawdown = function(r, denominator = "start"){
   log_r = log(r + 1)
@@ -40,10 +45,10 @@ drawdown_contribution = function(r, weight){
   r_all = (price - c(1, price[-length(price)]))/c(1, price[-length(price)])
   max_d = max_drawdown(r_all)
   if (max_d$Ri == 1 & max_d$Rj == 1){
-    contribution = c(SPX = 0, RMZ = 0)
-  } else if (max_d$Ri ==1 & max_d$Rj > 1 ){
+    contribution = c(0, 0)
+  }else if (max_d$Ri ==1 & max_d$Rj > 1 ){
     contribution = (1-apply(r[1:max_d$Rj, ]+1, 2, prod)) * weight
-  } else if (max_d$Ri ==2 ){
+  }else if (max_d$Ri ==2 ){
     contribution = ((r[1:(max_d$Ri-1), ]+1)-apply(r[1:max_d$Rj, ]+1, 2, prod)) * weight
   }else {
     contribution = (apply(r[1:(max_d$Ri-1), ]+1, 2, prod)-apply(r[1:max_d$Rj, ]+1, 2, prod)) * weight
@@ -55,16 +60,19 @@ drawdown_contribution = function(r, weight){
 # Test data frame #
 ###################
 
-SPX = assetData$SPX$retrn_dl[which(assetData$SPX$Date == "2007-01-03"):
-                               (which(assetData$SPX$Date == "2008-01-03")-1)]
-RMZ = assetData$RMZ$retrn_dl[which(assetData$RMZ$Date == "2007-01-03"):
-                               (which(assetData$RMZ$Date == "2008-01-03")-1)]
-test_r = data.frame(SPX=SPX, RMZ=RMZ)
+Date = assetData$SPX$Date[which(assetData$SPX$Date == "2006-01-03"):
+                                (which(assetData$SPX$Date == "2015-12-31"))]
+SPX = assetData$SPX$retrn_dl[which(assetData$SPX$Date == "2006-01-03"):
+                               (which(assetData$SPX$Date == "2015-12-31"))]
+RMZ = assetData$RMZ$retrn_dl[which(assetData$RMZ$Date == "2006-01-03"):
+                               (which(assetData$RMZ$Date == "2015-12-31"))]
+test_r = data.frame(Date=Date, SPX=SPX, RMZ=RMZ)
+rownames(test_r) = Date
 
 max_drawdown(test_r$SPX)
 test_contr = drawdown_contribution(r=test_r, weight=c(0.4, 0.6))
 c(test_contr$max_drawdown,test_contr$contribution)
-## meeee!!!!!!!!!!!!!!!!!!!!!!
+
 ####################### calc all drawdowns in a given window ###################################
 
 drawdown_contribution_reform <- function(r, weight){
@@ -73,19 +81,19 @@ drawdown_contribution_reform <- function(r, weight){
   return(ret)
 }
 
+# drawdown_contribution_reform(r=test_r, weight=c(0.4, 0.6))
 # test_2 = data.frame(Date =SPX$Date ,SPX=SPX$retrn_dl, RMZ=RMZ$retrn_dl)
 
 calcRolling_rc <- function(combo_df, prd, FUN, ...){
   res <- sapply(1:(nrow(combo_df)-prd+1) , function(x){
-    dt <- as.data.frame(combo_df[(x:(x+prd-1)), (2:3)])
+    dt <- as.data.frame(combo_df[(x:(x+prd-1)), (2:ncol(combo_df))])
     rownames(dt) <- combo_df$Date[x:(x+prd-1)] 
-    do.call(FUN, list(dt, ...))
+    unlist(do.call(FUN, list(dt, ...)))
   })
   ret = as.data.frame(cbind(Date = combo_df$Date[prd:nrow(combo_df)],t(res)))
   ret[,"Date"] <- as.Date(ret[,"Date"])
   return(ret)
 }
-
 
 calcCED_rc <- function(dd_df, prd, p = 0.9){
   res <- lapply(1:(nrow(dd_df)-prd+1), function(x){
@@ -107,12 +115,75 @@ calcCED_rc <- function(dd_df, prd, p = 0.9){
   }
   final <- as.data.frame(final)
   final[,"Date"] = as.Date(final[,"Date"])
-  colnames(final) = c("Date", "CED", assets, paste(assets,".ratio",sep = ""))
+  colnames(final) = c("Date", "CED", assets, paste(assets,".contribution",sep = ""))
   return(final)
 }
 
-# xin3 <- calcCED_rc(xin2,prds["3mon2yr"] )
+########################################################
+### calculate risk contribution of four risk measures ##
+########################################################
 
+w = c(0.6, 0.4)
+
+
+## CED
+dd_df = calcRolling_rc(combo_df = test_r, prd = 63, 
+                       FUN = drawdown_contribution_reform, weight = w)
+CED_rc <- calcCED_rc(dd_df, prd = 252)
+CED_plot = ggplot(melt(CED_rc[, c(1, 2, 5, 6)], id = c("Date")), 
+                  aes(x= Date, y = value, group = variable))+
+  geom_line()+
+  facet_grid(variable~., scales = "free")+
+  theme_grey()
+
+## ES
+ES_rc = function(data, weights, p){
+  res = ES(data, weights = weights, p = p, portfolio_method = "component")
+  return(c(ES = res$MES, mrc = res$contribution, contribution = res$pct_contrib_MES))
+}
+ES_df = calcRolling_rc(combo_df = test_r, prd = 63+252-1, FUN = ES_rc, 
+                       p = 0.9, weights = w)
+ES_plot = ggplot(melt(ES_df[, c(1, 2, 5, 6)], id = c("Date")), 
+                 aes(x= Date, y = value, group = variable))+
+  geom_line()+
+  facet_grid(variable~., scales = "free")+
+  theme_grey()
+
+## VaR
+VaR_rc = function(data, weights, p){
+  res = VaR(data, weights = weights, p = p, portfolio_method = "component")
+  return(c(VaR = res$MVaR, mrc = res$contribution, contribution = res$pct_contrib_MVaR))
+}
+VaR_df = calcRolling_rc(combo_df = test_r, prd = 63+252-1, FUN = VaR_rc, 
+                       p = 0.9, weights = w)
+VaR_plot = ggplot(melt(VaR_df[, c(1, 2, 5, 6)], id = c("Date")), 
+                 aes(x= Date, y = value, group = variable))+
+  geom_line()+
+  facet_grid(variable~., scales = "free")+
+  theme_grey()
+
+## volatility
+volatility_rc = function(data, weights){
+  volatility = portvol(1:ncol(data), weights = weights,
+                       start = rownames(data)[1], end = rownames(data)[nrow(data)], data = data)
+  mrc = mctr(c("SPX", "RMZ"), weights = weights,
+             start = rownames(data)[1], end = rownames(data)[nrow(data)], data = data)*weights
+  contribution = mrc/sum(mrc)
+  c(volatility = volatility, mrc = mrc, contribution = contribution)
+}
+# volatility_rc(test_r, weights = c(0.4, 0.6))
+
+vol_df = calcRolling_rc(combo_df = test_r, prd = 63+252-1, FUN = volatility_rc, 
+                        weights = w)
+volatility_plot = ggplot(melt(vol_df[, c(1, 2, 5, 6)], id = c("Date")), 
+                  aes(x= Date, y = value, group = variable))+
+  geom_line()+
+  facet_grid(variable~., scales = "free")+
+  theme_grey()
+
+png("../figures/risk_contribution/SPX_RMZ_64.png", width = 800, height = 800)
+plot_grid(CED_plot, ES_plot, VaR_plot, volatility_plot, ncol = 2, align = "v")
+dev.off()
 
 
 ### risk contributions of VaR, ES and volatility
