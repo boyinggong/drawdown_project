@@ -12,11 +12,11 @@ assetsList <- c("AGG", "HYG", "TIP",
 setAs("character","myDate", function(from) as.Date(from, format="%m/%d/%y"))
 assetData = list()
 for (asset in c("AGG", "HYG", "TIP")){
-  assetData[[asset]] = read.csv(paste("Analysis/csv_data/", asset, "_US_Equity.csv", sep = ''), 
+  assetData[[asset]] = read.csv(paste("../csv_data/", asset, "_US_Equity.csv", sep = ''), 
                             colClasses=c("myDate", "numeric"))
 } # US equity
 for (asset in c("BCOM", "G0O1", "MXEA", "MXEF", "RAY", "RMZ", "SPX", "USGG10YR")){
-  assetData[[asset]] = read.csv(paste("Analysis/csv_data/", asset, "_Index.csv", sep = ''), 
+  assetData[[asset]] = read.csv(paste("../csv_data/", asset, "_Index.csv", sep = ''), 
                             colClasses=c("myDate", "numeric"))
 } # index
 
