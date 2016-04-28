@@ -1,5 +1,5 @@
 source("read_data.R")
-source("risk_diagostics_function.R")
+# source("risk_diagostics_function.R")
 
 library(PerformanceAnalytics)
 library(ggplot2)
@@ -70,7 +70,7 @@ test_r = data.frame(Date=Date, SPX=SPX, RMZ=RMZ)
 rownames(test_r) = Date
 
 max_drawdown(test_r$SPX)
-test_contr = drawdown_contribution(r=test_r, weight=c(0.4, 0.6))
+test_contr = drawdown_contribution(r=test_r[, 2:3], weight=c(0.4, 0.6))
 c(test_contr$max_drawdown,test_contr$contribution)
 
 ####################### calc all drawdowns in a given window ###################################
@@ -123,13 +123,16 @@ calcCED_rc <- function(dd_df, prd, p = 0.9){
 ### calculate risk contribution of four risk measures ##
 ########################################################
 
-w = c(0.6, 0.4)
+w = c(0, 1)
 
 
 ## CED
 dd_df = calcRolling_rc(combo_df = test_r, prd = 63, 
                        FUN = drawdown_contribution_reform, weight = w)
 CED_rc <- calcCED_rc(dd_df, prd = 252)
+CED_total = calcCED_rc(dd_df, prd = 2454)
+# 63 2454
+# 126 2391
 CED_plot = ggplot(melt(CED_rc[, c(1, 2, 5, 6)], id = c("Date")), 
                   aes(x= Date, y = value, group = variable))+
   geom_line()+
@@ -142,6 +145,8 @@ ES_rc = function(data, weights, p){
   return(c(ES = res$MES, mrc = res$contribution, contribution = res$pct_contrib_MES))
 }
 ES_df = calcRolling_rc(combo_df = test_r, prd = 63+252-1, FUN = ES_rc, 
+                       p = 0.9, weights = w)
+ES_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = ES_rc, 
                        p = 0.9, weights = w)
 ES_plot = ggplot(melt(ES_df[, c(1, 2, 5, 6)], id = c("Date")), 
                  aes(x= Date, y = value, group = variable))+
@@ -156,6 +161,8 @@ VaR_rc = function(data, weights, p){
 }
 VaR_df = calcRolling_rc(combo_df = test_r, prd = 63+252-1, FUN = VaR_rc, 
                        p = 0.9, weights = w)
+VaR_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = VaR_rc, 
+                          p = 0.9, weights = w)
 VaR_plot = ggplot(melt(VaR_df[, c(1, 2, 5, 6)], id = c("Date")), 
                  aes(x= Date, y = value, group = variable))+
   geom_line()+
@@ -175,6 +182,8 @@ volatility_rc = function(data, weights){
 
 vol_df = calcRolling_rc(combo_df = test_r, prd = 63+252-1, FUN = volatility_rc, 
                         weights = w)
+vol_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = volatility_rc, 
+                          weights = w)
 volatility_plot = ggplot(melt(vol_df[, c(1, 2, 5, 6)], id = c("Date")), 
                   aes(x= Date, y = value, group = variable))+
   geom_line()+

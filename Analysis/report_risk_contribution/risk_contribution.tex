@@ -30,6 +30,8 @@
 
 In this section, we present the empirical analysis of portfolio risk using two asset class, SPX (S\&P 500 Index) and RMZ (MSCI US REIT Index) in 60/40, 50/50, 40/60 allocation separately. For each portfolio, we calculate the risk contributins of each asset component for CED, ES, VaR and volatility. The four measures indicate similar risk of portfolios over time, but large differences when it comes to risk contributions. The variation of risk contributions for ES, VaR and volatility resemble each other under fixed asset allocation weights. For asset SPX, while the its contribution to ES, VaR and volatility reached its peak during 2010, the contribution of SPX maximized during 2014. Note that in the case of 40/60 asset allocation, SPX contributes to over 98\% of the total CED in 2014. 
 
+Table \ref{table:portfolio_risk} shows how the risk changes for different fixed-mixed portfolios over the period January 3, 2006 to December 31, 2015. ES, VaR and CED are calculated at the 90\% confidence level. RMZ has larger risk than SPX. As we increase the weight of RMZ in the portfolio, the risk indicated by volatility, ES and CED increase. However, VaR of three portfolio are all greater than the individual risk of SPX and RMZ. This result is consistent with the fact that VaR is not sub-additive.
+
 \begin{figure}[H]
 \centering
 \includegraphics[width = 0.9\textwidth]{../figures/risk_contribution/SPX_RMZ_46}
@@ -54,31 +56,23 @@ In this section, we present the empirical analysis of portfolio risk using two a
 \label{fig:risk_contribution_SPX_RMZ_64}
 \end{figure}
 
-% \begin{figure}[H]
-% \centering
-% \includegraphics[width = 0.8\textwidth]{../figures/simulation/T_dist_MA2_risk_measures}
-% \caption{MA(1): Relationship between serial correlation $\rho_1$ and risk measures}
-% (Simulation path length: 63, $\epsilon_t \sim 0.01T(df = 4)$)
-% \label{fig:T_dist_MA2_risk_measures}
-% \end{figure}
-
-% \begin{table}[H]
-% \centering
-% \begin{tabular}{|r |r r r r|}
-% \hline
-% & Mean & Sd & Skewness & Kurtosis \\
-% \hline
-% $\alpha = 0.05 $ & 0.0 & 0.029 & -0.003 & 0.088\\
-% $\alpha = 0.08 $ & 0.0 & 0.013 & 0.001 & -0.033\\
-% $\alpha = 0.11 $ & 0.0 & 0.011 & -0.000 & -0.001\\
-% $\alpha = 0.14 $ & 0.0 & 0.011& -0.004 &  0.006\\
-% $\alpha = 0.17 $ & 0.0 & 0.013 & -0.014 & -0.004\\
-% $\alpha = 0.20 $ & 0.0 & 0.029 & 0.005 & 0.054\\
-% \hline
-% \end{tabular}
-% \caption{Statistics of simulated return distribution of AR(1)+ GARCH(1,1)}
-% \label{table:dist_garch_ar1_return}
-% \end{table}
+\begin{table}[H]
+\centering
+\begin{tabular}{r |r r r r r}
+\hline
+& Volatility & $\textrm{ES}_{0.9}$ & $\textrm{VaR}_{0.9}$ & $\textrm{CED}_{0.9}$ (3-month) & $\textrm{CED}_{0.9}$ (6-month) \\
+\hline
+\hline
+SPX   & 1.31\% & 1.58\% & 0.66\% & 24.79\% & 35.36\%\\
+60/40 & 1.63\% & 2.03\% & 0.74\% & 30.00\% & 42.15\%\\
+50/50 & 1.74\% & 2.20\% & 0.74\% & 31.49\% & 44.12\%\\ 
+40/60 & 1.85\% & 2.39\% & 0.72\% & 32.98\% & 46.10\%\\
+RMZ   & 2.35\% & 3.23\% & 0.67\% & 39.54\% & 54.63\%\\
+\hline
+\end{tabular}
+\caption{Risk measures for daily SPX and RMZ and three fixed-mix portfolios over the period January 3, 2006 to December 31, 2015. ES, VaR and CED are calculated at the 90\% confidence level. Three drawdown risk metrics are calculated by considering the maximum drawdown within return paths of different fixed lengths (3 months and 6 month)}
+\label{table:portfolio_risk}
+\end{table}
 
 \end{document}
 
