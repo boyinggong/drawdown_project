@@ -123,7 +123,7 @@ calcCED_rc <- function(dd_df, prd, p = 0.9){
 ### calculate risk contribution of four risk measures ##
 ########################################################
 
-w = c(0, 1)
+w = c(0.5, 0.5)
 
 
 ## CED
