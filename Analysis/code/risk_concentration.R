@@ -1,5 +1,10 @@
 source("read_data.R")
 # source("risk_diagostics_function.R")
+# install.packages("reshape")
+# install.packages("PortRisk")
+# install.packages("cowplot")
+install.packages("~/R_package/graph_1.30.0.tar.gz", repos = NULL, type="source")S
+remove.packages("PortRisk")
 
 library(PerformanceAnalytics)
 library(ggplot2)
@@ -76,22 +81,24 @@ c(test_contr$max_drawdown,test_contr$contribution)
 ####################### calc all drawdowns in a given window ###################################
 
 drawdown_contribution_reform <- function(r, weight){
+#   browser()
   dc <- drawdown_contribution(r, weight)
   ret <- c(max_drawdown = dc$max_drawdown, dc$contribution)
   return(ret)
 }
 
-# drawdown_contribution_reform(r=test_r, weight=c(0.4, 0.6))
+# drawdown_contribution_reform(r=test_r[,2:3], weight=c(0.4, 0.6))
 # test_2 = data.frame(Date =SPX$Date ,SPX=SPX$retrn_dl, RMZ=RMZ$retrn_dl)
 
 calcRolling_rc <- function(combo_df, prd, FUN, ...){
+#   browser()
   res <- sapply(1:(nrow(combo_df)-prd+1) , function(x){
     dt <- as.data.frame(combo_df[(x:(x+prd-1)), (2:ncol(combo_df))])
     rownames(dt) <- combo_df$Date[x:(x+prd-1)] 
     unlist(do.call(FUN, list(dt, ...)))
   })
   ret = as.data.frame(cbind(Date = combo_df$Date[prd:nrow(combo_df)],t(res)))
-  ret[,"Date"] <- as.Date(ret[,"Date"])
+  ret[,"Date"] <- as.Date(ret[,"Date"], origin = "1970-01-01")
   return(ret)
 }
 
@@ -114,7 +121,7 @@ calcCED_rc <- function(dd_df, prd, p = 0.9){
     final <- cbind(final, final[,asset]/summs) 
   }
   final <- as.data.frame(final)
-  final[,"Date"] = as.Date(final[,"Date"])
+  final[,"Date"] = as.Date(final[,"Date"], origin = "1970-01-01")
   colnames(final) = c("Date", "CED", assets, paste(assets,".contribution",sep = ""))
   return(final)
 }
@@ -129,6 +136,7 @@ w = c(0, 1)
 ## CED
 dd_df = calcRolling_rc(combo_df = test_r, prd = 63, 
                        FUN = drawdown_contribution_reform, weight = w)
+
 CED_rc <- calcCED_rc(dd_df, prd = 252)
 CED_total = calcCED_rc(dd_df, prd = 2454)
 # 63 2454
