@@ -173,6 +173,9 @@ VaR_plot = ggplot(melt(VaR_df[, c(1, 2, 5, 6)], id = c("Date")),
 volatility_rc = function(data, weights){
   volatility = portvol(1:ncol(data), weights = weights,
                        start = rownames(data)[1], end = rownames(data)[nrow(data)], data = data)
+  ############
+  #### BUG 
+  ###########
   mrc = mctr(c("SPX", "RMZ"), weights = weights,
              start = rownames(data)[1], end = rownames(data)[nrow(data)], data = data)*weights
   contribution = mrc/sum(mrc)

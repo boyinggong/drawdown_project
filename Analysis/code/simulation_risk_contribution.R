@@ -86,6 +86,38 @@ sim_ES = function(p = 0.9, n = 100, model1, rand.gen1,
   return(res)
 }
 
+# working
+sim_VaR = function(p = 0.9, n = 100, model1, rand.gen1, 
+                  model2, rand.gen2, rep = 1000, weights){
+  VaR_df = t(sapply(1:rep, function(x){
+    ts.sim1 = arima.sim(model = model1, n = n, rand.gen = rand.gen1)
+    ts.sim2 = arima.sim(model = model2, n = n, rand.gen = rand.gen2)
+    ts.df = as.data.frame(cbind(ts.sim1, ts.sim2))
+    rownames(ts.df) = seq(as.Date("2000/1/1"), by = "day", length.out = n)
+    res = VaR(ts.df, weights = weight, p = p, portfolio_method = "component")
+    return(c(VaR = res$MVaR, mrc = res$contribution))
+  }))
+  res = colMeans(VaR_df)
+  return(res)
+}
+
+# # working
+# sim_volatility = function(p = 0.9, n = 100, model1, rand.gen1, 
+#                   model2, rand.gen2, rep = 1000, weights){
+#   volatility_df = t(sapply(1:rep, function(x){
+#     ts.sim1 = arima.sim(model = model1, n = n, rand.gen = rand.gen1)
+#     ts.sim2 = arima.sim(model = model2, n = n, rand.gen = rand.gen2)
+#     ts.df = as.data.frame(cbind(ts.sim1, ts.sim2))
+#     rownames(ts.df) = seq(as.Date("2000/1/1"), by = "day", length.out = n)
+#     res = portvol(ts.df, weights = weight,
+#                   start = rownames(ts.df)[1], end = rownames(ts.df)[nrow(ts.df)], data = ts.df)
+#     return(c(Volatility = res$MES, mrc = res$contribution))
+#   }))
+#   res = colMeans(volatility_df)
+#   return(res)
+# }
+
+
 ##### tests
 
 model = list(ar=0.1)
@@ -98,7 +130,8 @@ sim_CED(p = 0.9, n = 100, model1 = model, rand.gen1 = rand.gen,
 sim_ES(p = 0.9, n = 100, model1 = model, rand.gen1 = rand.gen, 
         model2 = model, rand.gen2 = rand.gen, rep = 1000, weights = weight)
 
-
+sim_VaR(p = 0.9, n = 100, model1 = model, rand.gen1 = rand.gen, 
+       model2 = model, rand.gen2 = rand.gen, rep = 1000, weights = weight)
 
 
 
