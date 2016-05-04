@@ -763,20 +763,6 @@ for (asset in names(ar.sim)){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ar.sim<-arima.sim(model=list(ar=c(.9,-.2)),n=100)
 ts.plot(ar.sim) 
 ar.acf<-acf(ar.sim,type="correlation",plot=T) 
