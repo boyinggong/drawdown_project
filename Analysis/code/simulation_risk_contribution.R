@@ -60,7 +60,7 @@ drawdown_contribution = function(r, weight){
 
 
 # sim_CED: simulate portfolio
-sim_CED = function(p = 0.9, n = 100, model1, rand.gen1, 
+sim_CED_helper = function(p = 0.9, n = 100, model1, rand.gen1, 
                    model2, rand.gen2, rep = 1000, weights){# browser()
   maxdrawdown_df = t(sapply(1:rep, function(x){
     ts.sim1 = arima.sim(model = model1, n = n, rand.gen = rand.gen1)
@@ -73,6 +73,19 @@ sim_CED = function(p = 0.9, n = 100, model1, rand.gen1,
   names(res)[1] = "CED"
   return(res)
 }
+
+
+################# repeat CED to make it stable
+sim_CED <- function(p = 0.9, n = 100, model1, rand.gen1, 
+                    model2, rand.gen2, rep = 1000, weights, nrep){
+  ret <- replicate(nrep, sim_CED_helper (p = 0.9, n = 100, model1, rand.gen1, 
+                                         model2, rand.gen2, rep = 1000, weights = weight))
+  return(rowMeans(ret))
+}
+# sim_CED(p = 0.9, n = 100, model1 = model, rand.gen1 =rand.gen, 
+#          model2 = model, rand.gen2 = rand.gen, rep = 1000, weights = weight, 5)
+
+
 
 sim_ES = function(p = 0.9, n = 100, model1, rand.gen1, 
                   model2, rand.gen2, rep = 100, weights){
