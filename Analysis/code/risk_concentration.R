@@ -131,7 +131,8 @@ calcCED_rc <- function(dd_df, prd, p = 0.9){
 ########################################################
 
 w = c(0.5, 0.5)
-
+w = c(0.5, 0.5)
+w = c(0.5, 0.5)
 
 ## CED
 dd_df = calcRolling_rc(combo_df = test_r, prd = 63, 
@@ -179,12 +180,9 @@ VaR_plot = ggplot(melt(VaR_df[, c(1, 2, 5, 6)], id = c("Date")),
 
 ## volatility
 volatility_rc = function(data, weights){
-  volatility = portvol(1:ncol(data), weights = weights,
+  volatility = portvol(colnames(data), weights = weights,
                        start = rownames(data)[1], end = rownames(data)[nrow(data)], data = data)
-  ############
-  #### BUG 
-  ###########
-  mrc = mctr(c("SPX", "RMZ"), weights = weights,
+  mrc = mctr(colnames(data), weights = weights,
              start = rownames(data)[1], end = rownames(data)[nrow(data)], data = data)*weights
   contribution = mrc/sum(mrc)
   c(volatility = volatility, mrc = mrc, contribution = contribution)
@@ -211,6 +209,177 @@ dev.off()
 ### ES http://braverock.com/brian/R/PerformanceAnalytics/html/ES.html
 ### VaR http://braverock.com/brian/R/PerformanceAnalytics/html/VaR.html
 ### volatility page3 https://cran.r-project.org/web/packages/PortRisk/PortRisk.pdf
+
+w = c(0.5, 0.5)
+w = c(0.6, 0.4)
+w = c(0.7, 0.3)
+
+dd_df = calcRolling_rc(combo_df = test_r, prd = 63, 
+                       FUN = drawdown_contribution_reform, weight = w)
+CED_total = calcCED_rc(dd_df, prd = 2454)
+ES_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = ES_rc, 
+                          p = 0.9, weights = w)
+VaR_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = VaR_rc, 
+                           p = 0.9, weights = w)
+vol_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = volatility_rc, 
+                           weights = w)
+
+overall_rc = as.data.frame(matrix(0, nc = 3, nr = 12))
+colnames(overall_rc) = c("weights", "Measures", "Values")
+overall_rc[, 1] = c(rep("50/50", 4), rep("60/40", 4), rep("70/30", 4))
+overall_rc[, 2] = rep(c("CED", "ES", "VaR", "Volatility"), 3)
+overall_rc[1:4, 3] = c(CED_total[1, "SPX.contribution"], ES_total$contribution.SPX,
+                       VaR_total$contribution.SPX, vol_total$contribution.SPX)
+overall_rc[5:8, 3] = c(CED_total[1, "SPX.contribution"], ES_total$contribution.SPX,
+                       VaR_total$contribution.SPX, vol_total$contribution.SPX)
+overall_rc[9:12, 3] = c(CED_total[1, "SPX.contribution"], ES_total$contribution.SPX,
+                       VaR_total$contribution.SPX, vol_total$contribution.SPX)
+
+png("../figures/risk_contribution/overall_rc.png", width = 600, height = 400)
+ggplot(overall_rc, aes(x = Measures, y = Values, group = weights, fill = Measures)) + 
+  geom_bar(stat="identity") + ylim(0, 1) + 
+  theme_light() + facet_grid(.~weights) + scale_fill_hue(c=45, l=80) +
+  xlab("Risk measures") + ylab("Risk contribution")
+dev.off()
+
+
+###################
+### risk parity ###
+###################
+
+dd_df = calcRolling_rc(combo_df = test_r, prd = 63, 
+                       FUN = drawdown_contribution_reform, weight = c(0.6128, 0.3872))
+CED_total = calcCED_rc(dd_df, prd = 2454)
+CED_total
+# 63 2454
+# 126 2391
+
+## CED 3 month parity 0.6128, 0.3872
+CED_parity = c(0.6128, 0.3872)
+
+ES_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = ES_rc, 
+                          p = 0.9, weights = c(0.66671, 0.33329))
+ES_total
+ES_parity = c(0.66671, 0.33329)
+## ES parity 0.66671, 0.33329
+
+VaR_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = VaR_rc, 
+                           p = 0.9, weights = c(0.4577, 0.5423))
+VaR_total
+VaR_parity = c(0.4577, 0.5423)
+## VaR parity 
+
+vol_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = volatility_rc, 
+                           weights = c(0.64286, 0.35714))
+vol_total
+volatility_parity = c(0.64286, 0.35714)
+## volatility parity 0.64291, 0.35717
+
+risk_parity = matrix(0, nc = 4, nr = 4)
+colnames(risk_parity) = c("CED_parity", "ES_parity", "VaR_parity", "volatility_parity")
+rownames(risk_parity) = c("CED", "ES", "VaR", "volatility")
+
+####################################### CED parity
+
+dd_df = calcRolling_rc(combo_df = test_r, prd = 63, 
+                       FUN = drawdown_contribution_reform, weight = CED_parity)
+CED_total = calcCED_rc(dd_df, prd = 2454)
+CED_total
+
+ES_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = ES_rc, 
+                          p = 0.9, weights = CED_parity)
+
+VaR_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = VaR_rc, 
+                          p = 0.9, weights = CED_parity)
+
+vol_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = volatility_rc, 
+                           weights = CED_parity)
+
+risk_parity[, "CED_parity"] = c(CED_total[1, "SPX.contribution"], ES_total$contribution.SPX,
+                                VaR_total$contribution.SPX, vol_total$contribution.SPX)
+
+####################################### ES parity
+
+dd_df = calcRolling_rc(combo_df = test_r, prd = 63, 
+                       FUN = drawdown_contribution_reform, weight = ES_parity)
+CED_total = calcCED_rc(dd_df, prd = 2454)
+CED_total
+
+ES_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = ES_rc, 
+                          p = 0.9, weights = ES_parity)
+ES_total
+
+VaR_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = VaR_rc, 
+                           p = 0.9, weights = ES_parity)
+
+vol_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = volatility_rc, 
+                           weights = ES_parity)
+vol_total
+
+risk_parity[, "ES_parity"] = c(CED_total[1, "SPX.contribution"], ES_total$contribution.SPX,
+                               VaR_total$contribution.SPX, vol_total$contribution.SPX)
+
+####################################### VaR parity
+
+dd_df = calcRolling_rc(combo_df = test_r, prd = 63, 
+                       FUN = drawdown_contribution_reform, weight = VaR_parity)
+CED_total = calcCED_rc(dd_df, prd = 2454)
+CED_total
+
+ES_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = ES_rc, 
+                          p = 0.9, weights = VaR_parity)
+ES_total
+
+VaR_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = VaR_rc, 
+                           p = 0.9, weights = VaR_parity)
+
+vol_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = volatility_rc, 
+                           weights = VaR_parity)
+vol_total
+
+risk_parity[, "VaR_parity"] = c(CED_total[1, "SPX.contribution"], ES_total$contribution.SPX,
+                                VaR_total$contribution.SPX, vol_total$contribution.SPX)
+
+####################################### Volatility parity
+
+dd_df = calcRolling_rc(combo_df = test_r, prd = 63, 
+                       FUN = drawdown_contribution_reform, weight = volatility_parity)
+CED_total = calcCED_rc(dd_df, prd = 2454)
+CED_total
+
+ES_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = ES_rc, 
+                          p = 0.9, weights = volatility_parity)
+ES_total
+
+VaR_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = VaR_rc, 
+                           p = 0.9, weights = volatility_parity)
+
+vol_total = calcRolling_rc(combo_df = test_r, prd = 2517, FUN = volatility_rc, 
+                           weights = volatility_parity)
+vol_total
+
+risk_parity[, "volatility_parity"] = c(CED_total[1, "SPX.contribution"], ES_total$contribution.SPX,
+                                       VaR_total$contribution.SPX, vol_total$contribution.SPX)
+
+###########
+##  PLOT ##
+###########
+
+melt_parity_df = melt(risk_parity[c(1, 2, 4), c(1, 2, 4)], 
+                      measure.vars = c("CED_parity", 
+                                       "VaR_parity", "volatility_parity"))
+colnames(melt_parity_df)[1] = "Measures"
+
+png("../figures/risk_contribution/risk_parity.png", width = 600, height = 400)
+ggplot(melt_parity_df, aes(x = Measures, y = value, group = X2, fill = Measures)) + 
+  geom_bar(stat="identity") + ylim(0, 1) + 
+  geom_hline(yintercept=0.5, color="grey1", linetype="dashed") +
+  theme_light() + facet_grid(.~X2) + scale_fill_hue(c=45, l=80) +
+  xlab("Risk measures") + ylab("Risk contribution")
+dev.off()
+
+
+
 
 
 

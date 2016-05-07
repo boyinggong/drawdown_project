@@ -116,28 +116,35 @@ sim_VaR = function(p = 0.9, n = 100, model1, rand.gen1,
   return(res)
 }
 
-# # working
-# sim_volatility = function(p = 0.9, n = 100, model1, rand.gen1, 
-#                   model2, rand.gen2, rep = 1000, weights){
-#   volatility_df = t(sapply(1:rep, function(x){
-#     ts.sim1 = arima.sim(model = model1, n = n, rand.gen = rand.gen1)
-#     ts.sim2 = arima.sim(model = model2, n = n, rand.gen = rand.gen2)
-#     ts.df = as.data.frame(cbind(ts.sim1, ts.sim2))
-#     rownames(ts.df) = seq(as.Date("2000/1/1"), by = "day", length.out = n)
-#     res = portvol(ts.df, weights = weight,
-#                   start = rownames(ts.df)[1], end = rownames(ts.df)[nrow(ts.df)], data = ts.df)
-#     return(c(Volatility = res$MES, mrc = res$contribution))
-#   }))
-#   res = colMeans(volatility_df)
-#   return(res)
-# }
+# working
+sim_volatility = function(p = 0.9, n = 100, model1, rand.gen1, 
+                  model2, rand.gen2, rep = 1000, weights){
+  volatility_df = t(sapply(1:rep, function(x){
+    ts.sim1 = arima.sim(model = model1, n = n, rand.gen = rand.gen1)
+    ts.sim2 = arima.sim(model = model2, n = n, rand.gen = rand.gen2)
+    ts.df = as.data.frame(cbind(ts.sim1, ts.sim2))
+    rownames(ts.df) = seq(as.Date("2000/1/1"), by = "day", length.out = n)
+    volatility = portvol(colnames(ts.df), weights = weights,
+                  start = rownames(ts.df)[1], end = rownames(ts.df)[nrow(ts.df)], data = ts.df)
+    mrc = mctr(colnames(ts.df), weights = weights,
+               start = rownames(ts.df)[1], end = rownames(ts.df)[nrow(ts.df)], data = ts.df)*weights
+    return(c(Volatility = volatility, mrc = mrc))
+  }))
+  res = colMeans(volatility_df)
+  return(res)
+}
 
+model1 = model
+model2 = model
+rand.gen1 = rand.gen
+rand.gen2 = rand.gen
+n = 100
 
 ##### tests
 
 model = list(ar=0.1)
 rand.gen = function(n) rnorm(n, sd = 0.01)
-weight = c(0.5, 0.5)
+weights = c(0.5, 0.5)
 
 sim_CED(p = 0.9, n = 100, model1 = model, rand.gen1 = rand.gen, 
         model2 = model, rand.gen2 = rand.gen, rep = 1000, weights = weight)
@@ -148,7 +155,8 @@ sim_ES(p = 0.9, n = 100, model1 = model, rand.gen1 = rand.gen,
 sim_VaR(p = 0.9, n = 100, model1 = model, rand.gen1 = rand.gen, 
        model2 = model, rand.gen2 = rand.gen, rep = 1000, weights = weight)
 
-
+sim_volatility(p = 0.9, n = 100, model1 = model, rand.gen1 = rand.gen, 
+        model2 = model, rand.gen2 = rand.gen, rep = 1000, weights = weight)
 
 ts.sim = arima.sim(model = list(ar=0.1), n = 100, rand.gen = function(n) rnorm(n, sd = 0.01))
 

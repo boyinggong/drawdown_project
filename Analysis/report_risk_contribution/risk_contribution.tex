@@ -32,6 +32,10 @@ In this section, we present the empirical analysis of portfolio risk using two a
 
 Table \ref{table:portfolio_risk} shows how the risk changes for different fixed-mixed portfolios over the period January 3, 2006 to December 31, 2015. ES, VaR and CED are calculated at the 90\% confidence level. RMZ has larger risk than SPX. As we increase the weight of RMZ in the portfolio, the risk indicated by volatility, ES and CED increase. However, VaR of three portfolio are all greater than the individual risk of SPX and RMZ. This result is consistent with the fact that VaR is not sub-additive.
 
+Figure \ref{fig:risk_parity} shows the senario when a protfolio have euqal risk contributions with respect to one risk measure but show difference for other risk measures. We calculated the fractional risk contributions of SPX in two asset profolio in three types of risk parity cases: CED parity, ES parity and volatility parity.
+
+Figure \ref{fig:overall_rc} shows the overall risk contributions of SPX in SPX and RMZ portfolio for weights of 50/50, 60/40 and 70/30. Among the risk measures, VaR shows the greates contribution for SPX and CED the second. As we increase the weight of SPX in the portfolio, the risk contribution increases for all risk measures. 
+
 \begin{figure}[H]
 \centering
 \includegraphics[width = 0.9\textwidth]{../figures/risk_contribution/SPX_RMZ_46}
@@ -73,6 +77,21 @@ RMZ   & 2.35\% & 3.23\% & 0.67\% & 39.54\% & 54.63\%\\
 \caption{Risk measures for daily SPX and RMZ and three fixed-mix portfolios over the period January 3, 2006 to December 31, 2015. ES, VaR and CED are calculated at the 90\% confidence level. Three drawdown risk metrics are calculated by considering the maximum drawdown within return paths of different fixed lengths (3 months and 6 month)}
 \label{table:portfolio_risk}
 \end{table}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.7\textwidth]{../figures/risk_contribution/risk_parity}
+\caption{Fractional Risk Contributions of SPX constructed based on CED Parity, ES Parity and Volatility Parity. Protfolios are based on SPX and RMZ over the period January 3, 2006 to December 31, 2015. ES and CED are calculated at the 90\% confidence level. Maximum drawdown distribution is calculated based on 3-month rolling period.}
+\label{fig:risk_parity}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.7\textwidth]{../figures/risk_contribution/overall_rc}
+\caption{Fractional Risk Contributions of SPX for the weights of 50\%, 60\% and 70\%. Protfolios are based on SPX and RMZ over the period January 3, 2006 to December 31, 2015. ES and CED are calculated at the 90\% confidence level. Maximum drawdown distribution is calculated based on 3-month rolling period.}
+\label{fig:overall_rc}
+\end{figure}
+
 
 \end{document}
 
