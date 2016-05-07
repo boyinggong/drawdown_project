@@ -1,0 +1,207 @@
+%-*- program: xelatex -*-        
+%-*- program: biber -*-`        
+%-*- program: xelatex -*-
+\documentclass[11pt]{article}
+\usepackage[margin=0.75in]{geometry}            % See geometry.pdf to learn the layout options. There are lots.
+\geometry{letterpaper}  
+\usepackage{amsmath,textcomp,amssymb,geometry,graphicx,enumerate,upquote,color}
+\usepackage{hyperref}
+\usepackage{breqn}
+\usepackage{float}
+\usepackage{tikz}
+\usepackage{array}
+\usepackage{float}
+\usepackage{amsfonts}
+\def\Session{Fall 2015}
+\usepackage[english]{babel}
+\title{Risk Measures and Serial Correlation}
+\author{Boying Gong, Xinyue Zhou}
+\newenvironment{qparts}{\begin{enumerate}[{(}a{)}]}{\end{enumerate}}
+\def\endproofmark{$\Box$}
+\newenvironment{proof}{\par{\bf Proof}:}{\endproofmark\smallskip}
+\begin{document}
+\maketitle
+
+% \tableofcontents
+
+% \clearpage
+
+\begin{abstract}
+Conditional Expected Drawdown (CED), the tail mean of maximum drawdown distribution, is a newly proposed positive homogenous and convex risk measure. Since maximum drawdown is defined as the accumulative loss from peak to trough, we expect CED to be inherently path dependent and account for serial correlation. Most currently widely-used risk measures such as Value at Risk (VaR), Expected Shortfall (ES) and volatility are based on daily returns and do not account for consecutive losses. We compared CED with these risk measures and show that CED is more sensitive to serial correlation on empirical and theoretical perspective. 
+\end{abstract}
+
+\section{Introduction}
+
+Firms and regulators constantly quote risk measures such as VaR, ES and volatility to gauge the amount of asset needed for potential losses. These risk measures are usually calculated from the daily return distribution, thus only accounts for daily losses. However, during the events when consecutive losses happen such as 2008 financial crisis, these measures would become less informative due to the failure to consider the serial correlation of returns. Noticing this drawback of traditional risk measures, Goldberg and Mahmoud\cite{goldberg2014convex} developed Conditional Expected Drawdown (CED), a new risk measure defined over the empirical distribution of maximum drawdown. In this paper, we examine the relationship between serial correlation and various risk measures including CED. 
+
+\subsection{Risk measures}
+
+In the rest of the paper, we mainly focus on the comparison of CED and three extensively studied risk measures including Value at Risk (VaR), Expected Shortfall (ES) and volatility.
+
+\begin{itemize}
+\item $\textit{Conditional Expected Drawdown (CED)}$ is defined as the tail mean of maximum drawdown distribution.
+\begin{equation}
+CED_\alpha(X_{T_n}) = \mathbb{E}(\boldsymbol{\mu}(X_{T_n})|\boldsymbol{\mu}(X_{T_n}) > DT_\alpha).
+\end{equation}
+where $\alpha$ is the significance level, $DT_\alpha$ is the $\alpha$ quantile of maximum drawdown distribution, $\boldsymbol{\mu}(X_{T_n})$ represents $\textit{Maximum drawdown}$. In the return path of length n, the maximum drawdown is defined by
+\begin{equation}
+\boldsymbol{\mu}(X_{T_n}) = \mathrm{max_{1 < i < j \leq n} max}({X_{t_i}-X_{t_j}, 0}).
+\end{equation}
+Maximum drawdown is interpreted as the largest accumulative loss from peak to trough. For the detailed description of CED and its properties including path-dependency, convexity, and positive homogeneity, we direct the interested reader to Goldberg and Mahmoud\cite{goldberg2014convex}.
+
+
+\item $\textit{Value at Risk (VaR)} $ estimates the potential loss of financial investment in a period. VaR is widely used by investment industry to assess the amount of assets needed to cover possible losses. For a given significant level $\alpha$, VaR is defined as the $\alpha$ quantile of the asset return distribution, which suggests the probability that the amount of loss excess VaR($\alpha$) is less than $\alpha$. The mathematical representation of VaR is: 
+\begin{equation}
+VaR_{\alpha}(L) = inf\{l \in \mathbb{R} : P(L > l) \leq 1-\alpha \} = 
+inf\{l \in \mathbb{R} : F_L(l) \geq \alpha \}.
+\end{equation}
+
+\item $\textit{Expected shortfall (ES)}$ is a risk measure which resembles VaR but satisfies monotonicity, translation invariance, homogeneity and subadditivity. The ES of a financial asset is calculated as the tail mean of its return distribution. The Expected shortfall at level $\alpha$ is the expected value of loss which exceeds VaR($\alpha$). It is more sensitive to the shape of the loss distribution especially the tail of the distribution. The mathematical representation of ES is:
+\begin{equation}
+ES_{\alpha}(L) = E\left[ L \vert L<VaR_{\alpha}(L) \right].
+\end{equation}
+
+\item $\textit{Volatility}$ is measured by the standard deviation of asset returns. Higher volatility usually implies greater risk. Under the normality assumption of returns, volatility is proportional to VaR and ES. Although real world asset returns often have fatter tails than normal, volatility is often strongly correlated with VaR and ES, which we will see in later analysis. 
+
+\end{itemize}
+
+\subsection{Serial correlation}
+
+Serial correlation, also known as autocorrelation, is the correlation of observations at different time point. Under the wide-sense stationary process assumption, the serial correlation of $X$ between two time point $t$ and $s$ can be measured by the autocorrelation function as follows:
+
+\begin{equation}
+R(\tau) = R(s, t) = \frac{E[(X_t-\mu)(X_s-\mu)]}{\sigma^2}.
+\end{equation}
+
+where $\tau = t-s$.
+
+Serial correlation is often associated with the violation of efficiency market and random walk hypothesis. The literature documenting empirical serial correlation is extensive in the late 1980's\footnote{See Barucci and Emilio (2012, Section 6.5) \cite{barucci2012financial} for a detailed review.}. In stock price, Lo and MacKinlay (1988) \cite{lo1988stock} argue that returns based on the horizon longer than one year show a significant mean reversion, while Poterba and Summers (1988) \cite{poterba1988mean} detect a mean aversion for weekly and monthly returns. Lo and Mavkinlay (1988) \cite{lo1988stock}, Conrad et al. (1991) \cite{conrad1991components} model the security returns using a positively autocorrelated common component, an idiosyncratic component and a white-noise component. More extensively, the serial correlation has been documented in literature on nonsynchronous trading, which means assets are not traded simultaneously \cite{lo1990econometric}. Mech and Timothy (1993) \cite{mech1993portfolio} present evidence that the autocorrelation is associated with the delaying in price adjustment caused by transaction costs. In hedge fund returns, Getmansky, Lo and Makarov (2004) argue that serial correlation is an outcome of illiquidity exposure and smoothed returns, market inefficiencies, time-varying expected returns  and leverage and incentive fees with high water marks.
+
+Assuming a moving average representation of reported returns, Getmansky, Lo and Makarov (2004) \cite{getmansky2004econometric} show that Sharp Ratio (SR) tends to be overstated and the market beta understated. Cesare, Stork and Vries (2014) \cite{di2014risk} use the similar structure to demonstrate that the reported value-at-risk (VaR) and expected shortfall (ES) are always smaller than or equal to their actual values. Thus, the risks of assets are easily underestimated using standard risk measures, and the investment decisions may be misleading. Although based on serial correlation and smoothing feature of hedge fund returns, their models are as well applicable to other assets with autocorrelated returns. 
+
+\subsection{Synopsis}
+
+The plan of the paper is as follows. In \emph{Part I: Empirical Analysis}, we present empirical studies analyzing daily returns of various assets. Section 2 provides overall and time-varying risk diagnostics stressing both correlation and the difference between CED and other risk measures. In Section 3, we relate serial correlation with risk measures by fitting time series models, includes AR, MA, ARMA and GARCH. In Section 4, we give an empirical analysis of risk contributions by constructing portfolios of different weights. Next in \emph{Part II: Simulations}, we further illustrate properties of CED by generating returns from time series models. Section 5 contains the comparison of risk measures of various models. And we also give the analysis of the relationship between serial correlation and risk measures based on simulated models. Finally in Section 7, we show that higher serial correlation would result in higher drawdown risk concentrations.
+
+\part{Empirical Analysis}
+
+\section{Risk diagnostics}
+
+\subsection{Overall risk diagnostics}
+
+(Use unannualized VaR, ES and volatility in order to compare)
+
+VaR, ES: Empirical method \& normal method, VaR and ES is being overestimated at a lower confidence level and being underestimated at a higher confidence level. [Empirical, Page 49]
+
+Volatility: [Empirical, Page 8]
+
+Overall CED: how they are different under different confidentce interval and rolling windows [Empirical, Page 10]
+
+Relationship between risk measures: assets with larger VaR, ES and volatility also have larger CED, give the correlation values, Do they give the same order from lowest risk asset to highest?[Empirical, Page 10]
+
+Asset with largest and smallest risk for each risk measures: relate this with intuitive sence and the component of asset class. [Empirical, Page 9]
+
+Relative values of different assets for different risk measures: Is there a risk measure distinguish assets from each other most? [To be added]
+
+\subsection{Time-varying risk diagnostics}
+
+
+Empirical distribution of maximum drawdown is sensitive to the time length of measurement. [Empirical, Page 11, Figure 1]
+
+Large windows not desirable, why? [Empirical, Page 11, 13, Figure 1; Presentation2 Page3]
+
+Correlation between risk measures over time [Empirical, Table 4, 5, Figure 2, 27]
+
+CED plot
+
+Risk measures, when biggest? related to real world events. [To be extended]
+
+\section{Time series analysis}
+
+\subsection{ARMA}
+
+\subsection{GARCH}
+
+\subsection{Regime dependent analysis}
+
+\subsection{Other return frequencies}
+
+\section{Empirical risk contribution}
+
+
+\part{Simulations}
+
+\section{Serial correlation and risk measures}
+
+
+\section{Risk contribution}
+
+
+
+
+
+
+\newpage
+\appendix
+\section{Appendix A: Dataset} \label{App:AppendixA}
+\subsection{Description}
+Description of asset class: name, date ranges, description. [Empirical Page 4]
+
+\subsection{Statistical summary}
+annualized return, Sharpe Ratio, standard deviation, skewness, kurtosis [Empirical Page 8]
+
+\subsection{Return}
+Return across time and Return distribution [Empirical Page 8]
+
+\newpage
+
+\bibliographystyle{unsrt}
+\bibliography{analysis}
+
+
+
+
+
+
+\clearpage
+
+
+Which model gives the best fit (statistically)? Which assets have strongest serial correlation? The point here is to to understand the autocorrelation behavior of vaious asset classes, so you should once again interpret your results and parameters.
+
+
+relationship of the time series of the serial correlation parameters (e.g. $\kappa$ in the AR(1) model) with the time series of the various risk diagnostics. Is serial correlation strongly related to volatility, ES, VaR and CED? Is it more strongly correlated to one risk measure than another?
+
+
+
+Part I: Empirical analysis
+
+1. Understand the different risk characteristics (particularly drawdown) of different asset classes.
+
+2. Comparing the insights gained by looking at the maximum drawdown distribution in addition to the returns distribution.
+
+3. Find the empirical relationship between serial correlation and risk.
+
+
+Part II: Simulations
+
+1. Comparison of risk measures of various simulated models.
+
+2. Comparison of the returns and maximum drawdown distribution for various simulated models. (parallel to point 2 above)
+
+3. Relationship between serial correlation and risk based on simulated models. (parallel to point 3 above)
+
+
+The answer is that simulation and empirical analysis are two elements that play a complementary role in our understanding of the financial world, and specifically of drawdown risk: empirical analyses roughly guide us in understanding what are economically reasonable assumptions. Simulations help us estimate models from data generated by a known process. These simulated models are often used in practice for the purpose of forecasting and are tested out-of-sample for accuracy on empirical data. (Note however that forecasting will not be part of your project.)
+
+
+Our hypothesis for this next part is that higher serial correlation would result in higher drawdown risk concentrations (compared with risk concentrations along the other risk measures). Here is an outline of what you can do:
+
+1. Simulate the returns to two assets E (representing equity) and B (representing Bonds). For each model you simulate (AR, MA, GARCH, combination models, etc), you can use the parameters obtained by fitting to the real time series of equity and bonds (which you already have). Moreover, if your error term is Gaussian, you could use the real volatility of the underlying assets for the simulation.
+
+2. For each model you simulate, construct 50/50, 60/40, and 70/30 portfolios.
+
+3. For each model and portfolio, calculate the overall fractional risk contributions to volatility, ES, and CED along assets E and B.
+
+
+
+\end{document}
