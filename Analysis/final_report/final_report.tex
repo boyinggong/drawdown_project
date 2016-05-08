@@ -11,6 +11,7 @@
 \usepackage{tikz}
 \usepackage{array}
 \usepackage{float}
+\usepackage{stfloats}
 \usepackage{amsfonts}
 \def\Session{Fall 2015}
 \usepackage[english]{babel}
@@ -93,15 +94,7 @@ In this part, we provide the empirical analysis for various asset classes includ
 
 Table \ref{table:Overall_risk} shows the overall values of four risk measures for various assets over their time range. For each of VaR, ES and CED, we present results of two significance levels 90\% and 95\%. Volatility, ES and VaR are on daily-scale to allow comparison between risk measures in the future. 
 
-Note that VaR and ES are calculated based on the empirical distribution of daily returns. Another commonly used method would be based on Gaussian distribution assumption. However, in our case where all asset returns are fat-tailed distributed, applying Gaussian distribution would lead to erroneous results. VaR and ES will be overestimated at a lower confidence level and underestimated at a higher level. This discrepancy phenomenon is rather obvious when the return distribution has an extremely fat tail. We include results assuming Gaussian distribution in Appendix A for comparison.
- 
-The choice of path length is crucial for CED calculation. As shown in Table \ref{table:Overall_risk}, the value of CED is sensitive to path length. Here we present the CED with rolling three month and six month periods. CED is an increasing function of significance level and path length. We recommend period length no longer than six month for CED estimation. Please refer to an in-depth exploration of behaviour of maximum drawdown distribution and the choice of path length in next subsection. Due to the similarity in definition between CED and ES, they share many features in the calculation. Thus, many ES calculation technique could be implemented for CED estimation. 
-
-While volatility, VaR and ES are strongly correlated with each other across assets, CED has a comparatively weaker correlation with the other three. Note that the four risk measures do not give the same asset sequence from the largest to the least risky asset. Occasionally one risk measure indicates different order under different levels and path length. For example, CED indicates HYG has larger risk than SPX, but other three suggest the opposite comparison result. Moreover, the 6 month CED under 90\% level gives the different relative risk between HYG and BCOM with its counterpart under 95\% level. Notice that the reverse of relative risk suggested by same risk measure for distinct confidence level is more common for CED than for other risk measures.
-
-Back to the economic implications of these risk values. Top three assets in Table \ref{table:Overall_risk} (AGG, HYG, TIP), which are comprised of US bonds, have the smallest risk among all asset class; RMZ, constructed by US equity REITs (Real Estate Investment Trust), have much greater risk than the others; MXEF (MSCI Emerging Market Index), reflecting the emerging market equities, have larger risk than MXEA (MSCI Developed Market Index).
-
-\begin{table}
+\begin{table}[bp]
 \centering 
 \begin{tabular}{ | r || p{1.5cm} | p{1cm} p{1cm} | p{1cm} p{1cm} | p{1cm} p{1cm} | p{1cm} p{1cm} | } 
  \hline
@@ -125,6 +118,14 @@ USGG10YR & 1.27 & 1.26 & 1.95 & 2.28 & 2.99 & 23.28 & 28.11 & 32.78 & 39.00 \\
 \label{table:Overall_risk}
 \end{table}
 
+Note that VaR and ES are calculated based on the empirical distribution of daily returns. Another commonly used method would be based on Gaussian distribution assumption. However, in our case where all asset returns are fat-tailed distributed, applying Gaussian distribution would lead to erroneous results. VaR and ES will be overestimated at a lower confidence level and underestimated at a higher level. This discrepancy phenomenon is rather obvious when the return distribution has an extremely fat tail. We include results assuming Gaussian distribution in Appendix A for comparison.
+ 
+The choice of path length is crucial for CED calculation. As shown in Table \ref{table:Overall_risk}, the value of CED is sensitive to path length. Here we present the CED with rolling three month and six month periods. CED is an increasing function of significance level and path length. We recommend period length no longer than six month for CED estimation. Please refer to an in-depth exploration of behaviour of maximum drawdown distribution and the choice of path length in next subsection. Due to the similarity in definition between CED and ES, they share many features in the calculation. Thus, many ES calculation technique could be implemented for CED estimation. 
+
+While volatility, VaR and ES are strongly correlated with each other across assets, CED has a comparatively weaker correlation with the other three. Note that the four risk measures do not give the same asset sequence from the largest to the least risky asset. Occasionally one risk measure indicates different order under different levels and path length. For example, CED indicates HYG has larger risk than SPX, but other three suggest the opposite comparison result. Moreover, the 6 month CED under 90\% level gives the different relative risk between HYG and BCOM with its counterpart under 95\% level. Notice that the reverse of relative risk suggested by same risk measure for distinct confidence level is more common for CED than for other risk measures.
+
+Back to the economic implications of these risk values. Top three assets in Table \ref{table:Overall_risk} (AGG, HYG, TIP), which are comprised of US bonds, have the smallest risk among all asset class; RMZ, constructed by US equity REITs (Real Estate Investment Trust), have much greater risk than the others; MXEF (MSCI Emerging Market Index), reflecting the emerging market equities, have larger risk than MXEA (MSCI Developed Market Index).
+
 \subsection{Time-varying risk diagnostics}
 
 Time varying risk measures refer to risk measures based on fixed rolling windows. A series of risk measures is obtained. Risk at each time point is given by the past returns of a fixed length. Time-varying risk diagnostics enable us not only to compare risk across assets but to analyze risk for the same asset over time. 
@@ -133,43 +134,38 @@ Time varying risk measures refer to risk measures based on fixed rolling windows
 
 Unlike VaR and ES, the empirical distribution of maximum drawdown is more sensitive to the time length of measurement. Figure \ref{fig: dmaxdd_RMZ} shows the maximum drawdown of various assets for different path length (3 months, 6 months, 1 year, 2 years, 5 years) separately. As revealed in Figure \ref{fig: dmaxdd_RMZ}, maximum drawdown distribution tends to: a) have the larger mean and variance; b) be multi-mode; c) lack variability of values; d) center around several specific values when we move to longer periods. 
 
-For daily return data, we do not recommend window length greater than six months for CED estimation. Large drawdowns in real-world asset returns are usually associated with particular events during a short time, for example, the 2008-2009 financial crisis. When considering longer path such as two years or five years, maximum drawdown values tend to be dominant by these events. The empirical distribution would only be defined on several distinct values. In such cases, the empirical quantile no longer exists without distributional or polynomial assumptions of the tail. Thus, it becomes hard to calculate the tail mean (CED). Later in our analysis, we use three or six-month path length. Figure \ref{fig: dist_mdd} shows the empirical distribution of maximum drawdown under the six-month rolling window for various assets.
-
-\begin{figure}
+\begin{figure}[bp]
 \centering 
 \includegraphics[width = 1\textwidth]{../results/maxdd_RMZ}
 \caption{Maximum drawdown distribution of RMZ as rolling period increases} 
 \label{fig: dmaxdd_RMZ}
 \end{figure}
 
-\subsubsection{Time varying volatility, VaR and ES}
+For daily return data, we do not recommend window length greater than six months for CED estimation. Large drawdowns in real-world asset returns are usually associated with particular events during a short time, for example, the 2008-2009 financial crisis. When considering longer path such as two years or five years, maximum drawdown values tend to be dominant by these events. The empirical distribution would only be defined on several distinct values. In such cases, the empirical quantile no longer exists without distributional or polynomial assumptions of the tail. Thus, it becomes hard to calculate the tail mean (CED). Later in our analysis, we use three or six-month path length. Figure \ref{fig: dist_mdd} shows the empirical distribution of maximum drawdown under the six-month rolling window for various assets.
 
-Figure \ref{fig: risk_meausre_RMZ} shows the rolling VaR, volatility, ES, and maximum drawdown with rolling six-month periods. 
+\subsubsection{Time varying risk measures}
 
+Figure \ref{fig: risk_meausre_RMZ} shows the rolling VaR, volatility, ES, and maximum drawdown with rolling six-month periods. Under Gaussian distribution, VaR, ES, and volatility is linearly dependent. For empirical data where the return distribution has fat tails and distinct kurtosis, they still strongly correlated. (With average correlation $>$ 95\% for 6 month rolling window) 
 
 \begin{figure}
 \centering 
 \includegraphics[width = 1\textwidth]{../results/risk_measure_RMZ}
-\caption{Comparison of different risk measures of RMZ} 
+\caption{Comparison of different risk measures of US equity REITs index (RMZ)} 
 \label{fig: risk_meausre_RMZ}
 \end{figure}
 
-\subsubsection{Time varying CED}
 
 
+CED is also closely related with other risk measures. However, the correlation between CED and the other three risk measures are slightly weaker than the correlation among volatility, VaR and ES. Table \ref{table:corrRiskMeasureCED} shows the correlation between CED and other risk measures calculated based on six-month rolling risk measures for every asset. 
+
+\begin{figure}
+\centering 
+\includegraphics[width = 1\textwidth]{../figures/SPX_RMZ_P_CED}
+\caption{Daily price of the S\&P 500 (SPX) and US equity REITs index (RMZ) togther with their 2-year-3month rolling CED.} 
+\label{fig: SPX_RMZ_P_CED}
+\end{figure}
 
 
-===========Time-varying risk diagnostics=============
-
-Empirical distribution of maximum drawdown is sensitive to the time length of measurement. [Empirical, Page 11, Figure 1]
-
-Large windows not desirable, why? [Empirical, Page 11, 13, Figure 1; Presentation2 Page3]
-
-Correlation between risk measures over time [Empirical, Table 4, 5, Figure 2, 27]
-
-CED plot
-
-Risk measures, when biggest? related to real world events. [To be extended]
 
 \section{Time series analysis}
 
@@ -296,7 +292,27 @@ USGG10YR & 1.62 & 2.08 & 2.95 & 2.23 & 2.62 & 3.39\\
 \label{fig: dist_mdd}
 \end{figure}
 
-
+\begin{table}
+\caption{Correlation between CED (confidence level = 0.9) and other risk measures}
+\centering 
+\begin{tabular}{| p{2cm}||p{2cm}|p{2cm}|p{2cm}|} 
+\hline
+Measures & Volatility & VaR & ES\\
+  \hline
+AGG & 0.94 & 0.89 & 0.95\\ 
+HYG & 0.98 & 0.97 & 0.97\\ 
+TIP & 0.77 & 0.85 & 0.85\\ 
+BCOM & 0.84 & 0.89 & 0.89\\ 
+MXEA & 0.84 & 0.83 & 0.86\\ 
+MXEF & 0.91 & 0.91 & 0.93\\ 
+RAY & 0.92 & 0.85 & 0.92\\ 
+RMZ & 0.96 & 0.96 & 0.97\\ 
+SPX & 0.84 & 0.81 & 0.84\\ 
+USGG10YR & 0.91 & 0.93 & 0.95\\
+\hline
+\end{tabular}
+\label{table:corrRiskMeasureCED}
+\end{table}
 
 \newpage
 
@@ -326,6 +342,19 @@ Relationship between risk measures: assets with larger VaR, ES and volatility al
 Asset with largest and smallest risk for each risk measures: relate this with intuitive sence and the component of asset class. [Empirical, Page 9]
 
 Relative values of different assets for different risk measures: Is there a risk measure distinguish assets from each other most? [To be added]
+
+
+===========Time-varying risk diagnostics=============
+
+Empirical distribution of maximum drawdown is sensitive to the time length of measurement. [Empirical, Page 11, Figure 1]
+
+Large windows not desirable, why? [Empirical, Page 11, 13, Figure 1; Presentation2 Page3]
+
+Correlation between risk measures over time [Empirical, Table 4, 5, Figure 2, 27]
+
+CED plot
+
+Risk measures, when biggest? related to real world events. [To be extended]
 
 ==============================================
 
