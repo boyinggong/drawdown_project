@@ -145,27 +145,25 @@ For daily return data, we do not recommend window length greater than six months
 
 \subsubsection{Time varying risk measures}
 
-Figure \ref{fig: risk_meausre_RMZ} shows the rolling VaR, volatility, ES, and maximum drawdown with rolling six-month periods. Under Gaussian distribution, VaR, ES, and volatility is linearly dependent. For empirical data where the return distribution has fat tails and distinct kurtosis, they still strongly correlated. (With average correlation $>$ 95\% for 6 month rolling window) 
+Under Gaussian distribution, VaR, ES, and volatility are linearly dependent. For empirical data where the return distribution has fat tails and distinct kurtosis, they are still strongly correlated. (With average correlation $>$ 95\% for six months rolling window) Figure \ref{fig: risk_meausre_RMZ} shows the VaR, volatility, ES, and maximum drawdown with rolling six-month periods. Four risk measures share a similar pattern of ups and downs, where the risk shot up during the 2008-2009 financial crisis. 
 
 \begin{figure}
 \centering 
 \includegraphics[width = 1\textwidth]{../results/risk_measure_RMZ}
-\caption{Comparison of different risk measures of US equity REITs index (RMZ)} 
+\caption{Comparison of different risk measures of RMZ} 
 \label{fig: risk_meausre_RMZ}
 \end{figure}
-
-
-
-CED is also closely related with other risk measures. However, the correlation between CED and the other three risk measures are slightly weaker than the correlation among volatility, VaR and ES. Table \ref{table:corrRiskMeasureCED} shows the correlation between CED and other risk measures calculated based on six-month rolling risk measures for every asset. 
 
 \begin{figure}
 \centering 
 \includegraphics[width = 1\textwidth]{../figures/SPX_RMZ_P_CED}
 \caption{Daily price of the S\&P 500 (SPX) and US equity REITs index (RMZ) togther with their 2-year-3month rolling CED.} 
-\label{fig: SPX_RMZ_P_CED}
+\label{fig:SPX_RMZ_P_CED}
 \end{figure}
 
+CED requires more data compared with other risk measures and usually remain constant for a period. To empirically estimate the drawdown distribution, we often rolling a fixed path length. Credible quantile estimation requires hundreds of rollings. For example, two-year-three-month CED evaluates the three-month drawdown risk over the past two years. Figure \ref{fig:SPX_RMZ_P_CED} shows the daily price of the S\&P 500 (SPX) and US equity REITs Index (RMZ) together with their two-year-three-month rolling CED. The CED series also reflect the sharp increase in economic depressions.
 
+CED is closely related to other risk measures. However, the correlation between CED and the other three risk measures are slightly weaker than the correlation among volatility, VaR, and ES. Table \ref{table:corrRiskMeasureCED} shows the correlation between CED and other risk measures calculated based on six-month rolling risk measures for every asset. 
 
 \section{Time series analysis}
 
@@ -175,13 +173,7 @@ CED is also closely related with other risk measures. However, the correlation b
 
 \subsection{Regime dependent analysis}
 
-Introduction [Summary Page 13]
 
-Summary of regime switching model for different assets [Summary Page 13][To be add: modeled variance]
-
-Why can not see strong correlation between serial correlation and CED? Relate this to the simulation study: when both volatility and seiral correlation are different, volatility usually dominant the influence for CED. [To be added]
-
-Rolling risk measure (RMZ as example): Correlation between seial correlation and risk measure for two regions [Empirical Page 15]
 
 \subsection{Other return frequencies}
 
@@ -356,11 +348,19 @@ CED plot
 
 Risk measures, when biggest? related to real world events. [To be extended]
 
+=============== regime switching model ======
+
+Introduction [Summary Page 13]
+
+Summary of regime switching model for different assets [Summary Page 13][To be add: modeled variance]
+
+Why can not see strong correlation between serial correlation and CED? Relate this to the simulation study: when both volatility and seiral correlation are different, volatility usually dominant the influence for CED. [To be added]
+
+Rolling risk measure (RMZ as example): Correlation between seial correlation and risk measure for two regions [Empirical Page 15]
+
 ==============================================
 
-
 Which model gives the best fit (statistically)? Which assets have strongest serial correlation? The point here is to to understand the autocorrelation behavior of vaious asset classes, so you should once again interpret your results and parameters.
-
 
 relationship of the time series of the serial correlation parameters (e.g. $\kappa$ in the AR(1) model) with the time series of the various risk diagnostics. Is serial correlation strongly related to volatility, ES, VaR and CED? Is it more strongly correlated to one risk measure than another?
 

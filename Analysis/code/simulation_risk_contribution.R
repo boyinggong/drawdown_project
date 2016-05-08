@@ -214,8 +214,8 @@ group_sim <- function(param, risk_measure, rand.gen, weight, ...){
   return(ret)
 }
 
-# group_sim(param = ts.param.ar2[,1:2], risk_measure = "ES", 
-#           rand.gen = function(n) rnorm(n, sd = 0.01), weight = weightss[[i]])
+# group_sim(param = ts.param.ar2[,1:2], risk_measure = "volatility", 
+#           rand.gen = function(n) rnorm(n, sd = 0.01), weight = weightss[[3]])
 # 
 # param
 
@@ -226,14 +226,20 @@ weightss[["w3"]]  = c(0.3, 0.7)
 
 # run CED for different weight
 risk_measure = "CED"
-for (i in c("w2","w3")){
+
+risk_measure = "volatility"
+for (i in names(weightss)){
   assign(paste(risk_measure,"_ar1_",i, sep = ""),group_sim(ts.param.ar2, risk_measure = risk_measure, 
-                                                      rand.gen = function(n) rnorm(n, sd = 0.01),weight = weightss[[i]],nrep = 50))
+                                                      rand.gen = function(n) rnorm(n, sd = 0.01),weight = weightss[[i]]))
 }
 
 CED_ar1_w1_dead <- CED_ar1_w1
 CED_ar1_w2_dead <- CED_ar1_w2
 CED_ar1_w3_dead <- CED_ar1_w3
+
+
+colnames(volatility_ar1_w3)[3] = "volatility"
+
 
 
 # run VaR for different weight
@@ -246,7 +252,7 @@ risk_measure = "ES"
 # df_names <- paste(risk_measure, "_ar1_",names(weightss), sep = "")
 
 helper_get_ratio <- function(risk_measure,wi){
-#   browser()
+  # browser()
   df <- get(paste(risk_measure, "_ar1_",wi, sep = ""))
   ret <- df[,!(colnames(df) %in% c("model1","model2",risk_measure))]/df[,risk_measure]
   colnames(ret) <- paste(wi, c(".sim1",".sim2"), sep = "")
@@ -284,8 +290,8 @@ helper_plot_df <- function(risk_measure, fixat = -0.7){
 
 # helper_plot_df("CED", fixat = -0.1)
 plot_rc <- function(risk_measure, fixats = c(-0.7,-0.1,.7,.1), model = "ar1"){
-  png(paste("Analysis/figures/risk_contribution/z", risk_measure,"_", model, 
-            ".png", sep = ''), width = 800, height = 800)
+  png(paste("../figures/risk_contribution/z", risk_measure,"_", model, 
+            ".png", sep = ''), width = 800, height = 500)
   plots = list()
   # fixats <-  c(-0.7,-0.1,.7,.1)
   for (i in fixats){
@@ -306,7 +312,7 @@ plot_rc <- function(risk_measure, fixats = c(-0.7,-0.1,.7,.1), model = "ar1"){
 plot_rc("CED")
 plot_rc("VaR")
 plot_rc("ES")
-
+plot_rc("volatility")
 
 
 
