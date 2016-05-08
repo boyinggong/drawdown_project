@@ -85,26 +85,57 @@ The plan of the paper is as follows. In \emph{Part I: Empirical Analysis}, we pr
 
 \part{Empirical Analysis}
 
+In this part, we provide the empirical analysis for various asset classes including S\&P 500 Index (SPX), Russell 3000 Index (RAY), etc. Detailed descriptions of their date ranges, components, and summary statistics are given in Appendix \ref{App:AppendixA}.
+
 \section{Risk diagnostics}
 
 \subsection{Overall risk diagnostics}
 
-(Use unannualized VaR, ES and volatility in order to compare)
+Table \ref{table:Overall_risk} shows the overall values of four risk measures for various assets. For each of VaR, ES and CED, we present results of two significance levels 90\% and 95\%. Volatility, ES and VaR are on daily-scale to allow comparison between risk measures in the future. 
 
-VaR, ES: Empirical method \& normal method, VaR and ES is being overestimated at a lower confidence level and being underestimated at a higher confidence level. [Empirical, Page 49]
+Note that VaR and ES are calculated based on the empirical distribution of daily returns. Another commonly used method would be based on Gaussian distribution assumption. However, in our case where all asset returns are fat-tailed distributed, applying Gaussian distribution would lead to erroneous results. VaR and ES will be overestimated at a lower confidence level and underestimated at a higher level. This discrepancy phenomenon is rather obvious when the return distribution has an extremely fat tail. We include results assuming Gaussian distribution in Appendix A for comparison.
+ 
+The choice of path length is crucial for CED calculation. As shown in Table \ref{table:Overall_risk}, the value of CED is sensitive to path length. Here we present the CED with rolling three month and six month periods. CED is an increasing function of significance level and path length. We recommend period length no longer than six month for CED estimation. Please refer to an in-depth exploration of behaviour of maximum drawdown distribution and the choice of path length in next subsection. Due to the similarity in definition between CED and ES, they share many features in the calculation. Thus, many ES calculation technique could be implemented for CED estimation. 
 
-Volatility: [Empirical, Page 8]
+While volatility, VaR and ES are strongly correlated with each other across assets, CED has a comparatively weaker correlation with the other three. Note that the four risk measures do not give the same asset sequence from the largest to the least risky asset. Occasionally one risk measure indicates different order under different levels and path length. For example, CED indicates HYG has larger risk than SPX, but other three suggest the opposite comparison result. Moreover, the 6 month CED under 90\% level gives the different relative risk between HYG and BCOM with its counterpart under 95\% level. Notice that the reverse of relative risk suggested by same risk measure for distinct confidence level is more common for CED than for other risk measures.
 
-Overall CED: how they are different under different confidentce interval and rolling windows [Empirical, Page 10]
+Back to the economic implications of these risk values. Top three assets in Table \ref{table:Overall_risk} (AGG, HYG, TIP), which are comprised of US bonds, have the smallest risk among all asset class; RMZ, constructed by US equity REITs (Real Estate Investment Trust), have much greater risk than the others; MXEF (MSCI Emerging Market Index), reflecting the emerging market equities, have larger risk than MXEA (MSCI Developed Market Index).
 
-Relationship between risk measures: assets with larger VaR, ES and volatility also have larger CED, give the correlation values, Do they give the same order from lowest risk asset to highest?[Empirical, Page 10]
-
-Asset with largest and smallest risk for each risk measures: relate this with intuitive sence and the component of asset class. [Empirical, Page 9]
-
-Relative values of different assets for different risk measures: Is there a risk measure distinguish assets from each other most? [To be added]
+\begin{table}
+\centering 
+\begin{tabular}{ | r || p{1.5cm} | p{1cm} p{1cm} | p{1cm} p{1cm} | p{1cm} p{1cm} | p{1cm} p{1cm} | } 
+ \hline
+Measures & Volatility & \multicolumn{2}{c|}{VaR(\%)} & \multicolumn{2}{c|}{ES(\%)} &
+ \multicolumn{2}{p{2cm}|}{CED(\%)\quad(3 month)} &\multicolumn{2}{p{2cm}|}{CED(\%)\quad(6 month)} \\ 
+Levels & & 0.90 & 0.95 & 0.90 & 0.95 & 0.90 & 0.95 & 0.90 & 0.95 \\
+  \hline \hline
+AGG & 0.32 & 0.29 & 0.40 & 0.50 & 0.66 & 5.60 &  7.72 & 8.12 & 11.45  \\ 
+HYG & 0.84 &  0.62 & 1.03 & 1.41 & 2.03 & 18.41 & 24.07 & 26.43 & 30.77 \\ 
+TIP & 0.41 &  0.44 & 0.62 & 0.72 & 0.91 & 7.48 & 9.90 & 11.14 & 12.91 \\ 
+BCOM & 0.94 &  1.04 & 1.47 & 1.71 & 2.20 & 18.14 & 22.54 & 26.61 & 33.66 \\ 
+MXEA & 0.97 &  1.02 & 1.46 & 1.74 & 2.26 & 20.39 & 23.73 & 27.21 & 31.79 \\ 
+MXEF & 1.13 &  1.21 & 1.76 & 2.11 & 2.75 & 26.21 & 30.80 & 36.35 & 43.30 \\ 
+RAY & 1.09 &  1.11 & 1.62 & 1.95 & 2.56 & 20.65 & 25.64 & 27.81 & 34.08 \\ 
+RMZ & 2.30 &  1.91 & 3.00 & 3.99 & 5.62 & 37.30 & 48.41 & 52.04 & 62.41 \\ 
+SPX & 0.97 &  0.99 & 1.43 & 1.71 & 2.23 & 18.35 & 22.67 & 25.18 & 30.65 \\ 
+USGG10YR & 1.27 & 1.26 & 1.95 & 2.28 & 2.99 & 23.28 & 28.11 & 32.78 & 39.00 \\
+ \hline
+\end{tabular}
+\caption{Overall risk measures for various assets}
+\label{table:Overall_risk}
+\end{table}
 
 \subsection{Time-varying risk diagnostics}
 
+
+
+
+
+
+
+
+
+===========Time-varying risk diagnostics=============
 
 Empirical distribution of maximum drawdown is sensitive to the time length of measurement. [Empirical, Page 11, Figure 1]
 
@@ -124,6 +155,14 @@ Risk measures, when biggest? related to real world events. [To be extended]
 
 \subsection{Regime dependent analysis}
 
+Introduction [Summary Page 13]
+
+Summary of regime switching model for different assets [Summary Page 13][To be add: modeled variance]
+
+Why can not see strong correlation between serial correlation and CED? Relate this to the simulation study: when both volatility and seiral correlation are different, volatility usually dominant the influence for CED. [To be added]
+
+Rolling risk measure (RMZ as example): Correlation between seial correlation and risk measure for two regions [Empirical Page 15]
+
 \subsection{Other return frequencies}
 
 \section{Empirical risk contribution}
@@ -132,6 +171,29 @@ Risk measures, when biggest? related to real world events. [To be extended]
 \part{Simulations}
 
 \section{Serial correlation and risk measures}
+
+\subsection{ARMA model}
+
+\subsection{Garch model}
+
+\subsection{Summary}
+
+
+
+
+=========================================
+
+AR, MA and ARMA model with normal dist and t dist, fat tail distribution would result in more randomness when calculating CED and other risk measures[Simulation Page 2 - 21]
+
+Garch model fitting: how different coefficients influence the risk measure values? [Simulation Page 32]
+
+Simulation with standard error adjusted [Simulation Page 21]
+
+CED distinguishes negative from positive autocorrelation[Simulation Page 21]
+
+Change standard deviation but fix everything in time series simulation would result in linear change of risk measures[Simulation Page 22]
+
+The influence of volatility dominant in the risk measure calculation, relate this to empirical data, why usually we can not discover patterns? [To be added] 
 
 
 \section{Risk contribution}
@@ -145,13 +207,58 @@ Risk measures, when biggest? related to real world events. [To be extended]
 \appendix
 \section{Appendix A: Dataset} \label{App:AppendixA}
 \subsection{Description}
-Description of asset class: name, date ranges, description. [Empirical Page 4]
+\begin{table}[H]
+\centering 
+\begin{tabular}{ | r | p{7cm}  | p{4.5cm} | } 
+ \hline 
+Symbol & Name & Date range \\ \hline
+AGG & iShares Core US Aggregate Bond & 2003-09-29 to 2015-12-31 \\
+HYG & iShares iBoxx High Yield Corporate Bond & 2007-04-12 to 2015-12-31 \\
+TIP & iShares TIPS Bond & 2003-12-08 to 2015-12-31 \\
+BCOM & Bloomberg Commodity Index & 1991-01-03 to 2015-12-31 \\
+MXEA & MSCI Developed Markets Index & 1970-01-07 to 2015-12-31 \\
+MXEF & MSCI Emerging Markets Index & 1988-01-01 to 2015-12-31 \\
+RAY & Russell 3000 Index & 1979-01-02 to 2015-12-31 \\
+RMZ & MSCI US REIT Index & 2005-06-20 to 2015-12-31 \\
+SPX & S\&P 500 Index & 1950-01-04 to 2015-12-31 \\
+USGG10YR & US Generic Govt 10 Year & 1962-01-03 to 2015-12-31 \\
+ \hline
+\end{tabular}
+\caption{Normal VaR and ES under various levels}
+\label{table:AssetDescription}
+\end{table}
+
 
 \subsection{Statistical summary}
 annualized return, Sharpe Ratio, standard deviation, skewness, kurtosis [Empirical Page 8]
 
 \subsection{Return}
 Return across time and Return distribution [Empirical Page 8]
+
+\subsection{Normal VaR and ES}
+
+\begin{table}[H]
+\centering 
+\begin{tabular}{ | r || p{1cm} p{1cm} p{1cm} || p{1cm} p{1cm} p{1cm} | } 
+ \hline
+ & & VaR(\%) &&& ES(\%) & \\
+Asset& 0.90 & 0.95 & 0.99 & 0.90 & 0.95 & 0.99 \\
+  \hline \hline
+AGG & 0.39 & 0.51 & 0.72 & 0.57 & 0.67 & 0.86\\ 
+HYG & 1.06 & 1.36 & 1.94 & 1.50 & 1.76 & 2.26\\ 
+TIP & 0.51 & 0.66 & 0.94 & 0.74 & 0.86 & 1.11\\ 
+BCOM & 1.20 & 1.54 & 2.18 & 1.65 & 1.94 & 2.50\\ 
+MXEA & 1.22 & 1.57 & 2.24 & 1.74 & 2.04 & 2.62\\ 
+MXEF & 1.42 & 1.83 & 2.61 & 2.03 & 2.38 & 3.06\\ 
+RAY & 1.36 & 1.75 & 2.49 & 1.95 & 2.29 & 2.94\\ 
+RMZ & 2.92 & 3.75 & 5.32 & 4.08 & 4.79 & 6.18\\ 
+SPX & 1.21 & 1.57 & 2.22 & 1.73 & 2.03 & 2.61\\ 
+USGG10YR & 1.62 & 2.08 & 2.95 & 2.23 & 2.62 & 3.39\\
+ \hline
+\end{tabular}
+\caption{Normal VaR and ES under various levels}
+\label{table:VaRESNormal}
+\end{table}
 
 \newpage
 
@@ -164,6 +271,25 @@ Return across time and Return distribution [Empirical Page 8]
 
 
 \clearpage
+
+
+===========Overall risk measures for various assets============
+
+(Use unannualized VaR, ES and volatility in order to compare)
+
+VaR, ES: Empirical method \& normal method, VaR and ES is being overestimated at a lower confidence level and being underestimated at a higher confidence level. [Empirical, Page 49]
+
+Volatility: [Empirical, Page 8]
+
+Overall CED: how they are different under different confidentce interval and rolling windows [Empirical, Page 10]
+
+Relationship between risk measures: assets with larger VaR, ES and volatility also have larger CED, give the correlation values, Do they give the same order from lowest risk asset to highest?[Empirical, Page 10]
+
+Asset with largest and smallest risk for each risk measures: relate this with intuitive sence and the component of asset class. [Empirical, Page 9]
+
+Relative values of different assets for different risk measures: Is there a risk measure distinguish assets from each other most? [To be added]
+
+==============================================
 
 
 Which model gives the best fit (statistically)? Which assets have strongest serial correlation? The point here is to to understand the autocorrelation behavior of vaious asset classes, so you should once again interpret your results and parameters.
