@@ -60,7 +60,7 @@ drawdown_contribution = function(r, weight){
 
 
 # sim_CED: simulate portfolio
-sim_CED = function(p = 0.9, n = 100, model1, rand.gen1, 
+sim_CED_helper = function(p = 0.9, n = 100, model1, rand.gen1, 
                    model2, rand.gen2, rep = 1000, weights){# browser()
   maxdrawdown_df = t(sapply(1:rep, function(x){
     ts.sim1 = arima.sim(model = model1, n = n, rand.gen = rand.gen1)
@@ -73,6 +73,20 @@ sim_CED = function(p = 0.9, n = 100, model1, rand.gen1,
   names(res)[1] = "CED"
   return(res)
 }
+
+
+################# repeat CED to make it stable
+sim_CED <- function(p = 0.9, n = 100, model1, rand.gen1, 
+                    model2, rand.gen2, rep = 1000, weights, nrep){
+  ret <- replicate(nrep, sim_CED_helper (p = 0.9, n = 100, model1, rand.gen1, 
+                                         model2, rand.gen2, rep = 1000, weights = weights))
+  return(rowMeans(ret))
+}
+
+sim_CED(p = 0.9, n = 100, model1 = model, rand.gen1 =rand.gen, 
+         model2 = model, rand.gen2 = rand.gen, rep = 1000, weights = c(0.1,0.9), 5)
+
+
 
 sim_ES = function(p = 0.9, n = 100, model1, rand.gen1, 
                   model2, rand.gen2, rep = 100, weights){
@@ -149,10 +163,19 @@ ts.sim = arima.sim(model = list(ar=0.1), n = 100, rand.gen = function(n) rnorm(n
 
 
 ########################### simulation for difference param #################################
-ts.ar1 <- expand.grid(seq(from = -0.7, to = 0.7, by = 0.1), seq(from = -0.7, to = 0.7, by = 0.1))
-ts.param.ar1 = as.data.frame(t(ts.ar1))
-rownames(ts.param.ar1) = NULL
-colnames(ts.param.ar1) = 1:ncol(ts.param.ar1)
+param_df <- function (seq1, seq2){
+  ts.ar1 <- expand.grid(seq1, seq2)
+  ts.param.ar1 = as.data.frame(t(ts.ar1))
+  rownames(ts.param.ar1) = NULL
+  colnames(ts.param.ar1) = 1:ncol(ts.param.ar1)
+  list (origin =ts.ar1 ,reform = ts.param.ar1)
+}
+ts.param.ar2 = param_df(seq(from = -0.7, to = 0.7, by = 0.1), c(-0.7,-0.1,.7,.1))$reform
+
+# ts.ar1 <- expand.grid(seq(from = -0.7, to = 0.7, by = 0.1), seq(from = -0.7, to = 0.7, by = 0.1))
+# ts.param.ar1 = as.data.frame(t(ts.ar1))
+# rownames(ts.param.ar1) = NULL
+# colnames(ts.param.ar1) = 1:ncol(ts.param.ar1)
 
 risk_measure = "CED"
 # FUN = get(paste("sim_",risk_measure, sep = ""))
@@ -168,16 +191,33 @@ risk_measure = "CED"
 # # helper(ts.param.ar1[1,])
 # sapply(ts.param.ar1[,1:2],helper)
 
-group_sim <- function(param, risk_measure, rand.gen, weight){
-#   browser()
+# group_sim <- function(param, risk_measure, rand.gen, weight){
+# #   browser()
+#   FUN = get(paste("sim_",risk_measure, sep = ""))
+#   ret1 <- sapply(param, function(vec){
+#     return(FUN(p = 0.9, n = 1000, model1 = list(ar=vec[1]),rand.gen1 = rand.gen, 
+#              model2 = list(ar=vec[2]), rand.gen2 = rand.gen, rep = 100, weights = weight))})
+#   ret <- t(rbind(param,ret1))
+#   colnames(ret)[1:2] = c("model1","model2")
+#   return(ret)
+# }
+
+group_sim <- function(param, risk_measure, rand.gen, weight, ...){
   FUN = get(paste("sim_",risk_measure, sep = ""))
   ret1 <- sapply(param, function(vec){
-    return(FUN(p = 0.9, n = 1000, model1 = list(ar=vec[1]),rand.gen1 = rand.gen, 
-             model2 = list(ar=vec[2]), rand.gen2 = rand.gen, rep = 100, weights = weight))})
+    do.call(FUN,
+            list(p = 0.9, n = 1000, model1 = list(ar=vec[1]),rand.gen1 = rand.gen, 
+                 model2 = list(ar=vec[2]), rand.gen2 = rand.gen, rep = 100, weights = weight,...))})
+  
   ret <- t(rbind(param,ret1))
   colnames(ret)[1:2] = c("model1","model2")
   return(ret)
 }
+
+# group_sim(param = ts.param.ar2[,1:2], risk_measure = "ES", 
+#           rand.gen = function(n) rnorm(n, sd = 0.01), weight = weightss[[i]])
+# 
+# param
 
 weightss <- list()
 weightss[["w1"]]  = c(0.5, 0.5)
@@ -186,10 +226,15 @@ weightss[["w3"]]  = c(0.3, 0.7)
 
 # run CED for different weight
 risk_measure = "CED"
-for (i in names(weightss)){
-  assign(paste(risk_measure,"_ar1_",i, sep = ""),group_sim(ts.param.ar1, risk_measure = risk_measure, 
-                                                           rand.gen = function(n) rnorm(n, sd = 0.01),weight = weightss[[i]]))
+for (i in c("w2","w3")){
+  assign(paste(risk_measure,"_ar1_",i, sep = ""),group_sim(ts.param.ar2, risk_measure = risk_measure, 
+                                                      rand.gen = function(n) rnorm(n, sd = 0.01),weight = weightss[[i]],nrep = 50))
 }
+
+CED_ar1_w1_dead <- CED_ar1_w1
+CED_ar1_w2_dead <- CED_ar1_w2
+CED_ar1_w3_dead <- CED_ar1_w3
+
 
 # run VaR for different weight
 risk_measure = "VaR"
@@ -211,7 +256,8 @@ helper_get_ratio <- function(risk_measure,wi){
 # helper_get_ratio(risk_measure, "w1")
 
 get_ratio <- function(risk_measure){
-  df <- ts.ar1
+#     browser()
+  df <- param_df(seq(from = -0.7, to = 0.7, by = 0.1), c(-0.7,-0.1,.7,.1))$origin
   for (wi in names(weightss)){
     df = cbind(df,helper_get_ratio(risk_measure,wi))
   }
@@ -238,19 +284,21 @@ helper_plot_df <- function(risk_measure, fixat = -0.7){
 
 # helper_plot_df("CED", fixat = -0.1)
 plot_rc <- function(risk_measure, fixats = c(-0.7,-0.1,.7,.1), model = "ar1"){
-  png(paste("Analysis/figures/risk_contribution/", risk_measure,"_", model, 
-            ".png", sep = ''), width = 1600, height = 1600)
+  png(paste("Analysis/figures/risk_contribution/z", risk_measure,"_", model, 
+            ".png", sep = ''), width = 800, height = 800)
   plots = list()
   # fixats <-  c(-0.7,-0.1,.7,.1)
   for (i in fixats){
     print(i)
     plots[[toString(i)]] <- ggplot(data = helper_plot_df(risk_measure,fixat = i), 
                                    aes(x = model1, y = value, group = as.factor(variable), color = variable))+
-      geom_line()+
+      geom_line(size = 1)+
       ylab(paste(risk_measure, "Proportion"))+
       xlab(expression(rho))+
       theme_bw()+
-      ggtitle(paste("AR coef of model 2:",toString(i)))
+      ylim(0,1)+
+      ggtitle(paste("AR coef of model 2:",toString(i)))+
+      scale_colour_brewer()
   }
   do.call("grid.arrange", c(plots, ncol=2))
   dev.off()
