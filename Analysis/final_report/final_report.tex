@@ -13,6 +13,7 @@
 \usepackage{float}
 \usepackage{stfloats}
 \usepackage{amsfonts}
+\usepackage{wrapfig,lipsum,booktabs}
 \def\Session{Fall 2015}
 \usepackage[english]{babel}
 \title{Risk Measures and Serial Correlation}
@@ -173,6 +174,84 @@ CED is closely related to other risk measures. However, the correlation between 
 
 \subsection{Regime dependent analysis}
 
+Most economic time series data behave differently in the adjacent period. For example, asset returns
+usually show considerable volatility during a financial crisis. One standard approach to model abrupt changes in regime is to use the Hamilton's Markov regime switching model\cite{hamilton1994time}\cite{hamilton1990analysis}. In our study, we use the following two-regime switching model to fit the returns:
+
+\begin{equation}
+y_t - \mu_{s^*_t} = \phi_{s^*_t} (y_{t-1} - \mu_{s^*_{t-1}}) + \epsilon_t
+\end{equation}
+where the number of autoregressive coefficients is set to 1. $s^*_t$ is a two-state Markov chain. $s^*_t = 1$ represent regime 1 and $s^*_t = 2$ represent regime 2. $s^*_t$ depends on the past only through the most recent values:
+
+\begin{equation}
+P(s_t = j|s_{t-1}, s_{t-2}, \dots) = P(s_t = j|s_{t-1})  = p_{ij}
+\end{equation}
+
+\subsubsection{Comparison of basic summary of two regimes}
+
+\begin{wraptable}{r}{8.5cm}
+% \begin{table}[H]
+\centering 
+\begin{tabular}{ | c || r r | r r | } 
+    \hline
+    & \multicolumn{2}{c|}{Regime 1}  & 
+    \multicolumn{2}{c|}{Regime 2} \\
+     & \multicolumn{2}{c|}{High volatility}  & 
+    \multicolumn{2}{c|}{Low volatility} \\
+    & $\phi$ & Std & $\phi$ &  Std \\
+     \hline \hline
+    AGG  & -0.134 & 0.009 & -0.114 & 0.002 \\ 
+    HYG & -0.010 & 0.016 & 0.025 & 0.004 \\ 
+    TIP &  0.039 & 0.007 & -0.026 & 0.003 \\ 
+    BCOM & -0.046 & 0.013 & 0.050 & 0.006 \\ 
+    MXEA & 0.095 & 0.015 & 0.109 & 0.006 \\ 
+    MXEF & 0.221 & 0.018 & 0.254 & 0.007\\ 
+    RAY& -0.039  & 0.019 & 0.052 & 0.007\\ 
+    RMZ & -0.244 & 0.040 & 0.007 & 0.010\\ 
+    SPX & -0.018 & 0.016 & 0.113 & 0.006\\ 
+    USGG10YR & -0.031 & 0.020 & 0.082 & 0.006\\ 
+    \hline
+\end{tabular}
+\caption{Coefficient estimation of two regimes} 
+\label{table:autoCoeffRegime}
+% \end{table}
+\end{wraptable} 
+
+Table \ref{table:autoCoeffRegime} shows the estimated autoregression coefficient $\phi$ and standard deviation of the noise term of two regimes for various assets. We also provide the standard deviation, skewness, and kurtosis of different assets in Table \ref{table:statSumRegime} in the appendix. Note that regime 1 represents high volatility regime while regime 2 represents low volatility one. In general, it is clear that returns of regime 1 have a larger standard deviation, skewness, and kurtosis than that of regime 2. This difference in kurtosis indicates that the return distribution in low volatility regimes has a lighter tail. In contrast, in high volatility regimes, there are more extreme values of returns.
+
+We observe that low volatility regimes are more likely (9 out of 10 assets) to show larger autocorrelation coefficient. Although we expect greater drawdown risk when serial correlation increase (which means more significant autocorrelation coefficients estimate here), we did not prove this through empirical results. Later we will show in the simulation study that given different serial correlation and error term variance of the time series model, the latter factor dominant the impact to CED values, which is the case in our empirical findings. But under the same level of noise term variance, the larger the serial correlation, the greater the CED.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{../results/regime/RMZ_regime}
+    \caption{Left panel: Return plot of RMZ from June 20th, 2005 to December 31st, 2015. Shadowed areas represent regime 1 with high volatility, and white areas indicate regime 2 with low volatility. Right panel: one-month maximum drawdown distribution of regime 1 and regime 2 of RMZ.}
+    \label{fig: RMZregime}
+\end{figure}
+
+\begin{table}[H]
+    \centering 
+    \begin{tabular}{| r | r | r |} 
+        \hline
+        & Regime 1 & Regime 2 \\
+        & High volatility & Low volatility \\
+        \hline 
+        VaR (empirical, p = 0.95) & 7.4\% & 1.5\% \\
+        ES (empirical, p = 0.95) & 9.9\% & 2.1\% \\
+        CED (one-month, p = 0.9) & 38.4\% & 8.4\% \\
+        Serial correlation (order = 1) & -0.257 & -0.026 \\
+        Serial correlation (order = 2) & -0.023 & 0.008 \\
+        \hline
+    \end{tabular}
+    \caption{Risk diagnostics for RMZ of two equal-length episode of each regime} 
+    \label{table:ridkDiagsRegimeRMZ}
+\end{table}
+
+\subsubsection{RMZ: An example}
+
+In order to make a consistent comparison of risk diagnostics between two regimes, we ignore some short discontinuity and pick two longest single occurring episode for each regime. Here we use RMZ, the most risky asset in our data set as an example. Both episode contain 530 trading days. The episode of regime 1 range from October 30th, 2007 to December 7th, 2009, and the episode of regime 2 range from June 20th, 2013 to July 29th, 2015. 
+
+In Figure \ref{fig: RMZregime}, the left panel shows the return of RMZ from June 20th, 2005 to December 31st, 2015. The shadowed area represents the regime with high volatility and the white area low volatility. This model is consistent with the actual financial event in that the high volatility regime covered mainly from mid-2007 to 2010. As we might expect, regime with high volatility also shows high risks in that they have larger ES and VaR values. Moreover, model of regime 1 only explains 26.3\% of the observations, which means abrupt deviation is minority in total observations. By looking at assets with longer period, we find a similar proportion of high volatility regimes (SPX: 23.7\%, RAY: 20.6\%). The right panel shows the one-month maximum drawdown distribution calculated based on the continuous episode we selected. The maximum drawdown distribution in regime 1 has larger mean and variance as well as greater knewness and kurtosis. 
+
+We may wrongly interpretate that larger serial correlation results in less drawdown risk. Notice from the results in later simulation section that variance of noice term dominant the influence for CED. And we can only obverve the positive correlation between serial correlation and CED under fixed variance level.
 
 
 \subsection{Other return frequencies}
@@ -193,19 +272,6 @@ CED is closely related to other risk measures. However, the correlation between 
 
 
 
-=========================================
-
-AR, MA and ARMA model with normal dist and t dist, fat tail distribution would result in more randomness when calculating CED and other risk measures[Simulation Page 2 - 21]
-
-Garch model fitting: how different coefficients influence the risk measure values? [Simulation Page 32]
-
-Simulation with standard error adjusted [Simulation Page 21]
-
-CED distinguishes negative from positive autocorrelation[Simulation Page 21]
-
-Change standard deviation but fix everything in time series simulation would result in linear change of risk measures[Simulation Page 22]
-
-The influence of volatility dominant in the risk measure calculation, relate this to empirical data, why usually we can not discover patterns? [To be added] 
 
 
 \section{Risk contribution}
@@ -306,6 +372,29 @@ USGG10YR & 0.91 & 0.93 & 0.95\\
 \label{table:corrRiskMeasureCED}
 \end{table}
 
+\begin{table}
+\caption{Summary statistics of two regimes for various assets} 
+\centering 
+\begin{tabular}{ | c || rr | rr | rr | } 
+ \hline
+& \multicolumn{2}{c|}{Volatility} & \multicolumn{2}{c|}{Skewness} & \multicolumn{2}{c|}{Kurtosis} \\
+Asset & Regime 1 & Regime 2 & Regime 1 & Regime 2 & Regime 1 & Regime 2 \\
+  \hline \hline
+AGG & 0.141 & 0.036 & -1.59 &  0.01 & 17.15 &  0.60\\ 
+HYG & 0.265 & 0.055 &  0.60 &  0.00 &  8.76 &  0.83\\ 
+TIP & 0.113 & 0.049 &  0.18 & -0.06 &  2.50 &  0.16\\ 
+BCOM & 0.205 & 0.096 & -0.25 & -0.04 &  1.92 &  0.28\\ 
+MXEA & 0.253 & 0.101 & -0.14 & -0.02 &  4.26 &  0.25\\ 
+MXEF & 0.303 & 0.119 & -0.08 & -0.06 &  2.39 &  0.38\\ 
+RAY & 0.307 & 0.114 & -0.39 & -0.06 &  6.43 &  0.55\\ 
+RMZ & 0.661 & 0.159 &  0.29 & -0.15 &  2.92 &  0.79\\ 
+SPX & 0.260 & 0.099 & -0.43 & -0.02 &  9.11 &  0.56\\ 
+USGG10YR & 0.314 & 0.098 &  0.09 & -0.05 &  2.67 &  1.17 \\
+ \hline
+\end{tabular}
+\label{table:statSumRegime}
+\end{table}
+
 \newpage
 
 \bibliographystyle{unsrt}
@@ -357,6 +446,20 @@ Summary of regime switching model for different assets [Summary Page 13][To be a
 Why can not see strong correlation between serial correlation and CED? Relate this to the simulation study: when both volatility and seiral correlation are different, volatility usually dominant the influence for CED. [To be added]
 
 Rolling risk measure (RMZ as example): Correlation between seial correlation and risk measure for two regions [Empirical Page 15]
+
+================ simulation summary =========
+
+AR, MA and ARMA model with normal dist and t dist, fat tail distribution would result in more randomness when calculating CED and other risk measures[Simulation Page 2 - 21]
+
+Garch model fitting: how different coefficients influence the risk measure values? [Simulation Page 32]
+
+Simulation with standard error adjusted [Simulation Page 21]
+
+CED distinguishes negative from positive autocorrelation[Simulation Page 21]
+
+Change standard deviation but fix everything in time series simulation would result in linear change of risk measures[Simulation Page 22]
+
+The influence of volatility dominant in the risk measure calculation, relate this to empirical data, why usually we can not discover patterns? [To be added] 
 
 ==============================================
 

@@ -35,8 +35,10 @@ for (asset in names(assetData)){
 # print the summary of every asset
 
 for (asset in names(assetData)){
-  summary(models[[asset]])
+  models[[asset]]
 }
+
+models[["SPX"]]
 
 # print the coefficient of the model
 

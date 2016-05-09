@@ -1,4 +1,4 @@
-\begin{thebibliography}{1}
+\begin{thebibliography}{10}
 
 \bibitem{goldberg2014convex}
 Lisa~R Goldberg and Ola Mahmoud.
@@ -47,5 +47,15 @@ Mila Getmansky, Andrew~W Lo, and Igor Makarov.
 Antonio Di~Cesare, Philip~A Stork, and Casper~G De~Vries.
 \newblock Risk measures for autocorrelated hedge fund returns.
 \newblock {\em Journal of Financial Econometrics}, page nbu023, 2014.
+
+\bibitem{hamilton1994time}
+James~Douglas Hamilton.
+\newblock {\em Time series analysis}, volume~2.
+\newblock Princeton university press Princeton, 1994.
+
+\bibitem{hamilton1990analysis}
+James~D Hamilton.
+\newblock Analysis of time series subject to changes in regime.
+\newblock {\em Journal of econometrics}, 45(1):39--70, 1990.
 
 \end{thebibliography}
