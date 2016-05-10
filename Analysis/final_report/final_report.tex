@@ -11,7 +11,9 @@
 \usepackage{tikz}
 \usepackage{array}
 \usepackage{float}
+\usepackage{stfloats}
 \usepackage{amsfonts}
+\usepackage{wrapfig,lipsum,booktabs}
 \def\Session{Fall 2015}
 \usepackage[english]{babel}
 \title{Risk Measures and Serial Correlation}
@@ -85,9 +87,406 @@ The plan of the paper is as follows. In \emph{Part I: Empirical Analysis}, we pr
 
 \part{Empirical Analysis}
 
+In this part, we provide the empirical analysis for various asset classes including S\&P 500 Index (SPX), Russell 3000 Index (RAY), etc. Detailed descriptions of their date ranges, components, and summary statistics are given in Appendix \ref{App:AppendixA}.
+
 \section{Risk diagnostics}
 
 \subsection{Overall risk diagnostics}
+
+Table \ref{table:Overall_risk} shows the overall values of four risk measures for various assets over their time range. For each of VaR, ES and CED, we present results of two significance levels 90\% and 95\%. Volatility, ES and VaR are on daily-scale to allow comparison between risk measures in the future. 
+
+\begin{table}[bp]
+\centering 
+\begin{tabular}{ | r || p{1.5cm} | p{1cm} p{1cm} | p{1cm} p{1cm} | p{1cm} p{1cm} | p{1cm} p{1cm} | } 
+ \hline
+Measures & Volatility & \multicolumn{2}{c|}{VaR(\%)} & \multicolumn{2}{c|}{ES(\%)} &
+ \multicolumn{2}{p{2cm}|}{CED(\%)\quad(3 month)} &\multicolumn{2}{p{2cm}|}{CED(\%)\quad(6 month)} \\ 
+Levels & & 0.90 & 0.95 & 0.90 & 0.95 & 0.90 & 0.95 & 0.90 & 0.95 \\
+  \hline \hline
+AGG & 0.32 & 0.29 & 0.40 & 0.50 & 0.66 & 5.60 &  7.72 & 8.12 & 11.45  \\ 
+HYG & 0.84 &  0.62 & 1.03 & 1.41 & 2.03 & 18.41 & 24.07 & 26.43 & 30.77 \\ 
+TIP & 0.41 &  0.44 & 0.62 & 0.72 & 0.91 & 7.48 & 9.90 & 11.14 & 12.91 \\ 
+BCOM & 0.94 &  1.04 & 1.47 & 1.71 & 2.20 & 18.14 & 22.54 & 26.61 & 33.66 \\ 
+MXEA & 0.97 &  1.02 & 1.46 & 1.74 & 2.26 & 20.39 & 23.73 & 27.21 & 31.79 \\ 
+MXEF & 1.13 &  1.21 & 1.76 & 2.11 & 2.75 & 26.21 & 30.80 & 36.35 & 43.30 \\ 
+RAY & 1.09 &  1.11 & 1.62 & 1.95 & 2.56 & 20.65 & 25.64 & 27.81 & 34.08 \\ 
+RMZ & 2.30 &  1.91 & 3.00 & 3.99 & 5.62 & 37.30 & 48.41 & 52.04 & 62.41 \\ 
+SPX & 0.97 &  0.99 & 1.43 & 1.71 & 2.23 & 18.35 & 22.67 & 25.18 & 30.65 \\ 
+USGG10YR & 1.27 & 1.26 & 1.95 & 2.28 & 2.99 & 23.28 & 28.11 & 32.78 & 39.00 \\
+ \hline
+\end{tabular}
+\caption{Overall risk measures for various assets}
+\label{table:Overall_risk}
+\end{table}
+
+Note that VaR and ES are calculated based on the empirical distribution of daily returns. Another commonly used method would be based on Gaussian distribution assumption. However, in our case where all asset returns are fat-tailed distributed, applying Gaussian distribution would lead to erroneous results. VaR and ES will be overestimated at a lower confidence level and underestimated at a higher level. This discrepancy phenomenon is rather obvious when the return distribution has an extremely fat tail. We include results assuming Gaussian distribution in Appendix A for comparison.
+ 
+The choice of path length is crucial for CED calculation. As shown in Table \ref{table:Overall_risk}, the value of CED is sensitive to path length. Here we present the CED with rolling three month and six month periods. CED is an increasing function of significance level and path length. We recommend period length no longer than six month for CED estimation. Please refer to an in-depth exploration of behaviour of maximum drawdown distribution and the choice of path length in next subsection. Due to the similarity in definition between CED and ES, they share many features in the calculation. Thus, many ES calculation technique could be implemented for CED estimation. 
+
+While volatility, VaR and ES are strongly correlated with each other across assets, CED has a comparatively weaker correlation with the other three. Note that the four risk measures do not give the same asset sequence from the largest to the least risky asset. Occasionally one risk measure indicates different order under different levels and path length. For example, CED indicates HYG has larger risk than SPX, but other three suggest the opposite comparison result. Moreover, the 6 month CED under 90\% level gives the different relative risk between HYG and BCOM with its counterpart under 95\% level. Notice that the reverse of relative risk suggested by same risk measure for distinct confidence level is more common for CED than for other risk measures.
+
+Back to the economic implications of these risk values. Top three assets in Table \ref{table:Overall_risk} (AGG, HYG, TIP), which are comprised of US bonds, have the smallest risk among all asset class; RMZ, constructed by US equity REITs (Real Estate Investment Trust), have much greater risk than the others; MXEF (MSCI Emerging Market Index), reflecting the emerging market equities, have larger risk than MXEA (MSCI Developed Market Index).
+
+\subsection{Time-varying risk diagnostics}
+
+Time varying risk measures refer to risk measures based on fixed rolling windows. A series of risk measures is obtained. Risk at each time point is given by the past returns of a fixed length. Time-varying risk diagnostics enable us not only to compare risk across assets but to analyze risk for the same asset over time. 
+
+\subsubsection{Maximum dradown distribution}
+
+Unlike VaR and ES, the empirical distribution of maximum drawdown is more sensitive to the time length of measurement. Figure \ref{fig: dmaxdd_RMZ} shows the maximum drawdown of various assets for different path length (3 months, 6 months, 1 year, 2 years, 5 years) separately. As revealed in Figure \ref{fig: dmaxdd_RMZ}, maximum drawdown distribution tends to: a) have the larger mean and variance; b) be multi-mode; c) lack variability of values; d) center around several specific values when we move to longer periods. 
+
+\begin{figure}[bp]
+\centering 
+\includegraphics[width = 1\textwidth]{../results/maxdd_RMZ}
+\caption{Maximum drawdown distribution of RMZ as rolling period increases} 
+\label{fig: dmaxdd_RMZ}
+\end{figure}
+
+For daily return data, we do not recommend window length greater than six months for CED estimation. Large drawdowns in real-world asset returns are usually associated with particular events during a short time, for example, the 2008-2009 financial crisis. When considering longer path such as two years or five years, maximum drawdown values tend to be dominant by these events. The empirical distribution would only be defined on several distinct values. In such cases, the empirical quantile no longer exists without distributional or polynomial assumptions of the tail. Thus, it becomes hard to calculate the tail mean (CED). Later in our analysis, we use three or six-month path length. Figure \ref{fig: dist_mdd} shows the empirical distribution of maximum drawdown under the six-month rolling window for various assets.
+
+\subsubsection{Time varying risk measures}
+
+Under Gaussian distribution, VaR, ES, and volatility are linearly dependent. For empirical data where the return distribution has fat tails and distinct kurtosis, they are still strongly correlated. (With average correlation $>$ 95\% for six months rolling window) Figure \ref{fig: risk_meausre_RMZ} shows the VaR, volatility, ES, and maximum drawdown with rolling six-month periods. Four risk measures share a similar pattern of ups and downs, where the risk shot up during the 2008-2009 financial crisis. 
+
+\begin{figure}
+\centering 
+\includegraphics[width = 1\textwidth]{../results/risk_measure_RMZ}
+\caption{Comparison of different risk measures of RMZ} 
+\label{fig: risk_meausre_RMZ}
+\end{figure}
+
+\begin{figure}
+\centering 
+\includegraphics[width = 1\textwidth]{../figures/SPX_RMZ_P_CED}
+\caption{Daily price of the S\&P 500 (SPX) and US equity REITs index (RMZ) togther with their 2-year-3month rolling CED.} 
+\label{fig:SPX_RMZ_P_CED}
+\end{figure}
+
+CED requires more data compared with other risk measures and usually remain constant for a period. To empirically estimate the drawdown distribution, we often rolling a fixed path length. Credible quantile estimation requires hundreds of rollings. For example, two-year-three-month CED evaluates the three-month drawdown risk over the past two years. Figure \ref{fig:SPX_RMZ_P_CED} shows the daily price of the S\&P 500 (SPX) and US equity REITs Index (RMZ) together with their two-year-three-month rolling CED. The CED series also reflect the sharp increase in economic depressions.
+
+CED is closely related to other risk measures. However, the correlation between CED and the other three risk measures are slightly weaker than the correlation among volatility, VaR, and ES. Table \ref{table:corrRiskMeasureCED} shows the correlation between CED and other risk measures calculated based on six-month rolling risk measures for every asset. 
+
+\section{Time series analysis}
+
+\subsection{ARMA}
+
+\subsection{GARCH}
+
+\subsection{Regime dependent analysis}
+
+Most economic time series data behave differently in the adjacent period. For example, asset returns
+usually show considerable volatility during a financial crisis. One standard approach to model abrupt changes in regime is to use the Hamilton's Markov regime switching model\cite{hamilton1994time}\cite{hamilton1990analysis}. In our study, we use the following two-regime switching model to fit the returns:
+
+\begin{equation}
+y_t - \mu_{s^*_t} = \phi_{s^*_t} (y_{t-1} - \mu_{s^*_{t-1}}) + \epsilon_t
+\end{equation}
+where the number of autoregressive coefficients is set to 1. $s^*_t$ is a two-state Markov chain. $s^*_t = 1$ represent regime 1 and $s^*_t = 2$ represent regime 2. $s^*_t$ depends on the past only through the most recent values:
+
+\begin{equation}
+P(s_t = j|s_{t-1}, s_{t-2}, \dots) = P(s_t = j|s_{t-1})  = p_{ij}
+\end{equation}
+
+\subsubsection{Comparison of basic summary of two regimes}
+
+\begin{wraptable}{r}{8.5cm}
+% \begin{table}[H]
+\centering 
+\begin{tabular}{ | c || r r | r r | } 
+    \hline
+    & \multicolumn{2}{c|}{Regime 1}  & 
+    \multicolumn{2}{c|}{Regime 2} \\
+     & \multicolumn{2}{c|}{High volatility}  & 
+    \multicolumn{2}{c|}{Low volatility} \\
+    & $\phi$ & Std & $\phi$ &  Std \\
+     \hline \hline
+    AGG  & -0.134 & 0.009 & -0.114 & 0.002 \\ 
+    HYG & -0.010 & 0.016 & 0.025 & 0.004 \\ 
+    TIP &  0.039 & 0.007 & -0.026 & 0.003 \\ 
+    BCOM & -0.046 & 0.013 & 0.050 & 0.006 \\ 
+    MXEA & 0.095 & 0.015 & 0.109 & 0.006 \\ 
+    MXEF & 0.221 & 0.018 & 0.254 & 0.007\\ 
+    RAY& -0.039  & 0.019 & 0.052 & 0.007\\ 
+    RMZ & -0.244 & 0.040 & 0.007 & 0.010\\ 
+    SPX & -0.018 & 0.016 & 0.113 & 0.006\\ 
+    USGG10YR & -0.031 & 0.020 & 0.082 & 0.006\\ 
+    \hline
+\end{tabular}
+\caption{Coefficient estimation of two regimes} 
+\label{table:autoCoeffRegime}
+% \end{table}
+\end{wraptable} 
+
+Table \ref{table:autoCoeffRegime} shows the estimated autoregression coefficient $\phi$ and standard deviation of the noise term of two regimes for various assets. We also provide the standard deviation, skewness, and kurtosis of different assets in Table \ref{table:statSumRegime} in the appendix. Note that regime 1 represents high volatility regime while regime 2 represents low volatility one. In general, it is clear that returns of regime 1 have a larger standard deviation, skewness, and kurtosis than that of regime 2. This difference in kurtosis indicates that the return distribution in low volatility regimes has a lighter tail. In contrast, in high volatility regimes, there are more extreme values of returns.
+
+We observe that low volatility regimes are more likely (9 out of 10 assets) to show larger autocorrelation coefficient. Although we expect greater drawdown risk when serial correlation increase (which means more significant autocorrelation coefficients estimate here), we did not prove this through empirical results. Later we will show in the simulation study that given different serial correlation and error term variance of the time series model, the latter factor dominant the impact to CED values, which is the case in our empirical findings. But under the same level of noise term variance, the larger the serial correlation, the greater the CED.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{../results/regime/RMZ_regime}
+    \caption{Left panel: Return plot of RMZ from June 20th, 2005 to December 31st, 2015. Shadowed areas represent regime 1 with high volatility, and white areas indicate regime 2 with low volatility. Right panel: one-month maximum drawdown distribution of regime 1 and regime 2 of RMZ.}
+    \label{fig: RMZregime}
+\end{figure}
+
+\begin{table}[H]
+    \centering 
+    \begin{tabular}{| r | r | r |} 
+        \hline
+        & Regime 1 & Regime 2 \\
+        & High volatility & Low volatility \\
+        \hline 
+        VaR (empirical, p = 0.95) & 7.4\% & 1.5\% \\
+        ES (empirical, p = 0.95) & 9.9\% & 2.1\% \\
+        CED (one-month, p = 0.9) & 38.4\% & 8.4\% \\
+        Serial correlation (order = 1) & -0.257 & -0.026 \\
+        Serial correlation (order = 2) & -0.023 & 0.008 \\
+        \hline
+    \end{tabular}
+    \caption{Risk diagnostics for RMZ of two equal-length episode of each regime} 
+    \label{table:ridkDiagsRegimeRMZ}
+\end{table}
+
+\subsubsection{RMZ: An example}
+
+In order to make a consistent comparison of risk diagnostics between two regimes, we ignore some short discontinuity and pick two longest single occurring episode for each regime. Here we use RMZ, the most risky asset in our data set as an example. Both episode contain 530 trading days. The episode of regime 1 range from October 30th, 2007 to December 7th, 2009, and the episode of regime 2 range from June 20th, 2013 to July 29th, 2015. 
+
+In Figure \ref{fig: RMZregime}, the left panel shows the return of RMZ from June 20th, 2005 to December 31st, 2015. The shadowed area represents the regime with high volatility and the white area low volatility. This model is consistent with the actual financial event in that the high volatility regime covered mainly from mid-2007 to 2010. As we might expect, regime with high volatility also shows high risks in that they have larger ES and VaR values. Moreover, model of regime 1 only explains 26.3\% of the observations, which means abrupt deviation is a minority in total observations. By looking at assets with longer period, we find a similar proportion of high volatility regimes (SPX: 23.7\%, RAY: 20.6\%). The right panel shows the one-month maximum drawdown distribution calculated based on the continuous episode we selected. The maximum drawdown distribution in regime 1 has larger mean and variance as well as greater knewness and kurtosis. 
+
+We may wrongly interpretate that larger serial correlation results in less drawdown risk. Notice from the results in later simulation section that variance of noice term dominant the influence for CED. And we can only obverve the positive correlation between serial correlation and CED under fixed variance level.
+
+
+\subsection{Other return frequencies}
+
+\section{Empirical risk contribution}
+
+\part{Simulations}
+
+In this part, we explore the relationship between serial correlation and risk measures by analyzing models from data generated by known time series. Real world financial data is usually more complicated and simultaneously influenced by multiple effects. Simulation allow us to examine one specific factor by fixing others. For example, we may change one coefficient of a time series model while keeping other at the same level, which enables us to examine the relationship of certain order of serial correlation and CED.
+
+\section{Serial correlation and risk measures}
+
+In this section, we simulate various time series models and examine the impact of serial correlation on risk measures.
+
+\subsection{ARMA model}
+
+We started from the simplest model AR(1):
+
+\begin{equation}
+X_t = \kappa_1X_{t-1} + \epsilon_t
+\end{equation}
+
+We simulate AR(1) for various values of the autoregressive parameter for $\kappa_1 \in (-1, 1)$ . Figure \ref{fig:AR1_risk_measures} shows the relationship between AR(1) coefficient and risk measures of interest including ES, VaR, volatility and CED. Note that for AR(1) model, the order one serial correlation is the the value of autoregressive parameter.
+
+CED shows a decreasing trend when $\kappa_1\in(-1, -0.75)$ and an increasing trend when $\kappa_1 \in(-0.75, 1)$. As shown in Figure \ref{fig:AR1_risk_measures}, it becomes feasible for us to distinguish negative and positive serial correlation using the CED values. However, the other 3 risk measures are all symmetric about $\kappa_1 = 0$, and they increase as the absolute values of $\kappa_1$ increases.
+
+For VaR, ES and CED, the derivative of risk measure values to $\kappa_1$ approaches to zero as  $\kappa_1$ goes to 0 and increase as $\kappa_1$ increase. This suggests that the value of this three risk measures can hardly reflect the change of serial correlation when the serial correlation is small. And they perform better when the serial correlation increases. The trend of derivatives reverse for CED. While the change of $\kappa_1$ has a comparatively larger influence around 0, the influence becomes weaker as we move to larger  $\kappa_1$ values.
+
+Figure \ref{fig:AR1_maxDrawdown_dist} shows the maximum drawdown distribution for various $\kappa_1$. Same as revealed in Figure \ref{fig:AR1_risk_measures}, the mean and tail mean of maximum drawdown distribution increases as we increase $\kappa_1$ from negative values to positive values.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.8\textwidth]{../figures/simulation/AR1_risk_measures}
+\caption{AR(1): Relationship between auto-correlation coefficients and risk measures}
+(Simulation path length: 1000, $\epsilon_t \sim N(0, 0.0001)$)
+\label{fig:AR1_risk_measures}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.8\textwidth]{../figures/simulation/AR1_maxDrawdown_dist_re}
+\caption{AR(1): Maximum drawdown distribution for various $\kappa_1$ values }
+(Empirical distribution, path length = 1000, sample size = 1000, $\epsilon_t \sim N(0, 0.0001)$ )
+\label{fig:AR1_maxDrawdown_dist}
+\end{figure}
+
+\subsection{Garch model}
+
+\subsection{Findings}
+
+In this section, we present findings summarized from the previous simulation study, and provide the corresponding theorial explainations. 
+
+\textbf{1. CED distinguishes negative from positive autocorrelation}
+
+For time series with positive autocorrelation, return is more likely to remain the same sign as the previous day. The likelihood increase as the serial correlation increase. As a consequence, returns tend to keep they current profit or loss status for a period. If the current status is loss, then unfortunately, the price of the asset may continuously go down, which results in a large CED. Conversely, time series with negative autocorrelation tend to reverse the sign in the previous day. If the the price of one assets goes down in one day, it is more likely that the price would bounce back in the next day, which results in alternating profit and loss status thus a smaller CED.
+
+While CED captures the difference in serial correlation, other risk measures do not. VaR, ES and volatility are obtained from the empirical distribution of returns. If we shuffle the return sequence, we would get the same value for VaR, ES, and volatility.
+
+Figure \ref{fig:Comparison_pos_neg_autocorrelation} shows the comparison of simulated returns and prices when serial correlation is 0.7 and -0.7. The maximum drawdown of simulated series is 22.76\% and 9.49\% separately. And two return series have the same VaR, ES and volatility.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.8\textwidth]{../figures/simulation/Comparison_pos_neg_autocorrelation}
+\caption{Comparison of returns with positive and negative serial correlation}
+(Simulation length: 100; upper panel: AR(1) with $\kappa=0.7$; lower panel: AR(1) with $\kappa=-0.7$, $\epsilon\sim N(0, 0.0001)$)
+\label{fig:Comparison_pos_neg_autocorrelation}
+\end{figure}
+
+\textbf{2. Change standard deviation but fix everything in time series simulation would result in linear change of risk measures}
+
+Simulation in Figure \ref{fig:change_std_simulation} for AR(1) model shows a linear relationship for all risk measures. We simulate the model $X_t = 0.3X_{t-1} + \epsilon_t$ and change the $\epsilon_t$ from 0.001 to 0.015.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.8\textwidth]{../figures/simulation/AR1_risk_measures_change_sd}
+\caption{Comparison of returns with positive and negative serial correlation}
+(Simulation length: 100; upper panel: AR(1) with $\kappa=0.7$; lower panel: AR(1) with $\kappa=-0.7$, $\epsilon\sim N(0, 0.0001)$)
+\label{fig:change_std_simulation}
+\end{figure}
+
+Fixing everything but changing the standard deviation of the noise term would simply equals to multiplying the simulated time series model by a constant. For volatility, ES and VaR, it is obvious. For accumulated returns in a path, the return is approximately the sum of all returns for each day in this time period when the return is small (which is often the case):
+
+\begin{equation}
+R = \prod_{i=1}^n (1+r_i) - 1 \simeq \prod_{i=1}^n e^{r_i} - 1 = e^{\sum_{i=1}^n r_i} - 1 
+ \simeq  \sum_{i=1}^n r_i
+\end{equation}
+
+All the returns in every subpath would be multiplied by approximately a constant. Thus, the domain of the maximum drawdown distribution and CED would also be scaled by the same number.
+
+\section{Risk contribution}
+
+
+
+
+\clearpage
+
+\newpage
+\appendix
+\section{Appendix A: Dataset} \label{App:AppendixA}
+\subsection{Description}
+\begin{table}[H]
+\centering 
+\begin{tabular}{ | r | p{7cm}  | p{4.5cm} | } 
+ \hline 
+Symbol & Name & Date range \\ \hline
+AGG & iShares Core US Aggregate Bond & 2003-09-29 to 2015-12-31 \\
+HYG & iShares iBoxx High Yield Corporate Bond & 2007-04-12 to 2015-12-31 \\
+TIP & iShares TIPS Bond & 2003-12-08 to 2015-12-31 \\
+BCOM & Bloomberg Commodity Index & 1991-01-03 to 2015-12-31 \\
+G0O1 & 3-Month U.S. Treasury Bill Index & 1992-04-01 to 2015-12-31 \\
+MXEA & MSCI Developed Markets Index & 1970-01-07 to 2015-12-31 \\
+MXEF & MSCI Emerging Markets Index & 1988-01-01 to 2015-12-31 \\
+RAY & Russell 3000 Index & 1979-01-02 to 2015-12-31 \\
+RMZ & MSCI US REIT Index & 2005-06-20 to 2015-12-31 \\
+SPX & S\&P 500 Index & 1950-01-04 to 2015-12-31 \\
+USGG10YR & US Generic Govt 10 Year & 1962-01-03 to 2015-12-31 \\
+ \hline
+\end{tabular}
+\caption{Normal VaR and ES under various levels}
+\label{table:AssetDescription}
+\end{table}
+
+
+\subsection{Statistical summary}
+annualized return, Sharpe Ratio, standard deviation, skewness, kurtosis [Empirical Page 8]
+
+\subsection{Return}
+Return across time and Return distribution [Empirical Page 8]
+
+\subsection{Normal VaR and ES}
+
+\begin{table}[H]
+\centering 
+\begin{tabular}{ | r || p{1cm} p{1cm} p{1cm} || p{1cm} p{1cm} p{1cm} | } 
+ \hline
+ & & VaR(\%) &&& ES(\%) & \\
+Asset& 0.90 & 0.95 & 0.99 & 0.90 & 0.95 & 0.99 \\
+  \hline \hline
+AGG & 0.39 & 0.51 & 0.72 & 0.57 & 0.67 & 0.86\\ 
+HYG & 1.06 & 1.36 & 1.94 & 1.50 & 1.76 & 2.26\\ 
+TIP & 0.51 & 0.66 & 0.94 & 0.74 & 0.86 & 1.11\\ 
+BCOM & 1.20 & 1.54 & 2.18 & 1.65 & 1.94 & 2.50\\ 
+MXEA & 1.22 & 1.57 & 2.24 & 1.74 & 2.04 & 2.62\\ 
+MXEF & 1.42 & 1.83 & 2.61 & 2.03 & 2.38 & 3.06\\ 
+RAY & 1.36 & 1.75 & 2.49 & 1.95 & 2.29 & 2.94\\ 
+RMZ & 2.92 & 3.75 & 5.32 & 4.08 & 4.79 & 6.18\\ 
+SPX & 1.21 & 1.57 & 2.22 & 1.73 & 2.03 & 2.61\\ 
+USGG10YR & 1.62 & 2.08 & 2.95 & 2.23 & 2.62 & 3.39\\
+ \hline
+\end{tabular}
+\caption{Normal VaR and ES under various levels}
+\label{table:VaRESNormal}
+\end{table}
+
+
+
+\section{Appendix B: Rolling risk diagnostics} \label{App:AppendixB}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=15cm]{../results/maxdd_dist_mon6}
+\caption{Empirical distribution of maximum drawdown under 6 month rolling window} 
+\label{fig: dist_mdd}
+\end{figure}
+
+\begin{table}
+\caption{Correlation between CED (confidence level = 0.9) and other risk measures}
+\centering 
+\begin{tabular}{| p{2cm}||p{2cm}|p{2cm}|p{2cm}|} 
+\hline
+Measures & Volatility & VaR & ES\\
+  \hline
+AGG & 0.94 & 0.89 & 0.95\\ 
+HYG & 0.98 & 0.97 & 0.97\\ 
+TIP & 0.77 & 0.85 & 0.85\\ 
+BCOM & 0.84 & 0.89 & 0.89\\ 
+MXEA & 0.84 & 0.83 & 0.86\\ 
+MXEF & 0.91 & 0.91 & 0.93\\ 
+RAY & 0.92 & 0.85 & 0.92\\ 
+RMZ & 0.96 & 0.96 & 0.97\\ 
+SPX & 0.84 & 0.81 & 0.84\\ 
+USGG10YR & 0.91 & 0.93 & 0.95\\
+\hline
+\end{tabular}
+\label{table:corrRiskMeasureCED}
+\end{table}
+
+\begin{table}
+\caption{Summary statistics of two regimes for various assets} 
+\centering 
+\begin{tabular}{ | c || rr | rr | rr | } 
+ \hline
+& \multicolumn{2}{c|}{Volatility} & \multicolumn{2}{c|}{Skewness} & \multicolumn{2}{c|}{Kurtosis} \\
+Asset & Regime 1 & Regime 2 & Regime 1 & Regime 2 & Regime 1 & Regime 2 \\
+  \hline \hline
+AGG & 0.141 & 0.036 & -1.59 &  0.01 & 17.15 &  0.60\\ 
+HYG & 0.265 & 0.055 &  0.60 &  0.00 &  8.76 &  0.83\\ 
+TIP & 0.113 & 0.049 &  0.18 & -0.06 &  2.50 &  0.16\\ 
+BCOM & 0.205 & 0.096 & -0.25 & -0.04 &  1.92 &  0.28\\ 
+MXEA & 0.253 & 0.101 & -0.14 & -0.02 &  4.26 &  0.25\\ 
+MXEF & 0.303 & 0.119 & -0.08 & -0.06 &  2.39 &  0.38\\ 
+RAY & 0.307 & 0.114 & -0.39 & -0.06 &  6.43 &  0.55\\ 
+RMZ & 0.661 & 0.159 &  0.29 & -0.15 &  2.92 &  0.79\\ 
+SPX & 0.260 & 0.099 & -0.43 & -0.02 &  9.11 &  0.56\\ 
+USGG10YR & 0.314 & 0.098 &  0.09 & -0.05 &  2.67 &  1.17 \\
+ \hline
+\end{tabular}
+\label{table:statSumRegime}
+\end{table}
+
+\section{Appendix C: Simulations specifics} \label{App:AppendixC}
+\subsubsection{Noise term with normal distribution}
+
+We use some simple assumptions and parameters for simulation with normal distribution as follows:
+
+\begin{enumerate}
+\item Noise terms in the time series model follow Normal distribution with standard deviation of 0.01: $\epsilon \sim N(0, 0.0001)$.
+\item Risk measures including volatility, VaR, ES and maximum drawdown are calculated based on simulated time series with path length 1000. The calculation of maximum drawdown is replicated 1000 times in order to obtain the maximum drawdown distribution and its tail mean (CED).
+\item All time series parameters in this section range from -0.9 to 0.9. For time series with multiple parameters such as AR(2), ARMA(1, 1), the parameters are cartesian product of arithmetic progressions range from -0.9 to 0.9. Note that to take the stationary of AR and ARMA models into consideration (all moving averages are stationary, but the AR and ARMA model have to meet certain criteria to be stationary), not all parameters in the cartesian product are used in the simulation.
+\end{enumerate}
+
+\newpage
+
+\bibliographystyle{unsrt}
+\bibliography{analysis}
+
+
+
+
+
+
+\clearpage
+
+
+===========Overall risk measures for various assets============
 
 (Use unannualized VaR, ES and volatility in order to compare)
 
@@ -103,8 +502,8 @@ Asset with largest and smallest risk for each risk measures: relate this with in
 
 Relative values of different assets for different risk measures: Is there a risk measure distinguish assets from each other most? [To be added]
 
-\subsection{Time-varying risk diagnostics}
 
+===========Time-varying risk diagnostics=============
 
 Empirical distribution of maximum drawdown is sensitive to the time length of measurement. [Empirical, Page 11, Figure 1]
 
@@ -116,58 +515,33 @@ CED plot
 
 Risk measures, when biggest? related to real world events. [To be extended]
 
-\section{Time series analysis}
+=============== regime switching model ======
 
-\subsection{ARMA}
+Introduction [Summary Page 13]
 
-\subsection{GARCH}
+Summary of regime switching model for different assets [Summary Page 13][To be add: modeled variance]
 
-\subsection{Regime dependent analysis}
+Why can not see strong correlation between serial correlation and CED? Relate this to the simulation study: when both volatility and seiral correlation are different, volatility usually dominant the influence for CED. [To be added]
 
-\subsection{Other return frequencies}
+Rolling risk measure (RMZ as example): Correlation between seial correlation and risk measure for two regions [Empirical Page 15]
 
-\section{Empirical risk contribution}
+================ simulation summary =========
 
+AR, MA and ARMA model with normal dist and t dist, fat tail distribution would result in more randomness when calculating CED and other risk measures[Simulation Page 2 - 21]
 
-\part{Simulations}
+Garch model fitting: how different coefficients influence the risk measure values? [Simulation Page 32]
 
-\section{Serial correlation and risk measures}
+Simulation with standard error adjusted [Simulation Page 21]
 
+CED distinguishes negative from positive autocorrelation[Simulation Page 21]
 
-\section{Risk contribution}
+Change standard deviation but fix everything in time series simulation would result in linear change of risk measures[Simulation Page 22]
 
+The influence of volatility dominant in the risk measure calculation, relate this to empirical data, why usually we can not discover patterns? [To be added] 
 
-
-
-
-
-\newpage
-\appendix
-\section{Appendix A: Dataset} \label{App:AppendixA}
-\subsection{Description}
-Description of asset class: name, date ranges, description. [Empirical Page 4]
-
-\subsection{Statistical summary}
-annualized return, Sharpe Ratio, standard deviation, skewness, kurtosis [Empirical Page 8]
-
-\subsection{Return}
-Return across time and Return distribution [Empirical Page 8]
-
-\newpage
-
-\bibliographystyle{unsrt}
-\bibliography{analysis}
-
-
-
-
-
-
-\clearpage
-
+==============================================
 
 Which model gives the best fit (statistically)? Which assets have strongest serial correlation? The point here is to to understand the autocorrelation behavior of vaious asset classes, so you should once again interpret your results and parameters.
-
 
 relationship of the time series of the serial correlation parameters (e.g. $\kappa$ in the AR(1) model) with the time series of the various risk diagnostics. Is serial correlation strongly related to volatility, ES, VaR and CED? Is it more strongly correlated to one risk measure than another?
 

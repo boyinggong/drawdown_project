@@ -9,8 +9,8 @@ library(MSwM)
 ########################################
 
 val = "SPX"
-lm.val = lm(retrn_dl ~ 1, get(val))
-mod.mswm=msmFit(lm.val, k=2, p=1, sw=rep(T, 3), control=list(parallel=F))
+lm.val = lm(retrn_dl ~ 1, assetData[[val]])
+mod.mswm=msmFit(lm.val, k=2, p=1, sw=c(F, T, T), control=list(parallel=F))
 summary(mod.mswm)
 class(mod.mswm)
 
@@ -35,8 +35,10 @@ for (asset in names(assetData)){
 # print the summary of every asset
 
 for (asset in names(assetData)){
-  summary(models[[asset]])
+  models[[asset]]
 }
+
+models[["SPX"]]
 
 # print the coefficient of the model
 
@@ -153,6 +155,9 @@ which(regime.ind[[asset]][1:(length(regime.ind[[asset]])-1)] != regime.ind[[asse
 ### analysis for asset RMZ ###
 ##############################
 
+
+plot(assetData[["RMZ"]]$retrn_dl)
+
 # regime1: 2015-2545 regime2: 596-1126
 assetData[["RMZ"]]$Date[596]
 assetData[["RMZ"]]$Date[1126]
@@ -167,7 +172,7 @@ ES(assetData[["RMZ"]]$retrn_dl[2015:2545], p = 0.95)
 acf_1 = acf(assetData[["RMZ"]]$retrn_dl[596:1126])
 acf_1$acf[2]
 acf_2 = acf(assetData[["RMZ"]]$retrn_dl[2015:2545])
-acf_2
+acf_2$acf[2]
 
 RMZ_dd <- read.csv("../results/maxDrawdowns/9_mon3.csv")
 plot(density(RMZ_dd[(2015+63):2545, 2]))
@@ -225,8 +230,14 @@ get_acf = function(R){
 
 regime1_RMZ_rho1mon = calcRolling(assetData[["RMZ"]][596:1126, ], 
                                          prd = 21, FUN = "serialCorrelation", order = 1)
+mean(regime2_RMZ_rho1mon)
 regime2_RMZ_rho1mon = calcRolling(assetData[["RMZ"]][2015:2545, ], 
                                          prd = 21, FUN = "serialCorrelation", order = 1)
+
+
+cor(regime1_RMZ_MDD1mon/regime1_RMZ_volatility1mon, regime1_RMZ_rho1mon)
+cor(regime2_RMZ_MDD1mon/regime2_RMZ_volatility1mon, regime2_RMZ_rho1mon)
+
 
 cor(regime1_RMZ_rho1mon, regime1_RMZ_MDD1mon)
 cor(regime1_RMZ_rho1mon, regime1_RMZ_ES1mon)
