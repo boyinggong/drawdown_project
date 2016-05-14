@@ -167,10 +167,125 @@ CED requires more data compared with other risk measures and usually remain cons
 CED is closely related to other risk measures. However, the correlation between CED and the other three risk measures are slightly weaker than the correlation among volatility, VaR, and ES. Table \ref{table:corrRiskMeasureCED} shows the correlation between CED and other risk measures calculated based on six-month rolling risk measures for every asset. 
 
 \section{Time series analysis}
+%%% add here %%
+%%% The reason for time series analysis %%%
+\subsection{ARMA} \label{arma}
+ARMA is the simplest and most commonly used time series model, which is enable to capture the correlation between current time point and one or several lags in a stationary time series. Therefore, in the section \ref{arma}, ten kinds of U.S indices are feeded into ARMA models, first simple chosen models from the family, then best model through selection steps. From there, one can take the first sight of the relationship between serial correlation and different risk measurements in real-world data.
 
-\subsection{ARMA}
+\subsubsection{Result of basic ARMA model fit}
+Started from the simplest ones, ten U.S indices have been feeded into 3 most basic ARMA models: AR(1), MA(1) and ARMA(1,1). The three models here are not necessary the best one, or even the ones that all underlying assumptions are satisfied. This step is just try to have a general idea if the serial correlation of each model is related with risk measurements in some way. When it comes to serial correlation here, it refers to the first order autocorrelation of the time series models. 
+
+Following is a short summary on these three ARMA model, including their formulus, description and the method for calculating the serial correlation.
+
+\begin{enumerate}
+\item \textbf{AR(1)}
+\begin{itemize}
+\item Model:
+\begin{equation}
+X_t = \phi X_{t-1} + \epsilon_t \ \ \  s.t.\ |\phi | < 1
+\end{equation}
+\item AR(1) just has the AR component with lag 1 in the ARMA model, which characterized by only the previous term in the process and the noise term contributing to the output. When $\phi$ is closer to 0, the whole process is more like to be white noise.
+\item The equation for calculating the serial correlation:
+\begin{equation}
+\rho(h) = \phi ^h, \ h = 0,1,\dots
+\end{equation}
+\end{itemize}
+
+\item \textbf{MA(1)}
+\begin{itemize}
+\item Model:
+\begin{equation}
+X_t = \epsilon_t + \theta\epsilon_{t-1}
+\end{equation}
+\item MA(1) just has the MA component with lag 1 in the ARMA model, which impost the shock for the current period and q periods into the future; in contrast, in the AR model a shock affects  X values infinitely far into the future.
+\item The equation for calculating the serial correlation:
+\begin{equation}
+\rho(h) = \begin{cases} \frac{\theta}{(1+\theta^2)} &\mbox{if } h = 1 \\ 
+0 & \mbox{otherwise } \end{cases}
+\end{equation}
+\end{itemize}
+
+\item \textbf{ARMA(1,1)}
+\begin{itemize}
+\item Model:
+\begin{equation}
+X_t = \phi X_{t-1} + \epsilon_t + \theta\epsilon_{t-1}
+\end{equation}
+\item ARMA(1,1) has both AR and MA component with lag 1. ARMA(1,1) is the combination of AR(1) and MA(1), which ACF incorporate the characteristics from both AR and MA: both error term and data point are directely affected by that on the previous time points.
+\item The equation for calculating the serial correlation:
+\begin{equation}
+\rho(h) = \frac{(1+\theta \phi)(\theta + \phi)}{1+ 2\theta \phi +\phi^2} \phi^{h-1}, \mbox{if } h \geq 1
+\end{equation}
+\end{itemize}
+\end{enumerate}
+The Table\ref{table:corSerialRisk} shows the correlatio between serial correlation and different risk measures for AR(1) and ARMA(1,1). Figure\ref{fig:SerCol-CED5yr3monAR1} and Figure \ref{fig:SerCol-VaR5yrAR1}
+ in the appendix shows a more straightforward relationship between first order serial correlation of AR(1) and risk measures. Consistent with what was showing in the plot, all the assets except MXEA and MXEF have the high correlation between $\kappa(1)$ and risk measurements. Within each asset, as expected, the correlation with VaR and ES are very closed, as VaR is highly correlated with ES internally. However, compared with VaR and ES, the correlation with CED is relatively smaller, and sometimes the correlations are even with different sign.
+
+%\begin{wraptable}{l}{10.5cm}
+\begin{table}[H]
+\centering 
+\begin{tabular}{ | c || r r r|| r r r | } 
+ \hline
+ &\multicolumn{3}{c|}{AR(1)} &\multicolumn{3}{c|}{MA(1)} \\
+ \cline{2-7}
+Asset & VaR  & ES & CED & VaR  & ES & CED \\
+  \hline \hline
+AGG & 0.92 & 0.95 & 0.94  & 0.94 & 0.96 & 0.94  \\ 
+HYG & -0.61 & -0.56 &  -0.41 & -0.51 & -0.45 &  -0.29  \\ 
+TIP & -0.67 & -0.75 &  -0.73 & -0.65 & -0.74 &  -0.73\\ 
+BCOM & 0.86 & 0.80 & 0.76 & 0.86 & 0.80 & 0.76\\ 
+MXEA & 0.26 & 0.33 & 0.08& 0.01 & 0.11 & 0.15 \\ 
+MXEF & 0.23 & 0.22 & -0.05& 0.15 & 0.16 & -0.12  \\ 
+RAY & 0.79 & 0.76 & 0.49 & 0.79 & 0.77 & 0.50 \\ 
+RMZ & 0.90 & 0.93 &  0.81 & 0.92 & 0.95 &  0.84\\ 
+SPX & 0.62 & 0.70 & 0.15 & 0.65 & 0.72 & 0.17\\ 
+USGG10YR & 0.67 & 0.64 &  0.66 & 0.65 & 0.64 &  0.68\\
+ \hline
+\end{tabular}
+\caption{Correlation between $\rho(1)$ and risk measures. The time window used for get risk measurements and $\rho(1)$ is 5 years, and the rolling window within 5 year for CED is 3 month.}
+\label{table:corSerialRisk}
+\end{table}
+
+Both the table and figures are unable to tell the story what are the relationships between risk measures and serial correlation for the indices, since the model here are recklessly chosen and more complicated factors shocking the market everyday. However, the table provides an idea that relationship with CED is more closed to that with VaR and ES when this correlation is internally large.
+%\end{wraptable}
+
+\subsubsection{Model selection}
+The model selection is accomplished by trying to find a proper time series model on the unit of all data for each asset, for the fact that it makes no sense to fit different model for each rolling time period within one financial asset.  Unfortunately, observing from the ACF plot of returns, most of them are not stationary by nature without drift term, which means ARMA model is inherently not or just a partial a good selection for fitting them. It may also explain the reason why the previous section did not produce a expected result that CED is more correlated with serial correlation $\kappa(1)$.
+\begin{wraptable}{r}{6.5cm}
+%\begin{table}[!h]
+\caption{Best ARIMA Model for the U.S. Assets }
+\centering 
+\begin{tabular}{ | c || r | } 
+ \hline
+Asset & ARIMA (p,d,q) \\
+  \hline \hline
+AGG & (5,0,5) \\ 
+HYG & (3,0,1) \\ 
+TIP &  (0,0,0)\\ 
+BCOM & (0,0,0)\\ 
+MXEA & (2,0,2) \\ 
+MXEF & (4,0,2)\\ 
+RAY &  (2,0,2)\\ 
+RMZ & (0,0,1) \\ 
+SPX & (2,0,2) \\ 
+USGG10YR & (0,0,0) \\
+ \hline
+\end{tabular}
+\label{table:BestArima}
+%\end{table}
+\end{wraptable}
+
+
+Our criterion here for ``better model'' is the smaller AIC value. Appendix \ref{App:AppendixD} provides a more detailed explanation on model select criteria. To confirm the fact that ARMA is not reasonable for almost all the indices, we tried sets of parameter for ARMA and select the one with the smallest AIC value. Essentially, we chose the combination of AR and MA parameters ranging from 1 to 5.  Table \ref{table:BestArima} shows the best selection based on AIC criteria. The Table \ref{table:BestArima} indicates that the parameters are as high as 4 or 5 for almost all the assets, which suggests that the time series are not stationary. It also involved some converging issue is when the parameters are getting too larger.
+
+
+To illustrate this point, the following is an example analysis on RMZ index. There are several reasons why RMZ is selected: 1) the RMZ has a shorter period, which means it includes less abnormal market shock such as financial crisis in 2008 and more close to the normal fluctuation in stock price. 2) Larger serial correlation and ES, VaR comparing with other indices, implying it is more suitable for analysing the relationship between serial correlation and various risk measures. 3) There are less modes in Maximum drawdown of RMZ, suggesting it is reasonable to get tail mean, which is CED.
+\subsubsection{RMZ: an example}
 
 \subsection{GARCH}
+\subsubsection{Why GARCH is better}
+\subsubsection{Result of GARCH fit}
+\subsubsection{RMZ: an example}
 
 \subsection{Regime dependent analysis}
 
@@ -257,6 +372,7 @@ We may wrongly interpretate that larger serial correlation results in less drawd
 \subsection{Other return frequencies}
 
 \section{Empirical risk contribution}
+\subsection{SPX \& RMZ: An example}
 
 \part{Simulations}
 
@@ -299,6 +415,9 @@ Figure \ref{fig:AR1_maxDrawdown_dist} shows the maximum drawdown distribution fo
 \end{figure}
 
 \subsection{Garch model}
+Also started from AR(1) ~ GARCH(1,1) model\\
+Discribe simulation parameters of AR\\
+Insert that table that compare with other ARMA models\\
 
 \subsection{Findings}
 
@@ -342,8 +461,11 @@ R = \prod_{i=1}^n (1+r_i) - 1 \simeq \prod_{i=1}^n e^{r_i} - 1 = e^{\sum_{i=1}^n
 All the returns in every subpath would be multiplied by approximately a constant. Thus, the domain of the maximum drawdown distribution and CED would also be scaled by the same number.
 
 \section{Risk contribution}
+Started from AR(1), present an example how risk contribution varied for different risk measurements, different weight and different ARMA parameters.\\
 
+High light difference between CED and traditional risk measurements.\\
 
+Short discuss how CED useful in capture the risk of financial assets on risk contribution aspect.
 
 
 \clearpage
@@ -472,6 +594,26 @@ We use some simple assumptions and parameters for simulation with normal distrib
 \item Risk measures including volatility, VaR, ES and maximum drawdown are calculated based on simulated time series with path length 1000. The calculation of maximum drawdown is replicated 1000 times in order to obtain the maximum drawdown distribution and its tail mean (CED).
 \item All time series parameters in this section range from -0.9 to 0.9. For time series with multiple parameters such as AR(2), ARMA(1, 1), the parameters are cartesian product of arithmetic progressions range from -0.9 to 0.9. Note that to take the stationary of AR and ARMA models into consideration (all moving averages are stationary, but the AR and ARMA model have to meet certain criteria to be stationary), not all parameters in the cartesian product are used in the simulation.
 \end{enumerate}
+
+
+\section{Appendix D: Empirical Study Results} \label{App:AppendixD}
+\begin{figure}[H]
+  \centering
+  \begin{minipage}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{../results/SerCol-CED5yr3monAR1}
+    \caption{First-order serial correlation calculated using AR(1) model versus CED}
+    \label{fig:SerCol-CED5yr3monAR1}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.48\textwidth}
+    \includegraphics[width=\textwidth]{../results/SerCol-VaR5yrAR1}
+    \caption{First-order serial correlation calculated using AR(1) model versus VaR}
+    \label{fig:SerCol-VaR5yrAR1}
+  \end{minipage}
+\end{figure}
+
+
+
 
 \newpage
 
