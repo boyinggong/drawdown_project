@@ -274,11 +274,11 @@ We started from the simplest model AR(1):
 X_t = \kappa_1X_{t-1} + \epsilon_t
 \end{equation}
 
-We simulate AR(1) for various values of the autoregressive parameter for $\kappa_1 \in (-1, 1)$ . Figure \ref{fig:AR1_risk_measures} shows the relationship between AR(1) coefficient and risk measures of interest including ES, VaR, volatility and CED. Note that for AR(1) model, the order one serial correlation is the the value of autoregressive parameter.
+We simulate AR(1) for various values of the autoregressive parameter for $\kappa_1 \in (-1, 1)$ . Figure \ref{fig:AR1_risk_measures} shows the relationship between AR(1) coefficient and risk measures of interest including ES, VaR, volatility and CED. For AR(1) model, the order one serial correlation is the value of the autoregressive parameter.
 
 CED shows a decreasing trend when $\kappa_1\in(-1, -0.75)$ and an increasing trend when $\kappa_1 \in(-0.75, 1)$. As shown in Figure \ref{fig:AR1_risk_measures}, it becomes feasible for us to distinguish negative and positive serial correlation using the CED values. However, the other 3 risk measures are all symmetric about $\kappa_1 = 0$, and they increase as the absolute values of $\kappa_1$ increases.
 
-For VaR, ES and CED, the derivative of risk measure values to $\kappa_1$ approaches to zero as  $\kappa_1$ goes to 0 and increase as $\kappa_1$ increase. This suggests that the value of this three risk measures can hardly reflect the change of serial correlation when the serial correlation is small. And they perform better when the serial correlation increases. The trend of derivatives reverse for CED. While the change of $\kappa_1$ has a comparatively larger influence around 0, the influence becomes weaker as we move to larger  $\kappa_1$ values.
+For VaR, ES and CED, the derivative of risk measure values to $\kappa_1$ approaches to zero as  $\kappa_1$ goes to 0 and increase as $\kappa_1$ increase. This suggests that the value of this three risk measures can hardly reflect the change of serial correlation when the serial correlation is small. And they perform better when the serial correlation increases. The trend of derivatives reverses for CED. While the change of $\kappa_1$ has a comparatively larger influence around 0, the impact becomes weaker as we move to greater $\kappa_1$ values.
 
 Figure \ref{fig:AR1_maxDrawdown_dist} shows the maximum drawdown distribution for various $\kappa_1$. Same as revealed in Figure \ref{fig:AR1_risk_measures}, the mean and tail mean of maximum drawdown distribution increases as we increase $\kappa_1$ from negative values to positive values.
 
@@ -306,11 +306,11 @@ In this section, we present findings summarized from the previous simulation stu
 
 \textbf{1. CED distinguishes negative from positive autocorrelation}
 
-For time series with positive autocorrelation, return is more likely to remain the same sign as the previous day. The likelihood increase as the serial correlation increase. As a consequence, returns tend to keep they current profit or loss status for a period. If the current status is loss, then unfortunately, the price of the asset may continuously go down, which results in a large CED. Conversely, time series with negative autocorrelation tend to reverse the sign in the previous day. If the the price of one assets goes down in one day, it is more likely that the price would bounce back in the next day, which results in alternating profit and loss status thus a smaller CED.
+For time series with positive autocorrelation, the return is more likely to remain the same sign as the previous day. The likelihood increase as the serial correlation increase. As a consequence, returns tend to keep they current profit or loss status for a period. If the current status is loss, then, unfortunately, the price of the asset may continuously go down, which results in a large CED. Conversely, time series with negative autocorrelation tend to reverse the sign in the previous day. If the price of one asset goes down in one day, it is more likely that the price would bounce back in the next day, which results in alternating profit and loss status thus a smaller CED.
 
-While CED captures the difference in serial correlation, other risk measures do not. VaR, ES and volatility are obtained from the empirical distribution of returns. If we shuffle the return sequence, we would get the same value for VaR, ES, and volatility.
+While CED captures the difference in serial correlation, other risk measures do not. VaR, ES, and volatility are obtained from the empirical distribution of returns. If we shuffle the return sequence, we will get the same value for VaR, ES, and volatility.
 
-Figure \ref{fig:Comparison_pos_neg_autocorrelation} shows the comparison of simulated returns and prices when serial correlation is 0.7 and -0.7. The maximum drawdown of simulated series is 22.76\% and 9.49\% separately. And two return series have the same VaR, ES and volatility.
+Figure \ref{fig:Comparison_pos_neg_autocorrelation} shows the comparison of simulated returns and prices when serial correlation is 0.7 and -0.7. The maximum drawdown of simulated series is 22.76\% and 9.49\% separately. And two return series have the same VaR, ES, and volatility.
 
 \begin{figure}[H]
 \centering
@@ -332,7 +332,7 @@ Simulation in Figure \ref{fig:change_std_simulation} for AR(1) model shows a lin
 \label{fig:change_std_simulation}
 \end{figure}
 
-Fixing everything but changing the standard deviation of the noise term would simply equals to multiplying the simulated time series model by a constant. For volatility, ES and VaR, it is obvious. For accumulated returns in a path, the return is approximately the sum of all returns for each day in this time period when the return is small (which is often the case):
+Fixing everything but changing the standard deviation of the noise term would simply just to multiplying the simulated time series model by a constant. For volatility, ES and VaR, it is evident. For accumulated returns in a path, the return is approximately the sum of all returns for each day in this time period when the return is small (which is often the case):
 
 \begin{equation}
 R = \prod_{i=1}^n (1+r_i) - 1 \simeq \prod_{i=1}^n e^{r_i} - 1 = e^{\sum_{i=1}^n r_i} - 1 
