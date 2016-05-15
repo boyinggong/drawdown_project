@@ -146,7 +146,7 @@ CED_plot = ggplot(melt(CED_rc[, c(1, 2, 5, 6)], id = c("Date")),
                   aes(x= Date, y = value, group = variable))+
   geom_line()+
   facet_grid(variable~., scales = "free")+
-  theme_grey()
+  theme_light()
 
 ## ES
 ES_rc = function(data, weights, p){
@@ -161,7 +161,7 @@ ES_plot = ggplot(melt(ES_df[, c(1, 2, 5, 6)], id = c("Date")),
                  aes(x= Date, y = value, group = variable))+
   geom_line()+
   facet_grid(variable~., scales = "free")+
-  theme_grey()
+  theme_light()
 
 ## VaR
 VaR_rc = function(data, weights, p){
@@ -176,7 +176,7 @@ VaR_plot = ggplot(melt(VaR_df[, c(1, 2, 5, 6)], id = c("Date")),
                  aes(x= Date, y = value, group = variable))+
   geom_line()+
   facet_grid(variable~., scales = "free")+
-  theme_grey()
+  theme_light()
 
 ## volatility
 volatility_rc = function(data, weights){
@@ -197,9 +197,9 @@ volatility_plot = ggplot(melt(vol_df[, c(1, 2, 5, 6)], id = c("Date")),
                   aes(x= Date, y = value, group = variable))+
   geom_line()+
   facet_grid(variable~., scales = "free")+
-  theme_grey()
+  theme_light()
 
-png("../figures/risk_contribution/SPX_RMZ_64.png", width = 800, height = 800)
+png("../figures/risk_contribution/SPX_RMZ_55.png", width = 800, height = 800)
 plot_grid(CED_plot, ES_plot, VaR_plot, volatility_plot, ncol = 2, align = "v")
 dev.off()
 
