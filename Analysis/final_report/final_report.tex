@@ -281,9 +281,37 @@ Our criterion here for ``better model'' is the smaller AIC value. Appendix \ref{
 
 To illustrate this point, the following is an example analysis on RMZ index. There are several reasons why RMZ is selected: 1) the RMZ has a shorter period, which means it includes less abnormal market shock such as financial crisis in 2008 and more close to the normal fluctuation in stock price. 2) Larger serial correlation and ES, VaR comparing with other indices, implying it is more suitable for analysing the relationship between serial correlation and various risk measures. 3) There are less modes in Maximum drawdown of RMZ, suggesting it is reasonable to get tail mean, which is CED.
 \subsubsection{RMZ: an example}
+Grid searching of the best parameter set of ARIMA model is applied to RMZ index. On the basis of both AIC and BIC selection criteria (Appendix \ref{App:AppendixD}), MA(1) turns out to be the best option.
+
+\begin{figure}[H]
+  \centering
+  \begin{minipage}[b]{0.48\textwidth}
+  \includegraphics[width = 1\textwidth]{../results/DiagnosticRMZ}
+      \caption{Diagnostic Plots of MA(1) for RMZ}
+  \label{fig:DiagnosticRMZ}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.48\textwidth}
+  \includegraphics[width = 1\textwidth]{../results/ACFofRMZ}
+  \caption{ACF/PACF of Return for RMZ}
+  \label{fig:ACFofRMZ}
+  \end{minipage}
+\end{figure}
+However, the residuals after fitting does not convert into white noise as the assumption of ARIMA model. The factors lead this result is complicated and beyond our discussion, as this is a 10-year-long time series and market shock varied during this long time. Figure \ref{fig:DiagnosticRMZ} shows the diagnostic results after the fitting. The variance of residuals are clustered across the time. After taking a closed look at the data, agreed with expectation, the high volatility period is corresponding to 2008 financial crisis.
+
+Figure \ref{fig:ACFofRMZ} also demonstrates this problem in ACF/PACF plot, in which some correlations exist between residuals after more than 50 lags, but they are comparatively small after the fitting.Normal Q-Q shows that residuals are heavy-tailed. Ljung–Box–Pierce Q-statistic, used for test grouped $\kappa_e(h)$, rejects $H_0$ after $5^{th}$ lag, which also indicates the residual is not white noise after fitting. The diagnostics suggest that AR(1), MA(1) and ARMA(1,1) could all be good options, while the time series is not stationary by nature. Therefore, more complicated model should be adopt to capture the pattern with in the variance of residual.
+
+
 
 \subsection{GARCH}
+For financial assets, the returns have strong dependency across the time, thus it is reasonable to fit time series to interpret and predict them. As described in Section \ref{arma}, the ARIMA models are infeasible for most assets from diagnostics plots, in which the variance cluster in the return could not be captured, resulting in some variance cluster left the residual plot. To solve the problems listed above, the GARCH then is attempted to fit the returns for various assets. It turns out to have a much better performance in capturing the variance, and hence, a reasonable diagnostic plots.
 \subsubsection{Why GARCH is better}
+GARCH(1,1) is the most widely used the model in financial assets, so we fit the residual in MA(1) to GARCH(1,1) here. Rather than ARIMA having constant variance assumption, GARCH(1,1) also model the heteroscedasiticity in the time series.  For GARCH(1,1), the model is discribed as following:
+
+\begin{align*}
+y_t & = \sigma_t \epsilon_t\\
+\sigma_t^2 & = \alpha_0+ \alpha_1 y_{t-1}^2 +\beta_1\sigma_{t-1}^2
+\end{align*}
 \subsubsection{Result of GARCH fit}
 \subsubsection{RMZ: an example}
 
@@ -409,27 +437,25 @@ In this part, we explore the relationship between serial correlation and risk me
 
 In this section, we simulate various time series models and examine the impact of serial correlation on risk measures.
 
-\subsection{ARMA model with normal noise}
+\subsection{ARMA model}
 
-We started from the simplest model AR(1) and the normal noice term:
+We started from the simplest model AR(1):
 
 \begin{equation}
 X_t = \kappa_1X_{t-1} + \epsilon_t
 \end{equation}
 
-We simulate AR(1) for various values of the autoregressive parameter for $\kappa_1 \in (-1, 1)$ . Figure \ref{fig:AR1_risk_measures} shows the relationship between AR(1) coefficient and risk measures of interest including ES, VaR, volatility and CED. For AR(1) model, the order one serial correlation is the value of the autoregressive parameter.
+We simulate AR(1) for various values of the autoregressive parameter for $\kappa_1 \in (-1, 1)$ . Figure \ref{fig:AR1_risk_measures} shows the relationship between AR(1) coefficient and risk measures of interest including ES, VaR, volatility and CED. Note that for AR(1) model, the order one serial correlation is the the value of autoregressive parameter.
 
 CED shows a decreasing trend when $\kappa_1\in(-1, -0.75)$ and an increasing trend when $\kappa_1 \in(-0.75, 1)$. As shown in Figure \ref{fig:AR1_risk_measures}, it becomes feasible for us to distinguish negative and positive serial correlation using the CED values. However, the other 3 risk measures are all symmetric about $\kappa_1 = 0$, and they increase as the absolute values of $\kappa_1$ increases.
 
-For VaR, ES and CED, the derivative of risk measure values to $\kappa_1$ approaches to zero as  $\kappa_1$ goes to 0 and increase as $\kappa_1$ increase. This suggests that the value of this three risk measures can hardly reflect the change of serial correlation when the serial correlation is small. And they perform better when the serial correlation increases. The trend of derivatives reverses for CED. While the change of $\kappa_1$ has a comparatively larger influence around 0, the impact becomes weaker as we move to greater $\kappa_1$ values.
+For VaR, ES and CED, the derivative of risk measure values to $\kappa_1$ approaches to zero as  $\kappa_1$ goes to 0 and increase as $\kappa_1$ increase. This suggests that the value of this three risk measures can hardly reflect the change of serial correlation when the serial correlation is small. And they perform better when the serial correlation increases. The trend of derivatives reverse for CED. While the change of $\kappa_1$ has a comparatively larger influence around 0, the influence becomes weaker as we move to larger  $\kappa_1$ values.
 
 Figure \ref{fig:AR1_maxDrawdown_dist} shows the maximum drawdown distribution for various $\kappa_1$. Same as revealed in Figure \ref{fig:AR1_risk_measures}, the mean and tail mean of maximum drawdown distribution increases as we increase $\kappa_1$ from negative values to positive values.
 
-As we move to higher order models, the relationship between serial correlation and risk measures becomes complicated. Due to the page limit, we omit the results for higher order models. The interested reader is welcome to refer to our simulation report.
-
 \begin{figure}[H]
 \centering
-\includegraphics[width = 0.7\textwidth]{../figures/simulation/AR1_risk_measures}
+\includegraphics[width = 0.8\textwidth]{../figures/simulation/AR1_risk_measures}
 \caption{AR(1): Relationship between auto-correlation coefficients and risk measures}
 (Simulation path length: 1000, $\epsilon_t \sim N(0, 0.0001)$)
 \label{fig:AR1_risk_measures}
@@ -437,67 +463,13 @@ As we move to higher order models, the relationship between serial correlation a
 
 \begin{figure}[H]
 \centering
-\includegraphics[width = 0.7\textwidth]{../figures/simulation/AR1_maxDrawdown_dist_re}
+\includegraphics[width = 0.8\textwidth]{../figures/simulation/AR1_maxDrawdown_dist_re}
 \caption{AR(1): Maximum drawdown distribution for various $\kappa_1$ values }
 (Empirical distribution, path length = 1000, sample size = 1000, $\epsilon_t \sim N(0, 0.0001)$ )
 \label{fig:AR1_maxDrawdown_dist}
 \end{figure}
 
-\subsection{ARMA model with fat tailed noise}
-
-Empirical asset returns are usually fat-tailed distributed. Extreme losses consistently occur, which lead us to consider noise with student t distribution.
-
-Figure \ref{fig:T_dist_AR1_risk_measures} shows the simulated AR(1) model and the corresponding risk measures. The relationship between serial correlation and risk measures revealed in this subsection resembles that of the last subsection where noise terms follow the normal distribution. There are slight differences due to the heavy-tail distribution. However, the points are not lies perfectly on a curve because the heavy tail introduces more randomness of the quantile and tail mean values. The simulated return distribution has mean and skewness close to zero. And they have high kurtosis which implies the fat tail. The simulated maximum drawdown distribution has larger the variance than that of the normal case.
-
-
-\begin{figure}[H]
-\centering
-\includegraphics[width = 0.7\textwidth]{../figures/simulation/T_dist_AR1_risk_measures}
-\caption{AR(1): Relationship between auto-correlation coefficients and risk measures}
-(Simulation path length: 63, $\epsilon_t \sim 0.01T(df = 4)$)
-\label{fig:T_dist_AR1_risk_measures}
-\end{figure} 
-
-\subsection{ARMA model with standard error adjusted}
-
-So far our simulation studies are based on fixed distribution of the noise term. For example, for normal distribution noise we use $\epsilon \sim N(0, 0.0001)$ and for t-distribution we use $\epsilon \sim 0.01T(df =4)$. In this section, we standardize the simulated time series by dividing certain factors such that the time series have same standard deviation. 
-
-In our simulation, the standard deviation for each our simulated time series is different. Say for AR(1), the standard deviation of time series $X_t = 0.5  X_{t-1} + \epsilon_t$ and $X_t = 0.1  X_{t-1} + \epsilon_t$ is different since we use the same distribution for $\epsilon_t$. The standard deviation for AR(1) model is :
-
-\begin{equation}
-SD(X_t) = \Big(\frac{Var(\epsilon_t)}{1-\kappa_1^2}\Big)^{1/2}
-\end{equation}
-
-Then what if we compare two time series with the different distribution of $\epsilon_t$ but the same standard deviation? Since standard deviation is one risk measures (volatility), this equals to fixing other risk measures to one level, say volatility = 1.2\%, and to see how CED changes with the serial correlation. 
-
-Since our simulation is based on the normal distribution of the noise term, volatility would be proportional to ES and VaR, which means fixed volatility also means fixed volatility. 
-
-Figure \ref{fig:simulation_fixed_volatility_AR1_MA1} shows the result for AR(1) and MA(1) respectively. And Figure \ref{fig:aggregated_adjsd_subset} shows the results for AR(2), MA(2) and ARMA(1, 1). There are clearer upward trends than the last two sections. These figures suggest that CED is a better metric in describing the returns with serial correlation. For the same volatility level, CED increases as the serial correlation increases, which means CED captures the changes in serial correlation while volatility, VaR and ES do not. 
-
-
-\begin{figure}[H]
-  \centering
-  \begin{minipage}[b]{0.48\textwidth}
-    \includegraphics[width = 0.8\textwidth]{../figures/simulation/AR1_adjsd}
-  \end{minipage}
-  \hfill
-  \begin{minipage}[b]{0.48\textwidth}
-    \includegraphics[width = 0.8\textwidth]{../figures/simulation/MA1_adjsd}
-  \end{minipage}
-  \caption{Left panel: first-order serial correlation calculated using AR(1) model versus CED. Right panel: First-order serial correlation calculated using AR(1) model versus VaR}
-  \label{fig:simulation_fixed_volatility_AR1_MA1}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width = 1\textwidth]{../figures/simulation/aggregated_adjsd_subset_resized}
-\caption{Relationship between serial correlation $\rho_1$ and CED with adjusted standard error}
-(Simulation path length: 1000, from left to right: AR(2), MA(2), ARMA(1, 1), model coefficient $\in(-0.5, 0.5)$)
-\label{fig:aggregated_adjsd_subset}
-\end{figure}
-
-\subsection{More complex noise: Garch model}
-
+\subsection{Garch model}
 Also started from AR(1) ~ GARCH(1,1) model\\
 Discribe simulation parameters of AR\\
 Insert that table that compare with other ARMA models\\
@@ -508,11 +480,11 @@ In this section, we present findings summarized from the previous simulation stu
 
 \textbf{1. CED distinguishes negative from positive autocorrelation}
 
-For time series with positive autocorrelation, the return is more likely to remain the same sign as the previous day. The likelihood increase as the serial correlation increase. As a consequence, returns tend to keep they current profit or loss status for a period. If the current status is loss, then, unfortunately, the price of the asset may continuously go down, which results in a large CED. Conversely, time series with negative autocorrelation tend to reverse the sign in the previous day. If the price of one asset goes down in one day, it is more likely that the price would bounce back in the next day, which results in alternating profit and loss status thus a smaller CED.
+For time series with positive autocorrelation, return is more likely to remain the same sign as the previous day. The likelihood increase as the serial correlation increase. As a consequence, returns tend to keep they current profit or loss status for a period. If the current status is loss, then unfortunately, the price of the asset may continuously go down, which results in a large CED. Conversely, time series with negative autocorrelation tend to reverse the sign in the previous day. If the the price of one assets goes down in one day, it is more likely that the price would bounce back in the next day, which results in alternating profit and loss status thus a smaller CED.
 
-While CED captures the difference in serial correlation, other risk measures do not. VaR, ES, and volatility are obtained from the empirical distribution of returns. If we shuffle the return sequence, we will get the same value for VaR, ES, and volatility.
+While CED captures the difference in serial correlation, other risk measures do not. VaR, ES and volatility are obtained from the empirical distribution of returns. If we shuffle the return sequence, we would get the same value for VaR, ES, and volatility.
 
-Figure \ref{fig:Comparison_pos_neg_autocorrelation} shows the comparison of simulated returns and prices when serial correlation is 0.7 and -0.7. The maximum drawdown of simulated series is 22.76\% and 9.49\% separately. And two return series have the same VaR, ES, and volatility.
+Figure \ref{fig:Comparison_pos_neg_autocorrelation} shows the comparison of simulated returns and prices when serial correlation is 0.7 and -0.7. The maximum drawdown of simulated series is 22.76\% and 9.49\% separately. And two return series have the same VaR, ES and volatility.
 
 \begin{figure}[H]
 \centering
@@ -534,7 +506,7 @@ Simulation in Figure \ref{fig:change_std_simulation} for AR(1) model shows a lin
 \label{fig:change_std_simulation}
 \end{figure}
 
-Fixing everything but changing the standard deviation of the noise term would simply just to multiplying the simulated time series model by a constant. For volatility, ES and VaR, it is evident. For accumulated returns in a path, the return is approximately the sum of all returns for each day in this time period when the return is small (which is often the case):
+Fixing everything but changing the standard deviation of the noise term would simply equals to multiplying the simulated time series model by a constant. For volatility, ES and VaR, it is obvious. For accumulated returns in a path, the return is approximately the sum of all returns for each day in this time period when the return is small (which is often the case):
 
 \begin{equation}
 R = \prod_{i=1}^n (1+r_i) - 1 \simeq \prod_{i=1}^n e^{r_i} - 1 = e^{\sum_{i=1}^n r_i} - 1 
@@ -676,7 +648,7 @@ USGG10YR & 0.314 & 0.098 &  0.09 & -0.05 &  2.67 &  1.17 \\
 \end{table}
 
 \section{Appendix C: Simulations specifics} \label{App:AppendixC}
-\subsection{ARMA model with normal noise}
+\subsubsection{Noise term with normal distribution}
 
 We use some simple assumptions and parameters for simulation with normal distribution as follows:
 
@@ -685,21 +657,6 @@ We use some simple assumptions and parameters for simulation with normal distrib
 \item Risk measures including volatility, VaR, ES and maximum drawdown are calculated based on simulated time series with path length 1000. The calculation of maximum drawdown is replicated 1000 times in order to obtain the maximum drawdown distribution and its tail mean (CED).
 \item All time series parameters in this section range from -0.9 to 0.9. For time series with multiple parameters such as AR(2), ARMA(1, 1), the parameters are cartesian product of arithmetic progressions range from -0.9 to 0.9. Note that to take the stationary of AR and ARMA models into consideration (all moving averages are stationary, but the AR and ARMA model have to meet certain criteria to be stationary), not all parameters in the cartesian product are used in the simulation.
 \end{enumerate}
-
-\subsection{ARMA model with fat tailed noise}
-
-In the simulation with fat tailed noise, parameters used are close to what we've encountered in the empirical studies. 
-
-\begin{enumerate}
-\item White noise terms are simulated using t-distribution (degree of freedom = 4). Financial return usually have fat-tail distributions.
-\item Set path length to 63, which is the number of trading days in three month.
-\item Time series parameters all range from -0.3 to 0.3, which is similar to the financial time series data in the real world. Usually financial data does not show strong serial correlation. If we could narrow down our scope to smaller serial correlations we may found that the serial correlation is more closely related with various risk measures.
-\end{enumerate}
-
-
-
-
-
 
 
 \section{Appendix D: Empirical Study Results} \label{App:AppendixD}
@@ -717,6 +674,22 @@ In the simulation with fat tailed noise, parameters used are close to what we've
     \label{fig:SerCol-VaR5yrAR1}
   \end{minipage}
 \end{figure}
+
+
+\subparagraph{Model Selection Criteria}
+
+
+
+
+\newpage
+
+\bibliographystyle{unsrt}
+\bibliography{analysis}
+
+
+
+
+\clearpage
 
 
 \end{document}
