@@ -239,7 +239,7 @@ USGG10YR & 0.67 & 0.64 &  0.66 & 0.65 & 0.64 &  0.68\\
 \label{table:corSerialRisk}
 \end{table}
 
-Both the table and figures are unable to tell the story what are the relationships between risk measures and serial correlation for the indices, since the model here are recklessly chosen and more complicated factors shocking the market every day. However, the table provides an idea that relationship with CED is more closed to that with VaR and ES when this correlation is internally large.
+Both the table and figures are unable to tell the story what are the relationships between risk measures and serial correlation for the indices since the model here are recklessly chosen and more complicated factors shocking the market every day. However, the table provides an idea that relationship with CED is more closed to that with VaR and ES when this correlation is internally significant.
 %\end{wraptable}
 
 \subsubsection{Model selection}
@@ -269,12 +269,12 @@ USGG10YR & (0,0,0) \\
 \end{wraptable}
 
 
-Our criterion here for ``better model'' is the smaller AIC value. Appendix \ref{App:AppendixD} provides a more detailed explanation on model select criteria. To confirm the fact that ARMA is not reasonable for almost all the indices, we tried sets of parameters for ARMA and select the one with the smallest AIC value. Essentially, we chose the combination of AR and MA parameters ranging from 1 to 5.  Table \ref{table:BestArima} shows the best selection based on AIC criteria. The Table \ref{table:BestArima} indicates that the parameters are as high as 4 or 5 for almost all the assets, which suggests that the time series are not stationary. It also involved some converging issue is when the parameters are getting too larger.
+Our criterion here for ``better model'' is the smaller AIC value. Appendix \ref{App:AppendixD} provides a more detailed explanation on model select criteria. To confirm the fact that ARMA is not reasonable for almost all the indices, we tried sets of parameters for ARMA and selected the one with the smallest AIC value. Mostly, we chose the combination of AR and MA parameters ranging from 1 to 5.  Table \ref{table:BestArima} shows the best selection based on AIC criteria. The Table \ref{table:BestArima} indicates that the parameters are as high as 4 or 5 for almost all the assets, which suggests that the time series are not stationary. It also involved some converging issue is when the parameters are getting too larger.
 
 
-To illustrate this point, the following is an example analysis of RMZ index. There are several reasons why RMZ is selected: 1) the RMZ has a shorter period, which means it includes less abnormal market shock such as financial crisis in 2008 and more close to the normal fluctuation in stock price. 2) Larger serial correlation and ES, VaR comparing with other indices, implying it is more suitable for analyzing the relationship between serial correlation and various risk measures. 3) There are fewer modes in the maximum drawdown distribution of RMZ, suggesting it is reasonable to get tail mean, which is CED.
+To illustrate this point, the following is an example analysis of RMZ index. There are several reasons why RMZ is selected: 1) the RMZ has a shorter period, which means it includes less abnormal market shock such as the financial crisis in 2008 and more close to the normal fluctuation in stock price. 2) Larger serial correlation and ES, VaR comparing with other indices, implying it is more suitable for analyzing the relationship between serial correlation and various risk measures. 3) There are fewer modes in the maximum drawdown distribution of RMZ, suggesting it is reasonable to get tail mean, which is CED.
 \subsubsection{RMZ: an example}
-Grid searching of the best parameter set of ARIMA model is applied to RMZ index. On the basis of both AIC and BIC selection criteria (Appendix \ref{App:AppendixD}), MA(1) turns out to be the best option.
+Grid searching of the best parameter set of ARIMA model is applied to RMZ index. By both AIC and BIC selection criteria (Appendix \ref{App:AppendixD}), MA(1) turns out to be the best option.
 
 \begin{figure}[H]
   \centering
@@ -290,24 +290,23 @@ Grid searching of the best parameter set of ARIMA model is applied to RMZ index.
   \label{fig:ACFofRMZ}
   \end{minipage}
 \end{figure}
-However, the residuals after fitting do not convert into white noise as the assumption of ARIMA model. The factors lead this result is complicated and beyond our discussion, as this is a 10-year-long time series and market shock varied during this long time. Figure \ref{fig:DiagnosticRMZ} shows the diagnostic results after the fitting. The variance of residuals is clustered across the time. After taking a closer look at the data, agreed with expectation, the high volatility period is corresponding to 2008 financial crisis.
+However, the residuals after fitting do not convert into white noise. The factors of leading this result are complicated and beyond our discussion, as this is a 10-year-long time series and market shock varied during this long time. Figure \ref{fig:DiagnosticRMZ} shows the diagnostic results after the fitting. The variance of residuals are clustered across the time. After taking a closer look at the data, agreed with expectation, the high volatility period is corresponding to 2008 financial crisis.
 
-Figure \ref{fig:ACFofRMZ} also demonstrates this problem in ACF/PACF plot, in which some correlations exist between residuals after more than 50 lags, but they are comparatively small after the fitting.Normal Q-Q shows that residuals are heavy-tailed. Ljung–Box–Pierce Q-statistic, used for test grouped $\kappa_e(h)$, rejects $H_0$ after $5^{th}$ lag, which also indicates the residual is not white noise after fitting. The diagnostics suggest that AR(1), MA(1) and ARMA(1,1) could all be good options, while the time series is not stationary by nature. Therefore, more complicated model should be adopted to capture the pattern within the variance of residual.
-
+Figure \ref{fig:ACFofRMZ} also demonstrates this problem in ACF/PACF plot, in which some correlations exist between residuals after more than 50 lags, but they are comparatively small after the fitting.Normal Q-Q shows that residuals are heavy-tailed. Ljung–Box–Pierce Q-statistic, used for test grouped $\kappa_e(h)$, rejects $H_0$ after $5^{th}$ lag, which also indicates the residual is not white noise after fitting. The diagnostics suggest that AR(1), MA(1) and ARMA(1,1) could all be good options while the time series is not stationary by nature. Therefore, a more complicated model should be adopted to capture the pattern within the variance of residual.
 
 
 \subsection{GARCH} \label{garch}
-For financial assets, the returns have strong dependency across the time, thus, it is reasonable to fit time series to interpret and predict them. As described in Section \ref{arma}, the ARIMA models are infeasible for most assets from diagnostics plots, in which the variance cluster in the return could not be captured, resulting in some variance cluster left the residual plot. To solve the problems listed above, the GARCH then is attempted to fit the returns for various assets. It turns out to have a much better performance in capturing the variance, and hence, a reasonable diagnostic plot.
+For financial assets, the returns have high dependency at the time. Thus, it is reasonable to fit time series to interpret and predict them. As described in Section \ref{arma}, the ARIMA models are infeasible for most assets from diagnostics plots, in which the variance cluster in the return could not be captured, resulting in some variance cluster left the residual plot. To solve the problems listed above, the GARCH then is attempted to fit the returns for various assets. It turns out to have a much better performance in capturing the variance, and hence, a generous diagnostic plot.
 \subsubsection{Why GARCH is better?}
 The GARCH is the most widely used the model in financial data fitting. Rather than ARIMA having constant variance assumption, GARCH also model the heteroscedasticity in the time series.  For GARCH(1,1), the model is described as following:
 \begin{align*} 
 y_t & = \sigma_t \epsilon_t\\
 \sigma_t^2 & = \alpha_0+ \alpha_1 y_{t-1}^2 +\beta_1\sigma_{t-1}^2
 \end{align*}
-These set of formulas in indicates that the current variance of the noise is affected by the variance of error in the several previous periods and the magnitude of the previous return. In this model, the clustered variance of residuals can be efficiently captured. Additionally, GARCH also inherits good properties of the ARMA in characterizing the correlation between consecutive time points. Considering all the benefits listed above, GARCH is an ideal model for improving the ARMA mentioned in Section \ref{arma}.
+These set of formulas in indicates that the current variance of the noise is affected by the variance of error and the magnitude of return in the several previous periods. In this model, the clustered variance of residuals can be efficiently captured. Additionally, GARCH also inherits good properties of the ARMA in characterizing the correlation between consecutive time points. Considering all the benefits listed above, GARCH is an ideal model for improving the ARMA mentioned in Section \ref{arma}.
 
 \subsubsection{Result of GARCH fit}
-As shown in the return plots for different assets, the clustered variance is a common case in financial assets. Especially for really long time series, such as \textit{MXEA}, the market shock is even harder to interpret and predict. Therefore, for those assets with long time series, a longer lag of ARMA model is required. The best fit of GARCH model on all the selected assets is shown in Table \ref{table:BestGarch}.
+As shown in the return plots for different assets, the clustered variance is a typical case in financial assets. Especially for long time series, such as \textit{MXEA}, the market shock is even harder to interpret and predict. Therefore, for those assets with long time series, a longer lag of ARMA model is required. The best fit of GARCH model on all the selected assets is shown in Table \ref{table:BestGarch}.
 %\begin{figure}[H]
 %  \includegraphics[width = \textwidth]{../results/resids}
  %  \caption{Residuals after fitting using the best ARIMA Model}
@@ -336,14 +335,12 @@ USGG10YR & GARCH(1,3) &-6.664873& 0\\
 \end{table}
 The parameters are selected using in-sample error measure BIC. Details about BIC can be found in Appendix \ref{App:AppendixD}. The mean difference between BIC and AIC is that BIC tends to penalize more on complexity and to result in less feature in the model. As GARCH models are very likely to be overfitting, choosing BIC is of greater reasonability.
 
-The GARCH model highly reduces the correlation within the residual and ends up with a more reasonable diagnostics, while the predictivity of the model has  been highly improved( 
-%%\ref {}%%!!!!!!!!!!!!!!!!!!!!!!!!!!!
-is a good example). However, there are still problems revealed in GARCH model, and needs further improvement. The heavy tail is existing as the sign from the normal Q-Q plots, in which points deviate from the line at both ends. The failure in modeling heavy tail is caused by the inappropriate assumption of the Gaussian conditional distribution in GARCH. Instead of Gaussian, Student-t could be used as the conditional distribution and is able to catch the variance on both tails. Considering convergence issue caused by t-Student distribution, Generalize Normal Distribution (GED) and QMLE are other potential options.
- 
+The GARCH model highly reduces the correlation within the residual and ends up with a more intelligent diagnostics, while the predictivity of the model has  been highly improved (\ref{fig:RMZ_GARCH_dig2} is a case in point). However, there are still problems revealed in GARCH model and needs further improvement. The heavy tail is existing as the sign from the normal Q-Q plots, in which points deviate from the line at both ends. The failure in the modeling heavy tail is caused by the inappropriate assumption of the Gaussian conditional distribution in GARCH. Instead of Gaussian, Student-t could be used as the conditional distribution and can catch the variance on both tails. Considering convergence issue caused by t-Student distribution, Generalize Normal Distribution (GED) and QMLE are other potential options.
+
 \subsubsection{RMZ: an example}
 This section presents a model selection and assessment process of the RMZ example on GARCH method, showing a diagnostics of the model and the predictive capability of the model. Section \ref{GARCH_simulation} is highly related to this section, in which GARCH time series are simulated and fitted so that a more clear pattern is generated eliminating all the other market factors. There, we can see a more clear relationship between serial correlation and different risk measures.
 
-First of all, The MA(1)~ GARCH(1,1) for RMZ is estimated as followed:
+First of all, The MA(1)~ GARCH(1,1) for RMZ is estimated as followed: 
 \begin{align*}
 R_t &= -4.1561\times 10^{-2}\epsilon_{t-1} \\
 \sigma_t^2 & = 1.9955 \times 10^{-6} +1.1083\times 10^{-1} T_{t-1}^2 +8.8506\times 10^{-1}  \sigma_{t-1}^2
@@ -525,15 +522,16 @@ Figure \ref{fig:AR1_maxDrawdown_dist} shows the maximum drawdown distribution fo
 
 \subsection{GARCH model} \label{GARCH_simulation}
 
-The previous several sections have already stated general ideas that how magnitude of risk measurements correlated with serial correlation and ARMA coefficients in AR(1), MA(1) and ARMA(1,1) models. However, the inspiring results should not encourage us ignore the complexity of the market: it always does not produce such regular time series. The occasional events shock the market and the returns always shows clustered variance. As has been analyzed in the Section \ref{garch}, a popular way to handle the complex variance in the return is using generalized autoregressive conditional heteroskedasticity (GARCH) model. In this section, ARMA time series are simulated with GARCH(1,1) noise term, to which we expect analysis the extent of effect that complex noise term having on the relationship between serial correlation and risk measurements.
+The several previous sections have already stated general ideas that how the magnitude of risk measurements correlated with serial correlation and ARMA coefficients in AR(1), MA(1) and ARMA(1,1) models. However, the exciting results should not encourage us to ignore the complexity of the market: it always does not produce such regular time series. The occasional events shock the market and the returns always shows clustered variance. As has been analyzed in the Section \ref{garch}, a popular way to handle the complex variance in the return is using generalized autoregressive conditional heteroskedasticity (GARCH) model. In this section, ARMA time series are simulated with GARCH(1,1) noise term, to which we expect analysis the extent of the effect that involved noise term is having on the relationship between serial correlation and risk measurements.
 
-Several universal assumptions around GARCH term in this section should be stated at this point. The GARCH model is on the basis of the Gaussian conditional distribution. Although in the empirical study with thirteen American indices it shows that a heavy tail conditional distributions, such as t-Student, are more likely to approximate the true market, Gaussian enable us to analyze more properties in the return without losing the generality. For GARCH(1,1), recall  that:
+Several universal assumptions around GARCH term in this section should be stated at this point. The GARCH model is by the Gaussian conditional distribution. Although in the empirical study with thirteen American indices, it shows that a heavy tail conditional distributions, such as t-Student, are more likely to approximate the true market, Gaussian enables us to analyze more properties in the return without losing the generality. For GARCH(1,1), recall  that:
 \[
 \sigma^2_t = \omega + \alpha y_{t-1}^2 + \beta \sigma^2_{t-1}
 \]The choose of potential parameters is on account of the study of the American financial indices. In summary, we choose $\omega \in \{10^{-7}, 10^{-8}\}$, $\alpha \in \{0.05, 0.08, 0.11, 0.14, 0.17, 0.20\}$, $\beta  \in \{0.1,0.2,\dots, 0.7\}$.
 
 \subsubsection{AR(1)$\sim$GARCH(1,1)}
-Started from the simpliest model AR(1)$\sim$GARCH(1,1), the simulation results provides us a general idea how risk measures changes with $\alpha$ and serial correlation, namely, $\kappa(1)$. Two questions are focused here 1) which parameter within $\omega$, $\alpha$ and $\beta$ are more responsible for the change in risk measurements? 2) Comparing the extent that the risk measurements changing with serial correlation or coefficients, does $\alpha$ and $\beta$ counts a lots?
+Started from the simplest model AR(1)$\sim$GARCH(1,1), the simulation results provide us a general idea how risk measures changes with $\alpha$ and serial correlation, namely, $\kappa(1)$. Two questions are focused here 1) which parameter within $\omega$, $\alpha$ and $\beta$ are more responsible for the change in risk measures? 2) Comparing the extent that the risk measures changing with serial correlation or coefficients, does $\alpha$ and $\beta$ counts a lot?
+
 \begin{figure}[H]
   \centering
   \begin{minipage}[b]{0.48\textwidth}
@@ -551,11 +549,11 @@ Started from the simpliest model AR(1)$\sim$GARCH(1,1), the simulation results p
   \end{minipage}
 \end{figure}
 
-The Figure \ref{fig:garch_rm_alpha1} verifies our guess. The higher $\omega$, $\alpha$ or $\beta$ are all partial responsible for a highly risk measurements, in general. The eight lines within the plots are clearly separate into two groups, upper and lower. The higher four curves own a higher $\omega$, which indicates a general magnitude of variance. It is save to conclude that $\omega$ is dominant among parameters.
+The Figure \ref{fig:garch_rm_alpha1} verifies the guess. The higher $\omega$, $\alpha$ or $\beta$ are all partially responsible for high risk measures, in general. The eight lines within the plots are clearly separate into two groups, upper and lower. The more top four curves own a higher $\omega$, which indicates a general magnitude of variance. It is saved to conclude that $\omega$ is dominant among parameters.
 
-ES, VaR and Volatility are monotonically increasing with $alpha$. When the $\beta$ is relatively small, this relationship is almost linear, while when the $\beta$ is large, the relationship is more likely to be a higher order polynomial shape. In general, the CED has a similar trend with other risk measures, while it is less smooth. Especially, when the $\beta$ is low, $\alpha's$ effect is even more unclear. Indicating in the plot is the lowest three lines are twisting together. 
+ES, VaR, and Volatility are monotonically increasing with $alpha$. When the $\beta$ is relatively small, this relationship is almost linear, while when the $\beta$ is large, the relationship is more likely to be a higher order polynomial shape. In general, the CED has a similar trend with other risk measures, while it is less smooth. Especially, when the $\beta$ is low, $\alpha's$ effect is even more unclear. Indicating in the plot is the lowest three lines are twisting together. 
 
-Figure \ref{fig:garch_rm_coef1} explores the how large $\omega$, $\alpha$ or $\beta$ affect the risk measurements comparing with changing in serial correlation. As proved, we only choose the positive coefficients to see the clear trend. With in $\alpha$ and $\beta$, the $\beta$ is dominant, especially in the first three plots, the 0.5 change in $beta$ is larger than 0.7 change in $\kappa$, fixed $\alpha$. A more exciting pattern shown in the CED plot. It shows that the complex variance, $\alpha$ or $\beta$ less affect CED, comparing the other risk measurements. In general, the curve in last plot is steeper, suggesting that CED is more sensitive to$\kappa$ in AR(1) $\sim$GARCH(1,1) model.
+Figure \ref{fig:garch_rm_coef1} explores the how large $\omega$, $\alpha$ or $\beta$ affect the risk measurements comparing with changing in serial correlation. As proved, we only choose the positive coefficients to see the clear trend. Within $\alpha$ and $\beta$, the $\beta$ is dominant, especially in the first three plots, the 0.5 change in $beta$ is larger than 0.7 change in $\kappa$, fixed $\alpha$. A more exciting pattern shown in the CED plot. It shows that the complex variance, $\alpha$ or $\beta$ less affect CED, comparing the other risk measurements. In general, the curve in last plot is steeper, suggesting that CED is more sensitive to$\kappa$ in AR(1) $\sim$GARCH(1,1) model.
 
 \subsubsection{ARMA(1,1) $\sim$GARCH(1,1)}
 Similar to AR(1)$\sim$GARCH(1,1) model, we generalize it to ARMA(1,1)$\sim$GARCH(1,1), a more popular model in financial area. It indeed generates an indistinguishable pattern for traditional risk measures. Considering the complexity of the ARMA part, we find that AR and MA term have different impacts on the changing of risk measures.
@@ -575,17 +573,26 @@ Similar to AR(1)$\sim$GARCH(1,1) model, we generalize it to ARMA(1,1)$\sim$GARCH
 \label{fig:arma_garch}
 \end{figure}
 
-The Figure \ref{fig:arma_garch} shows the ARMA parameters effects on the risk measurements, and also compare the magnitude with the GARCH parameters. For ES, VaR and volatility, the plots suggests that the they are linearly increasing with the $\theta_1$, while non-linearly (probably quadratic, positive first derivative) increasing with the $\kappa_1$. Compared with traditional risk measures, the plots of CED are more dended. Similarly to the previous conclusions, CED seems to be more sensitive to $\kappa$ and less sensitive to $\theta$. Moreover, when $\omega$, or the general trend, is small, the CED is indifferentiatable for different alpha.
+The Figure \ref{fig:arma_garch} shows the ARMA parameters effects on the risk measurements, and also compare the magnitude of the GARCH parameters. For ES, VaR, and volatility, the plots suggest that the they are linearly increasing with the $\theta_1$ while non-linearly (probably quadratic, positive first derivative) increasing with the $\kappa_1$. Compared with traditional risk measures, the plots of CED are more jagged. Similarly to the previous conclusions, CED seems to be more sensitive to $\kappa$ and less sensitive to $\theta$. Moreover, when $\omega$, or the general trend, is small, the CED is undifferentiable for different alpha.
+
+\begin{figure}[H]
+\centering
+\includegraphics[width = 0.9\textwidth]{../figures/simulation_garch/garch_ARMA11_alpha_beta_3}
+\caption{ARMA(1): maximum drawdown distributions under different $\alpha$ and $\beta$. $\theta = 0.25$, $\omega = 10^{-7}$, $\kappa_1 = 0.25$,$\theta_1 = -0.25$ is fixed }
+\label{fig:garch_arma1_ddd}
+\end{figure}
+
+Figure \ref{fig:garch_arma1_ddd} show the maximum drawdown distribution's change with the different $\alpha$ and $\beta$. Clearly a higher $\beta$ responsible for a more spread-out distribution, while $\alpha$ is less determinant. In Appendix \ref{App:AppendixC},  Table \ref{table:dist_garch_ar1_return} further confirms this point.
 
 \subsubsection{A short summary about GARCH}
 This section is targeted in analyzing the impact of complex variance on the evaluation relationship of serial correlation($\kappa$ or $\rho$) and risk measures. It is more straightforward to see this effects through the simulation study other than tedious derivations. Through the analysis above, we have several conclusions as followed.
 
 \begin{enumerate}
-\item The larger value of $\omega$, $\alpha$ and $\beta$ are all partially responsible for a higher risk measurements, in general, given the ARMA model.
+\item The larger value of $\omega$, $\alpha$ and $\beta$ are all partially responsible for higher risk measures, in general, given the ARMA model.
 \item Among three parameters, the effect of $\omega$ dominates. As $\omega$ indicates the general change of variance of the model, which is a counterpart of $\sigma^2$ in the pure ARMA.
-\item When the $\beta$ is small, the effect of $\alpha$ on risk measurements are weak. Especially for CED, it is insensitive to the change of $\alpha$. However, when the $\beta$ value is large, the ES, VaR and Volatility increase sharply with $\alpha$. For CED, it has a upward trend, but more indented than other risk measurements.
-\item From the plots with $\kappa$ as axis, we found that in the time series with a GARCH variance, $\alpha$ and $\beta$ less affect CED comparing with other risk measurements.
-\item Last but not least, we found that $\alpha$ value of the GARCH model does not change the shape of maximun drawdown distribution a lot compare with $\beta$ values. Therefore, in summary, for CED, the ranking magitude of effect from GARCH parameters are: $\alpha < \beta < \omega$
+\item When the $\beta$ is small, the effect of $\alpha$ on risk measurements are weak. Especially for CED, it is insensitive to the change of $\alpha$. However, when the $\beta$ value is large, the ES, VaR, and Volatility increase sharply with $\alpha$. For CED, it has an upward trend, but more indented than other risk measurements.
+\item From the plots with $\kappa$ as an axis, we found that in the time series with a GARCH variance, $\alpha$ and $\beta$ less affect CED comparing with other risk measurements.
+\item Last but not least, we found that $\alpha$ value of the GARCH model does not change the shape of maximum drawdown distribution a lot compare with $\beta$ values. Therefore, in summary, for CED, the ranking magnitude of effect from GARCH parameters are: $\alpha < \beta < \omega$
 \end{enumerate}
 
 \subsection{Findings Summary}
@@ -776,27 +783,41 @@ We use some simple assumptions and parameters for simulation with normal distrib
 \item All time series parameters in this section range from -0.9 to 0.9. For time series with multiple parameters such as AR(2), ARMA(1, 1), the parameters are cartesian product of arithmetic progressions range from -0.9 to 0.9. Note that to take the stationary of AR and ARMA models into consideration (all moving averages are stationary, but the AR and ARMA model have to meet certain criteria to be stationary), not all parameters in the cartesian product are used in the simulation.
 \end{enumerate}
 
+\subsection{Maximum drawdown distribution descriptive statistics}
+\begin{table}[H]
+\centering
+\begin{tabular}{|r |r r r r|}
+\hline
+& Mean & Sd & Skewness & Kurtosis \\
+\hline
+$\alpha = 0.05 $ & 0.0 & 0.029 & -0.003 & 0.088\\
+$\alpha = 0.08 $ & 0.0 & 0.013 & 0.001 & -0.033\\
+$\alpha = 0.11 $ & 0.0 & 0.011 & -0.000 & -0.001\\
+$\alpha = 0.14 $ & 0.0 & 0.011& -0.004 &  0.006\\
+$\alpha = 0.17 $ & 0.0 & 0.013 & -0.014 & -0.004\\
+$\alpha = 0.20 $ & 0.0 & 0.029 & 0.005 & 0.054\\
+\hline
+\end{tabular}
+\caption{Statistics of simulated return distribution of AR(1)+ GARCH(1,1)}
+\label{table:dist_garch_ar1_return}
+\end{table}
+
 
 \section{Appendix D: Empirical Study Results} \label{App:AppendixD}
-\begin{figure}[H]
-  \centering
-  \begin{minipage}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{../results/SerCol-CED5yr3monAR1}
-    \caption{First-order serial correlation calculated using AR(1) model versus CED}
-    \label{fig:SerCol-CED5yr3monAR1}
-  \end{minipage}
-  \hfill
-  \begin{minipage}[b]{0.48\textwidth}
-    \includegraphics[width=\textwidth]{../results/SerCol-VaR5yrAR1}
-    \caption{First-order serial correlation calculated using AR(1) model versus VaR}
-    \label{fig:SerCol-VaR5yrAR1}
-  \end{minipage}
-\end{figure}
+\subsection{Model Selection Criteria}
+In Section \ref{arma} and Section \ref{garch}, two in-sample error measures, AIC and BIC, are used for selecting models. Following is a short introduction about these two criterions.
 
+AIC shorts for Akaike information criterion, which is one of the most commonly used criterion for model selection. Here is the formula for AIC.
+\[
+AIC = 2k - 2ln(L)
+\]
+The k is the number of parameter in the model and L is the maximum value of the likelihood function for an individual model. Intuitively, AIC rewards goodness of fit (as assessed by the likelihood function), but it also includes a penalty that is an increasing function of the number of estimated parameters. Therefore, we want the model with smallest AIC value.
 
-\subparagraph{Model Selection Criteria}
-
-
+BIC shorts for  Bayesian information criterion (BIC) or Schwarz criterion. Here is the formula for BIC.
+\[
+BIC = k\times ln(n) - 2ln(L)
+\]
+The only difference between AIC and BIC is the scalar for the number of features, k. In most of the cases when n is larger than 7, $log(n) > 2$. Therefore, BIC tends to penalize more on the complexity of the model.
 \newpage
 
 \clearpage
