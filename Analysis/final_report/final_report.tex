@@ -372,7 +372,34 @@ We may wrongly interpretate that larger serial correlation results in less drawd
 \subsection{Other return frequencies}
 
 \section{Empirical risk contribution}
-\subsection{SPX \& RMZ: An example}
+
+In this section, we present the empirical analysis of portfolio risk using two asset class, SPX (S\&P 500 Index) and RMZ (MSCI US REIT Index) in 60/40, 50/50, 40/60 allocation separately. For each portfolio, we calculate the risk contributions of each asset component for CED, ES, VaR and volatility. Figure \ref{fig:risk_contribution_SPX_RMZ_55} shows the time-varying risk contribution of 50/50 allocation. 
+
+The four measures indicate similar risk of portfolios over time, but large differences when it comes to risk contributions. The variation of risk contributions for ES, VaR and volatility resemble each other under fixed asset allocation weights. For asset RMZ, while its contribution to ES, VaR and volatility maximized during 2010, the contribution to CED reached its peak during 2014. In the case of 40/60 asset allocation, SPX contributes to over 98\% of the total CED in 2014. S\&P 500 Index had a continuously rising trend during 2013-2014. However, RMZ became volatile during this period, and several downward trend occurs, which lead to the major risk contribution for CED.
+
+The left panel of Figure \ref{fig:risk_parity_and_risk_rd} shows the scenario when a portfolio has equal risk contributions with respect to one risk measure but show difference for other risk measures. We calculated the fractional risk contributions of SPX in two asset portfolio in three types of risk parity cases: CED parity, ES parity and volatility parity. The right panel of Figure \ref{fig:risk_parity_and_risk_rd} shows the overall risk contributions of SPX in SPX and RMZ portfolio for weights of 50/50, 60/40 and 70/30. Among the risk measures, VaR shows the greatest contribution for SPX and CED the second. As we increase the weight of SPX in the portfolio, the risk contribution increases for all risk measures. 
+
+\begin{figure}[H]
+  \centering
+  \begin{minipage}[b]{0.48\textwidth}
+    \includegraphics[width = 1\textwidth]{../figures/risk_contribution/risk_parity}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.48\textwidth}
+    \includegraphics[width = 1\textwidth]{../figures/risk_contribution/overall_rc}
+  \end{minipage}
+  \caption{Left panel: Fractional Risk Contributions of SPX constructed based on CED Parity, ES Parity and Volatility Parity. Right panel: Fractional Risk Contributions of SPX for the weights of 50\%, 60\% and 70\%. Protfolios are based on SPX and RMZ over the period January 3, 2006 to December 31, 2015. ES and CED are calculated at the 90\% confidence level. Maximum drawdown distribution is calculated based on 3-month rolling period.}
+  \label{fig:risk_parity_and_risk_rd}
+\end{figure}
+
+\begin{figure}
+\centering
+\includegraphics[width = 1\textwidth]{../figures/risk_contribution/SPX_RMZ_55}
+\caption{3-month 1-year rolling risk contribution for CED, ES, VaR and volatility}
+(portfolio is constructed using two asset classes (SPX and RMZ) in the balanced 50/50 allocation, probability level = 0.9)
+\label{fig:risk_contribution_SPX_RMZ_55}
+\end{figure}
+
 
 \part{Simulations}
 
@@ -475,7 +502,7 @@ Also started from AR(1) ~ GARCH(1,1) model\\
 Discribe simulation parameters of AR\\
 Insert that table that compare with other ARMA models\\
 
-\subsection{Findings}
+\subsection{Findings Summary}
 
 In this section, we present findings summarized from the previous simulation study, and provide the corresponding theorial explainations. 
 
@@ -516,6 +543,8 @@ R = \prod_{i=1}^n (1+r_i) - 1 \simeq \prod_{i=1}^n e^{r_i} - 1 = e^{\sum_{i=1}^n
 
 All the returns in every subpath would be multiplied by approximately a constant. Thus, the domain of the maximum drawdown distribution and CED would also be scaled by the same number.
 
+\textbf{3. Fatter tail of return distributions result in }
+
 \section{Risk contribution}
 Started from AR(1), present an example how risk contribution varied for different risk measurements, different weight and different ARMA parameters.\\
 
@@ -523,6 +552,12 @@ High light difference between CED and traditional risk measurements.\\
 
 Short discuss how CED useful in capture the risk of financial assets on risk contribution aspect.
 
+
+\clearpage
+
+
+\bibliographystyle{unsrt}
+\bibliography{analysis}
 
 \clearpage
 
@@ -683,11 +718,5 @@ In the simulation with fat tailed noise, parameters used are close to what we've
   \end{minipage}
 \end{figure}
 
-\newpage
-
-\bibliographystyle{unsrt}
-\bibliography{analysis}
-
-\clearpage
 
 \end{document}
