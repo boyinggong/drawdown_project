@@ -252,14 +252,26 @@ risk_measure = "ES"
 # df_names <- paste(risk_measure, "_ar1_",names(weightss), sep = "")
 
 helper_get_ratio <- function(risk_measure,wi){
-  # browser()
+#   browser()
   df <- get(paste(risk_measure, "_ar1_",wi, sep = ""))
   ret <- df[,!(colnames(df) %in% c("model1","model2",risk_measure))]/df[,risk_measure]
   colnames(ret) <- paste(wi, c(".sim1",".sim2"), sep = "")
   return(ret)
 }
+risk_measure  = "ES"
 
-# helper_get_ratio(risk_measure, "w1")
+# ES_ar1_w1_dead = ES_ar1_w1
+# ES_ar1_w2_dead = ES_ar1_w2
+# ES_ar1_w3_dead = ES_ar1_w3
+# 
+# ind = c(1:15, 91:105, 121:135, 211:225)
+ES_ar1_w1 = as.data.frame(ES_ar1_w1_dead[ind,], row.names = FALSE)
+ES_ar1_w2 = as.data.frame(ES_ar1_w2_dead[ind,], row.names = FALSE)
+ES_ar1_w3 = as.data.frame(ES_ar1_w3_dead[ind,], row.names = FALSE)
+
+
+
+# helper_get_ratio(risk_measure, "w2")
 
 get_ratio <- function(risk_measure){
 #     browser()
@@ -270,7 +282,9 @@ get_ratio <- function(risk_measure){
   colnames(df)[1:2] = c("model1","model2")
   return (df)
 }
-# get_ratio("CED")
+
+
+# get_ratio("ES")
 #################################### plot it ######################################
 # CED
 
@@ -290,7 +304,7 @@ helper_plot_df <- function(risk_measure, fixat = -0.7){
 
 # helper_plot_df("CED", fixat = -0.1)
 plot_rc <- function(risk_measure, fixats = c(-0.7,-0.1,.7,.1), model = "ar1"){
-  png(paste("../figures/risk_contribution/z", risk_measure,"_", model, 
+  png(paste("Analysis/figures/risk_contribution/z", risk_measure,"_", model, 
             ".png", sep = ''), width = 800, height = 500)
   plots = list()
   # fixats <-  c(-0.7,-0.1,.7,.1)

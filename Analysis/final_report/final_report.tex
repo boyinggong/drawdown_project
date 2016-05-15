@@ -14,6 +14,7 @@
 \usepackage{stfloats}
 \usepackage{amsfonts}
 \usepackage{wrapfig,lipsum,booktabs}
+\usepackage{subcaption}
 %\usepackage[T1]{fontenc}
 %\usepackage[utf8]{inputenc}
 %\usepackage{babel}
@@ -557,10 +558,24 @@ ES, VaR and Volatility are monotonically increasing with $alpha$. When the $\bet
 Figure \ref{fig:garch_rm_coef1} explores the how large $\omega$, $\alpha$ or $\beta$ affect the risk measurements comparing with changing in serial correlation. As proved, we only choose the positive coefficients to see the clear trend. With in $\alpha$ and $\beta$, the $\beta$ is dominant, especially in the first three plots, the 0.5 change in $beta$ is larger than 0.7 change in $\kappa$, fixed $\alpha$. A more exciting pattern shown in the CED plot. It shows that the complex variance, $\alpha$ or $\beta$ less affect CED, comparing the other risk measurements. In general, the curve in last plot is steeper, suggesting that CED is more sensitive to$\kappa$ in AR(1) $\sim$GARCH(1,1) model.
 
 \subsubsection{ARMA(1,1) $\sim$GARCH(1,1)}
-Similar to AR(1)$\sim$GARCH(1,1) model, we generalize it to ARMA(1,1)$\sim$GARCH(1,1), a more popular model in financial area.
+Similar to AR(1)$\sim$GARCH(1,1) model, we generalize it to ARMA(1,1)$\sim$GARCH(1,1), a more popular model in financial area. It indeed generates an indistinguishable pattern for traditional risk measures. Considering the complexity of the ARMA part, we find that AR and MA term have different impacts on the changing of risk measures.
 
-In Figure \ref{fig:garch_ARMA11_risk_measures_3_alpha} where $\kappa_1 = 0.25$, $\theta_1 = -0.25$, the CED increases with the $\alpha$ and more sensitive when $\beta$ is high. Again, the $\omega$ is also the dominant factor compared with $\alpha$ and $\beta$.
+\begin{figure}[H]
+\begin{subfigure}{0.48\textwidth}
+\includegraphics[width = 0.9\textwidth]{../figures/simulation_garch/garch_ARMA11_risk_measures_ma1}
+\caption{$\kappa_1 = 0.5$, varied $\theta$}
+\label{fig:horse}
+\end{subfigure} \hspace{0.04\textwidth}
+\begin{subfigure}{0.48\textwidth}
+ \includegraphics[width = 0.9\textwidth]{../figures/simulation_garch/garch_ARMA11_risk_measures_ar1}
+\caption{$\theta_1 = 0.5$, varied $\kappa$}
+\label{fig:zebra}
+\end{subfigure}
+\caption{ARMA(1,1): Relationship between AR and MA coefficients in the GARCH(1,1) and risk measures. $\theta_1 \in \{0.1,0.2, \dots, 0.8 \}$, $\kappa_1 \in \{0.1,0.2, \dots, 0.8 \}$. The $\omega$  is fixed as $10^{-7}$.}
+\label{fig:arma_garch}
+\end{figure}
 
+The Figure \ref{fig:arma_garch} shows the ARMA parameters effects on the risk measurements, and also compare the magnitude with the GARCH parameters. For ES, VaR and volatility, the plots suggests that the they are linearly increasing with the $\theta_1$, while non-linearly (probably quadratic, positive first derivative) increasing with the $\kappa_1$. Compared with traditional risk measures, the plots of CED are more dended. Similarly to the previous conclusions, CED seems to be more sensitive to $\kappa$ and less sensitive to $\theta$. Moreover, when $\omega$, or the general trend, is small, the CED is indifferentiatable for different alpha.
 
 \subsubsection{A short summary about GARCH}
 This section is targeted in analyzing the impact of complex variance on the evaluation relationship of serial correlation($\kappa$ or $\rho$) and risk measures. It is more straightforward to see this effects through the simulation study other than tedious derivations. Through the analysis above, we have several conclusions as followed.
