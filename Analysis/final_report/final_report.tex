@@ -308,7 +308,7 @@ Figure \ref{fig:ACFofRMZ} also demonstrates this problem in ACF/PACF plot, in wh
 
 
 
-\subsection{GARCH}
+\subsection{GARCH} \label{garch}
 For financial assets, the returns have strong dependency across the time, thus it is reasonable to fit time series to interpret and predict them. As described in Section \ref{arma}, the ARIMA models are infeasible for most assets from diagnostics plots, in which the variance cluster in the return could not be captured, resulting in some variance cluster left the residual plot. To solve the problems listed above, the GARCH then is attempted to fit the returns for various assets. It turns out to have a much better performance in capturing the variance, and hence, a reasonable diagnostic plots.
 \subsubsection{Why GARCH is better?}
 The GARCH is the most widely used the model in financial data fitting. Rather than ARIMA having constant variance assumption, GARCH also model the heteroscedasiticity in the time series.  For GARCH(1,1), the model is discribed as following:
@@ -509,10 +509,55 @@ Figure \ref{fig:AR1_maxDrawdown_dist} shows the maximum drawdown distribution fo
 \label{fig:AR1_maxDrawdown_dist}
 \end{figure}
 
-\subsection{Garch model}
-Also started from AR(1) ~ GARCH(1,1) model\\
-Discribe simulation parameters of AR\\
-Insert that table that compare with other ARMA models\\
+\subsection{GARCH model}
+The previous several sections have already stated general ideas that how magnitude of risk measurements correlated with serial correlation and ARMA coefficients in AR(1), MA(1) and ARMA(1,1) models. However, the inspiring results should not encourage us ignore the complexity of the market: it always does not produce such regular time series. The occasional events shock the market and the returns always shows clustered variance. As has been analyzed in the Section \ref{garch}, a popular way to handle the complex variance in the return is using generalized autoregressive conditional heteroskedasticity (GARCH) model. In this section, ARMA time series are simulated with GARCH(1,1) noise term, to which we expect analysis the extent of effect that complex noise term having on the relationship between serial correlation and risk measurements.
+
+Several universal assumptions around GARCH term in this section should be stated at this point. The GARCH model is on the basis of the Gaussian conditional distribution. Although in the empirical study with thirteen American indices it shows that a heavy tail conditional distributions, such as t-Student, are more likely to approximate the true market, Gaussian enable us to analyze more properties in the return without losing the generality. For GARCH(1,1), recall  that:
+\[
+\sigma^2_t = \omega + \alpha y_{t-1}^2 + \beta \sigma^2_{t-1}
+\]The choose of potential parameters is on account of the study of the American financial indices. In summary, we choose $\omega \in \{10^{-7}, 10^{-8}\}$, $\alpha \in \{0.05, 0.08, 0.11, 0.14, 0.17, 0.20\}$, $\beta  \in \{0.1,0.2,\dots, 0.7\}$.
+
+\subsubsection{AR(1)$\sim$GARCH(1,1)}
+Started from the simpliest model AR(1)$\sim$GARCH(1,1), the simulation results provides us a general idea how risk measures changes with $\alpha$ and serial correlation, namely, $\kappa(1)$. Two questions are focused here 1) which parameter within $\omega$, $\alpha$ and $\beta$ are more responsible for the change in risk measurements? 2) Comparing the extent that the risk measurements changing with serial correlation or coefficients, does $\alpha$ and $\beta$ counts a lots?
+\begin{figure}[H]
+  \centering
+  \begin{minipage}[b]{0.48\textwidth}
+  \includegraphics[width = 0.9\textwidth]{../figures/simulation_garch/garch_AR1_risk_measures_neg_alpha.png}
+\caption{AR(1): Relationship between $\alpha$ parameter in the GARCH(1,1) and risk measures. The plots are produced under $\kappa_1 = -0.25$.}
+
+\label{fig:garch_rm_alpha1}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.48\textwidth}
+   \includegraphics[width = 0.9\textwidth]{../figures/simulation_garch/garch_AR1_risk_measures_ar1}
+\caption{AR(1): Relationship between serial correlation in the GARCH(1,1) and risk measures. $\kappa_1 \in \{0.1,0.2, \dots, 0.8 \}$}
+%(Simulation path length: 1000, $\epsilon_t \sim 0.01T(df = 4)$)
+\label{fig:garch_rm_coef1}
+  \end{minipage}
+\end{figure}
+
+The Figure \ref{fig:garch_rm_alpha1} verifies our guess. The higher $\omega$, $\alpha$ or $\beta$ are all partial responsible for a highly risk measurements, in general. The eight lines within the plots are clearly separate into two groups, upper and lower. The higher four curves own a higher $\omega$, which indicates a general magnitude of variance. It is save to conclude that $\omega$ is dominant among parameters.
+
+ES, VaR and Volatility are monotonically increasing with $alpha$. When the $\beta$ is relatively small, this relationship is almost linear, while when the $\beta$ is large, the relationship is more likely to be a higher order polynomial shape. In general, the CED has a similar trend with other risk measures, while it is less smooth. Especially, when the $\beta$ is low, $\alpha's$ effect is even more unclear. Indicating in the plot is the lowest three lines are twisting together. 
+
+Figure \ref{fig:garch_rm_coef1} explores the how large $\omega$, $\alpha$ or $\beta$ affect the risk measurements comparing with changing in serial correlation. As proved, we only choose the positive coefficients to see the clear trend. With in $\alpha$ and $\beta$, the $\beta$ is dominant, especially in the first three plots, the 0.5 change in $beta$ is larger than 0.7 change in $\kappa$, fixed $\alpha$. A more exciting pattern shown in the CED plot. It shows that the complex variance, $\alpha$ or $\beta$ less affect CED, comparing the other risk measurements. In general, the curve in last plot is steeper, suggesting that CED is more sensitive to$\kappa$ in AR(1) $\sim$GARCH(1,1) model.
+
+\subsubsection{ARMA(1,1) $\sim$GARCH(1,1)}
+Similar to AR(1)$\sim$GARCH(1,1) model, we generalize it to ARMA(1,1)$\sim$GARCH(1,1), a more popular model in financial area.
+
+In Figure \ref{fig:garch_ARMA11_risk_measures_3_alpha} where $\kappa_1 = 0.25$, $\theta_1 = -0.25$, the CED increases with the $\alpha$ and more sensitive when $\beta$ is high. Again, the $\omega$ is also the dominant factor compared with $\alpha$ and $\beta$.
+
+
+\subsubsection{A short summary about GARCH}
+This section is targeted in analyzing the impact of complex variance on the evaluation relationship of serial correlation($\kappa$ or $\rho$) and risk measures. It is more straightforward to see this effects through the simulation study other than tedious derivations. Through the analysis above, we have several conclusions as followed.
+
+\begin{enumerate}
+\item The larger value of $\omega$, $\alpha$ and $\beta$ are all partially responsible for a higher risk measurements, in general, given the ARMA model.
+\item Among three parameters, the effect of $\omega$ dominates. As $\omega$ indicates the general change of variance of the model, which is a counterpart of $\sigma^2$ in the pure ARMA.
+\item When the $\beta$ is small, the effect of $\alpha$ on risk measurements are weak. Especially for CED, it is insensitive to the change of $\alpha$. However, when the $\beta$ value is large, the ES, VaR and Volatility increase sharply with $\alpha$. For CED, it has a upward trend, but more indented than other risk measurements.
+\item From the plots with $\kappa$ as axis, we found that in the time series with a GARCH variance, $\alpha$ and $\beta$ less affect CED comparing with other risk measurements.
+\item Last but not least, we found that $\alpha$ value of the GARCH model does not change the shape of maximun drawdown distribution a lot compare with $\beta$ values. Therefore, in summary, for CED, the ranking magitude of effect from GARCH parameters are: $\alpha < \beta < \omega$
+\end{enumerate}
 
 \subsection{Findings}
 
