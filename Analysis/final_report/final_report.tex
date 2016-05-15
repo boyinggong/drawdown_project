@@ -175,12 +175,12 @@ CED is closely related to other risk measures. However, the correlation between 
 %%% add here %%
 %%% The reason for time series analysis %%%
 \subsection{ARMA} \label{arma}
-ARMA is the simplest and most commonly used time series model, which is enable to capture the correlation between current time point and one or several lags in a stationary time series. Therefore, in the section \ref{arma}, ten kinds of U.S indices are feeded into ARMA models, first simple chosen models from the family, then best model through selection steps. From there, one can take the first sight of the relationship between serial correlation and different risk measurements in real-world data.
+ARMA is the simplest and most commonly used time series model, which enable us to capture the correlation between current time point and one or several lags in a stationary time series. Therefore, in this section, ten assets returns are fitted into ARMA models, first simple chosen models from the family, then best model through selection steps. From there, one can take the first sight of the relationship between serial correlation and different risk measurements in real-world data.
 
 \subsubsection{Result of basic ARMA model fit}
-Started from the simplest ones, ten U.S indices have been feeded into 3 most basic ARMA models: AR(1), MA(1) and ARMA(1,1). The three models here are not necessary the best one, or even the ones that all underlying assumptions are satisfied. This step is just try to have a general idea if the serial correlation of each model is related with risk measurements in some way. When it comes to serial correlation here, it refers to the first order autocorrelation of the time series models. 
+Started from the simplest ones, ten assets have been fitted into three most basic ARMA models: AR(1), MA(1) and ARMA(1,1). The three models here are not necessary the best one, or even the ones that all underlying assumptions are satisfied. This step is just to try to have a general idea if the serial correlation of each model is related with risk measurements in some way. When it comes to serial correlation here, it refers to the first order autocorrelation of the time series models. 
 
-Following is a short summary on these three ARMA model, including their formulus and the method for calculating the serial correlation.
+Following is a summary of these three ARMA model, including their formulas and the method for calculating the serial correlation.
 
 \begin{enumerate}
 \item \textbf{AR(1)}
@@ -211,8 +211,7 @@ X_t = \phi X_{t-1} + \epsilon_t + \theta\epsilon_{t-1}
 \rho(h) = \frac{(1+\theta \phi)(\theta + \phi)}{1+ 2\theta \phi +\phi^2} \phi^{h-1}, \mbox{if } h \geq 1
 \end{equation}
 \end{enumerate}
-Table \ref{table:corSerialRisk} shows the correlatio between serial correlation and different risk measures for AR(1) and ARMA(1,1). Figure\ref{fig:SerCol-CED5yr3monAR1} and Figure \ref{fig:SerCol-VaR5yrAR1}
- in the appendix shows a more straightforward relationship between first order serial correlation of AR(1) and risk measures. Consistent with what was showing in the plot, all the assets except MXEA and MXEF have the high correlation between $\kappa(1)$ and risk measurements. Within each asset, as expected, the correlation with VaR and ES are very closed, as VaR is highly correlated with ES internally. However, compared with VaR and ES, the correlation with CED is relatively smaller, and sometimes the correlations are even with different sign.
+Table \ref{table:corSerialRisk} shows the correlation between serial correlation and different risk measures for AR(1) and ARMA(1,1). Figure \ref{fig:SerCol-CED5yr3monAR1} and Figure \ref{fig:SerCol-VaR5yrAR1} in the appendix shows a more straightforward relationship between first order serial correlation of AR(1) and risk measures. Consistent with what was showing in the plot, all the assets except MXEA and MXEF have the high correlation between $\kappa(1)$ and risk measurements. Within each asset, as expected, the correlation with VaR and ES are very closed, as VaR is highly correlated with ES internally. However, compared with VaR and ES, the correlation with CED is relatively smaller, and sometimes the correlations are even with the different sign.
 
 %\begin{wraptable}{l}{10.5cm}
 \begin{table}[H]
@@ -239,11 +238,11 @@ USGG10YR & 0.67 & 0.64 &  0.66 & 0.65 & 0.64 &  0.68\\
 \label{table:corSerialRisk}
 \end{table}
 
-Both the table and figures are unable to tell the story what are the relationships between risk measures and serial correlation for the indices, since the model here are recklessly chosen and more complicated factors shocking the market everyday. However, the table provides an idea that relationship with CED is more closed to that with VaR and ES when this correlation is internally large.
+Both the table and figures are unable to tell the story what are the relationships between risk measures and serial correlation for the indices, since the model here are recklessly chosen and more complicated factors shocking the market every day. However, the table provides an idea that relationship with CED is more closed to that with VaR and ES when this correlation is internally large.
 %\end{wraptable}
 
 \subsubsection{Model selection}
-The model selection is accomplished by trying to find a proper time series model on the unit of all data for each asset, for the fact that it makes no sense to fit different model for each rolling time period within one financial asset.  Unfortunately, observing from the ACF plot of returns, most of them are not stationary by nature without drift term, which means ARMA model is inherently not or just a partial a good selection for fitting them. It may also explain the reason why the previous section did not produce a expected result that CED is more correlated with serial correlation $\kappa(1)$.
+The model selection is accomplished by trying to find a proper time series model on the unit of all data for each asset, for the fact that it makes no sense to fit different model for each rolling time period within one financial asset.  Unfortunately, observing from the ACF plot of returns, most of them are not stationary by nature without drift term, which means ARMA model is inherently not or just a partial a good selection for fitting them. It may also explain the reason why the previous section did not produce an expected result that CED is more correlated with serial correlation $\kappa(1)$.
 \begin{wraptable}{r}{6.5cm}
 %\begin{table}[!h]
 \caption{Best ARIMA Model for the U.S. Assets }
@@ -269,10 +268,10 @@ USGG10YR & (0,0,0) \\
 \end{wraptable}
 
 
-Our criterion here for ``better model'' is the smaller AIC value. Appendix \ref{App:AppendixD} provides a more detailed explanation on model select criteria. To confirm the fact that ARMA is not reasonable for almost all the indices, we tried sets of parameter for ARMA and select the one with the smallest AIC value. Essentially, we chose the combination of AR and MA parameters ranging from 1 to 5.  Table \ref{table:BestArima} shows the best selection based on AIC criteria. The Table \ref{table:BestArima} indicates that the parameters are as high as 4 or 5 for almost all the assets, which suggests that the time series are not stationary. It also involved some converging issue is when the parameters are getting too larger.
+Our criterion here for ``better model'' is the smaller AIC value. Appendix \ref{App:AppendixD} provides a more detailed explanation on model select criteria. To confirm the fact that ARMA is not reasonable for almost all the indices, we tried sets of parameters for ARMA and select the one with the smallest AIC value. Essentially, we chose the combination of AR and MA parameters ranging from 1 to 5.  Table \ref{table:BestArima} shows the best selection based on AIC criteria. The Table \ref{table:BestArima} indicates that the parameters are as high as 4 or 5 for almost all the assets, which suggests that the time series are not stationary. It also involved some converging issue is when the parameters are getting too larger.
 
 
-To illustrate this point, the following is an example analysis on RMZ index. There are several reasons why RMZ is selected: 1) the RMZ has a shorter period, which means it includes less abnormal market shock such as financial crisis in 2008 and more close to the normal fluctuation in stock price. 2) Larger serial correlation and ES, VaR comparing with other indices, implying it is more suitable for analysing the relationship between serial correlation and various risk measures. 3) There are less modes in Maximum drawdown of RMZ, suggesting it is reasonable to get tail mean, which is CED.
+To illustrate this point, the following is an example analysis of RMZ index. There are several reasons why RMZ is selected: 1) the RMZ has a shorter period, which means it includes less abnormal market shock such as financial crisis in 2008 and more close to the normal fluctuation in stock price. 2) Larger serial correlation and ES, VaR comparing with other indices, implying it is more suitable for analyzing the relationship between serial correlation and various risk measures. 3) There are fewer modes in the maximum drawdown distribution of RMZ, suggesting it is reasonable to get tail mean, which is CED.
 \subsubsection{RMZ: an example}
 Grid searching of the best parameter set of ARIMA model is applied to RMZ index. On the basis of both AIC and BIC selection criteria (Appendix \ref{App:AppendixD}), MA(1) turns out to be the best option.
 
@@ -290,24 +289,24 @@ Grid searching of the best parameter set of ARIMA model is applied to RMZ index.
   \label{fig:ACFofRMZ}
   \end{minipage}
 \end{figure}
-However, the residuals after fitting does not convert into white noise as the assumption of ARIMA model. The factors lead this result is complicated and beyond our discussion, as this is a 10-year-long time series and market shock varied during this long time. Figure \ref{fig:DiagnosticRMZ} shows the diagnostic results after the fitting. The variance of residuals are clustered across the time. After taking a closed look at the data, agreed with expectation, the high volatility period is corresponding to 2008 financial crisis.
+However, the residuals after fitting do not convert into white noise as the assumption of ARIMA model. The factors lead this result is complicated and beyond our discussion, as this is a 10-year-long time series and market shock varied during this long time. Figure \ref{fig:DiagnosticRMZ} shows the diagnostic results after the fitting. The variance of residuals is clustered across the time. After taking a closer look at the data, agreed with expectation, the high volatility period is corresponding to 2008 financial crisis.
 
-Figure \ref{fig:ACFofRMZ} also demonstrates this problem in ACF/PACF plot, in which some correlations exist between residuals after more than 50 lags, but they are comparatively small after the fitting.Normal Q-Q shows that residuals are heavy-tailed. Ljung–Box–Pierce Q-statistic, used for test grouped $\kappa_e(h)$, rejects $H_0$ after $5^{th}$ lag, which also indicates the residual is not white noise after fitting. The diagnostics suggest that AR(1), MA(1) and ARMA(1,1) could all be good options, while the time series is not stationary by nature. Therefore, more complicated model should be adopt to capture the pattern with in the variance of residual.
+Figure \ref{fig:ACFofRMZ} also demonstrates this problem in ACF/PACF plot, in which some correlations exist between residuals after more than 50 lags, but they are comparatively small after the fitting.Normal Q-Q shows that residuals are heavy-tailed. Ljung–Box–Pierce Q-statistic, used for test grouped $\kappa_e(h)$, rejects $H_0$ after $5^{th}$ lag, which also indicates the residual is not white noise after fitting. The diagnostics suggest that AR(1), MA(1) and ARMA(1,1) could all be good options, while the time series is not stationary by nature. Therefore, more complicated model should be adopted to capture the pattern within the variance of residual.
 
 
 
 \subsection{GARCH} \label{garch}
-For financial assets, the returns have strong dependency across the time, thus it is reasonable to fit time series to interpret and predict them. As described in Section \ref{arma}, the ARIMA models are infeasible for most assets from diagnostics plots, in which the variance cluster in the return could not be captured, resulting in some variance cluster left the residual plot. To solve the problems listed above, the GARCH then is attempted to fit the returns for various assets. It turns out to have a much better performance in capturing the variance, and hence, a reasonable diagnostic plots.
+For financial assets, the returns have strong dependency across the time, thus, it is reasonable to fit time series to interpret and predict them. As described in Section \ref{arma}, the ARIMA models are infeasible for most assets from diagnostics plots, in which the variance cluster in the return could not be captured, resulting in some variance cluster left the residual plot. To solve the problems listed above, the GARCH then is attempted to fit the returns for various assets. It turns out to have a much better performance in capturing the variance, and hence, a reasonable diagnostic plot.
 \subsubsection{Why GARCH is better?}
-The GARCH is the most widely used the model in financial data fitting. Rather than ARIMA having constant variance assumption, GARCH also model the heteroscedasiticity in the time series.  For GARCH(1,1), the model is discribed as following:
+The GARCH is the most widely used the model in financial data fitting. Rather than ARIMA having constant variance assumption, GARCH also model the heteroscedasticity in the time series.  For GARCH(1,1), the model is described as following:
 \begin{align*} 
 y_t & = \sigma_t \epsilon_t\\
 \sigma_t^2 & = \alpha_0+ \alpha_1 y_{t-1}^2 +\beta_1\sigma_{t-1}^2
 \end{align*}
-These set of formulus in indicates that the current variance of the noise is affected by variance of error in the previous several periods and the magnitude of the previous return. In this model, the clustered variance of residuals can be efficiently captured. Additionally, GARCH also inherits good properties of the ARMA in characterizing the correlation within consecutive time points. Considering all the benefits listed above, GARCH is an ideal model for improving the ARMA mentioned in Section \ref{arma}.
+These set of formulas in indicates that the current variance of the noise is affected by the variance of error in the several previous periods and the magnitude of the previous return. In this model, the clustered variance of residuals can be efficiently captured. Additionally, GARCH also inherits good properties of the ARMA in characterizing the correlation between consecutive time points. Considering all the benefits listed above, GARCH is an ideal model for improving the ARMA mentioned in Section \ref{arma}.
 
 \subsubsection{Result of GARCH fit}
-Seen from the returns plot for different assets, the clustered variance is a common case in financial assets. Especially for really long time series, such as \textit{MXEA}, the market shock is even harder to interpret and predict. Therefore, for those assets with long time series, a longer lag of ARMA model is required. The best fit of GARCH model on all the selected assets are shown in the Table \ref{table:BestGarch}.
+As shown in the return plots for different assets, the clustered variance is a common case in financial assets. Especially for really long time series, such as \textit{MXEA}, the market shock is even harder to interpret and predict. Therefore, for those assets with long time series, a longer lag of ARMA model is required. The best fit of GARCH model on all the selected assets is shown in Table \ref{table:BestGarch}.
 %\begin{figure}[H]
 %  \includegraphics[width = \textwidth]{../results/resids}
  %  \caption{Residuals after fitting using the best ARIMA Model}
@@ -334,22 +333,24 @@ USGG10YR & GARCH(1,3) &-6.664873& 0\\
 \end{tabular}
 \label{table:BestGarch}
 \end{table}
-The parameters are selected using in-sample error measure BIC. Details about BIC can be found in Appendix \ref{App:AppendixD}. The mean difference between BIC and AIC is that BIC tends to penalty more on complexity and resulting less feature in the model. As garch models are very likely to be overfitting, choosing BIC is of greater reasonability.
+The parameters are selected using in-sample error measure BIC. Details about BIC can be found in Appendix \ref{App:AppendixD}. The mean difference between BIC and AIC is that BIC tends to penalize more on complexity and to result in less feature in the model. As GARCH models are very likely to be overfitting, choosing BIC is of greater reasonability.
 
-The GARCH model highly reduces the correlation within the residual and ends up with a more reasonable dignostics, while the predictivity of the model has  been highly improved( 
+The GARCH model highly reduces the correlation within the residual and ends up with a more reasonable diagnostics, while the predictivity of the model has  been highly improved( 
 %%\ref {}%%!!!!!!!!!!!!!!!!!!!!!!!!!!!
-is a good example). However, there are still problems presenting in GARCH model, and needs further solutions to handle it. The heavy tail is existing as the sign from the normal Q-Q plots, in which points deviate from line at both ends. Heavy tail problem is caused by assumption of the Gaussian conditional distribution in GARCH. Instead of Gaussian, t-Student could be used as the conditional distribution is able to catch the variance on both tails. Causing convergency issue time to time by t-Student distribution, Generalize Normal Distribution (GED) and  QMLE are other potential options.
+is a good example). However, there are still problems revealed in GARCH model, and needs further improvement. The heavy tail is existing as the sign from the normal Q-Q plots, in which points deviate from the line at both ends. The failure in modeling heavy tail is caused by the inappropriate assumption of the Gaussian conditional distribution in GARCH. Instead of Gaussian, Student-t could be used as the conditional distribution and is able to catch the variance on both tails. Considering convergence issue caused by t-Student distribution, Generalize Normal Distribution (GED) and QMLE are other potential options.
  
 \subsubsection{RMZ: an example}
-This section presents a model selection and assessment process of the RMZ example on GARCH method, showing a diagnostics of the model and the predictive capability of the model.
-%%Section\ref%% 
-is highly related to this section, in which GARCH time series are simulated and fitted so that a more clear pattern is generated eliminating all the other market factors. There, we can see a more clear relationship between serial correlation and different risk measures.
+This section presents a model selection and assessment process of the RMZ example on GARCH method, showing a diagnostics of the model and the predictive capability of the model. Section \ref{GARCH_simulation} is highly related to this section, in which GARCH time series are simulated and fitted so that a more clear pattern is generated eliminating all the other market factors. There, we can see a more clear relationship between serial correlation and different risk measures.
 
 First of all, The MA(1)~ GARCH(1,1) for RMZ is estimated as followed:
 \begin{align*}
 R_t &= -4.1561\times 10^{-2}\epsilon_{t-1} \\
 \sigma_t^2 & = 1.9955 \times 10^{-6} +1.1083\times 10^{-1} T_{t-1}^2 +8.8506\times 10^{-1}  \sigma_{t-1}^2
 \end{align*}
+
+Figure \ref{fig:RMZ_GARCH_dig2} shows the diagnostic after fitting GARCH(1,1) with a generalized normal distribution on the residuals of RMZ after the ARMA fitting. The resulting errors feasibly tend to be white noise, without any apparent correlation within them. After applying the heavy tail fixer on conditional distribution using GED, the resulting error is more Gaussian distribution, following almost exactly to the line in Q-Q plot.
+
+Figure \ref{fig:RMZ_GARCH_predCI} indicates the capability of GARCH in one and several steps prediction. It shows the last 120 residuals from RMZ index, and all but last 20 are used to fit the GARCH(1,1) model with GED conditional distribution. A confident interval is also created based on the mean and standard deviation. And it is nice to see that almost all the last 20 points lie in the interval.
 
 \begin{figure}[H]
   \centering
@@ -366,11 +367,15 @@ R_t &= -4.1561\times 10^{-2}\epsilon_{t-1} \\
   \end{minipage}
 \end{figure}
 
-Figure \ref{fig:RMZ_GARCH_dig2} shows the diagnostic after fitting GARCH(1,1) with a generialized normal distribution on the residuals of RMZ after the ARMA fitting. The resulting errors feasibly tend to be white noise, without any apparent correlation within them. After apply the heavy tail fixer on conditional distribution using GED, the resulting error is more Gaussian distribution,, following almost exactly to the line in Q-Q plot.
-
-Figure \ref{fig:RMZ_GARCH_predCI} indicates the capability of GARCH in one and several steps prediction. It shows the last 120 residuals from RMZ index, and all but last 20 are used to fit the GARCH(1,1) model with GED conditional distribution.  An confident interval is also created based on mean and standard deviation. And it is nice to see that almost all the last 20 points lies in the interval.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=1\textwidth]{../results/regime/RMZ_regime}
+    \caption{Left panel: Return plot of RMZ from June 20th, 2005 to December 31st, 2015. Shadowed areas represent regime 1 with high volatility, and white areas indicate regime 2 with low volatility. Right panel: one-month maximum drawdown distribution of regime 1 and regime 2 of RMZ.}
+    \label{fig: RMZregime}
+\end{figure}
 
 \subsection{Regime dependent analysis}
+
 
 Most economic time series data behave differently in the adjacent period. For example, asset returns
 usually show considerable volatility during a financial crisis. One standard approach to model abrupt changes in regime is to use the Hamilton's Markov regime switching model\cite{hamilton1994time}\cite{hamilton1990analysis}. In our study, we use the following two-regime switching model to fit the returns:
@@ -417,13 +422,6 @@ P(s_t = j|s_{t-1}, s_{t-2}, \dots) = P(s_t = j|s_{t-1})  = p_{ij}
 Table \ref{table:autoCoeffRegime} shows the estimated autoregression coefficient $\phi$ and standard deviation of the noise term of two regimes for various assets. We also provide the standard deviation, skewness, and kurtosis of different assets in Table \ref{table:statSumRegime} in the appendix. Note that regime 1 represents high volatility regime while regime 2 represents low volatility one. In general, it is clear that returns of regime 1 have a larger standard deviation, skewness, and kurtosis than that of regime 2. This difference in kurtosis indicates that the return distribution in low volatility regimes has a lighter tail. In contrast, in high volatility regimes, there are more extreme values of returns.
 
 We observe that low volatility regimes are more likely (9 out of 10 assets) to show larger autocorrelation coefficient. Although we expect greater drawdown risk when serial correlation increase (which means more significant autocorrelation coefficients estimate here), we did not prove this through empirical results. Later we will show in the simulation study that given different serial correlation and error term variance of the time series model, the latter factor dominant the impact to CED values, which is the case in our empirical findings. But under the same level of noise term variance, the larger the serial correlation, the greater the CED.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=1\textwidth]{../results/regime/RMZ_regime}
-    \caption{Left panel: Return plot of RMZ from June 20th, 2005 to December 31st, 2015. Shadowed areas represent regime 1 with high volatility, and white areas indicate regime 2 with low volatility. Right panel: one-month maximum drawdown distribution of regime 1 and regime 2 of RMZ.}
-    \label{fig: RMZregime}
-\end{figure}
 
 \begin{table}[H]
     \centering 
@@ -524,7 +522,8 @@ Figure \ref{fig:AR1_maxDrawdown_dist} shows the maximum drawdown distribution fo
 \label{fig:AR1_maxDrawdown_dist}
 \end{figure}
 
-\subsection{GARCH model}
+\subsection{GARCH model} \label{GARCH_simulation}
+
 The previous several sections have already stated general ideas that how magnitude of risk measurements correlated with serial correlation and ARMA coefficients in AR(1), MA(1) and ARMA(1,1) models. However, the inspiring results should not encourage us ignore the complexity of the market: it always does not produce such regular time series. The occasional events shock the market and the returns always shows clustered variance. As has been analyzed in the Section \ref{garch}, a popular way to handle the complex variance in the return is using generalized autoregressive conditional heteroskedasticity (GARCH) model. In this section, ARMA time series are simulated with GARCH(1,1) noise term, to which we expect analysis the extent of effect that complex noise term having on the relationship between serial correlation and risk measurements.
 
 Several universal assumptions around GARCH term in this section should be stated at this point. The GARCH model is on the basis of the Gaussian conditional distribution. Although in the empirical study with thirteen American indices it shows that a heavy tail conditional distributions, such as t-Student, are more likely to approximate the true market, Gaussian enable us to analyze more properties in the return without losing the generality. For GARCH(1,1), recall  that:
