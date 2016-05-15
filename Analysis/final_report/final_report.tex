@@ -175,50 +175,38 @@ ARMA is the simplest and most commonly used time series model, which is enable t
 \subsubsection{Result of basic ARMA model fit}
 Started from the simplest ones, ten U.S indices have been feeded into 3 most basic ARMA models: AR(1), MA(1) and ARMA(1,1). The three models here are not necessary the best one, or even the ones that all underlying assumptions are satisfied. This step is just try to have a general idea if the serial correlation of each model is related with risk measurements in some way. When it comes to serial correlation here, it refers to the first order autocorrelation of the time series models. 
 
-Following is a short summary on these three ARMA model, including their formulus, description and the method for calculating the serial correlation.
+Following is a short summary on these three ARMA model, including their formulus and the method for calculating the serial correlation.
 
 \begin{enumerate}
 \item \textbf{AR(1)}
-\begin{itemize}
-\item Model:
 \begin{equation}
 X_t = \phi X_{t-1} + \epsilon_t \ \ \  s.t.\ |\phi | < 1
 \end{equation}
-\item AR(1) just has the AR component with lag 1 in the ARMA model, which characterized by only the previous term in the process and the noise term contributing to the output. When $\phi$ is closer to 0, the whole process is more like to be white noise.
-\item The equation for calculating the serial correlation:
+% \item AR(1) just has the AR component with lag 1 in the ARMA model, which characterized by only the previous term in the process and the noise term contributing to the output. When $\phi$ is closer to 0, the whole process is more like to be white noise.
 \begin{equation}
 \rho(h) = \phi ^h, \ h = 0,1,\dots
 \end{equation}
-\end{itemize}
 
 \item \textbf{MA(1)}
-\begin{itemize}
-\item Model:
 \begin{equation}
 X_t = \epsilon_t + \theta\epsilon_{t-1}
 \end{equation}
-\item MA(1) just has the MA component with lag 1 in the ARMA model, which impost the shock for the current period and q periods into the future; in contrast, in the AR model a shock affects  X values infinitely far into the future.
-\item The equation for calculating the serial correlation:
+% \item MA(1) just has the MA component with lag 1 in the ARMA model, which impost the shock for the current period and q periods into the future; in contrast, in the AR model a shock affects  X values infinitely far into the future.
 \begin{equation}
 \rho(h) = \begin{cases} \frac{\theta}{(1+\theta^2)} &\mbox{if } h = 1 \\ 
 0 & \mbox{otherwise } \end{cases}
 \end{equation}
-\end{itemize}
 
 \item \textbf{ARMA(1,1)}
-\begin{itemize}
-\item Model:
 \begin{equation}
 X_t = \phi X_{t-1} + \epsilon_t + \theta\epsilon_{t-1}
 \end{equation}
-\item ARMA(1,1) has both AR and MA component with lag 1. ARMA(1,1) is the combination of AR(1) and MA(1), which ACF incorporate the characteristics from both AR and MA: both error term and data point are directely affected by that on the previous time points.
-\item The equation for calculating the serial correlation:
+% \item ARMA(1,1) has both AR and MA component with lag 1. ARMA(1,1) is the combination of AR(1) and MA(1), which ACF incorporate the characteristics from both AR and MA: both error term and data point are directely affected by that on the previous time points.
 \begin{equation}
 \rho(h) = \frac{(1+\theta \phi)(\theta + \phi)}{1+ 2\theta \phi +\phi^2} \phi^{h-1}, \mbox{if } h \geq 1
 \end{equation}
-\end{itemize}
 \end{enumerate}
-The Table\ref{table:corSerialRisk} shows the correlatio between serial correlation and different risk measures for AR(1) and ARMA(1,1). Figure\ref{fig:SerCol-CED5yr3monAR1} and Figure \ref{fig:SerCol-VaR5yrAR1}
+Table \ref{table:corSerialRisk} shows the correlatio between serial correlation and different risk measures for AR(1) and ARMA(1,1). Figure\ref{fig:SerCol-CED5yr3monAR1} and Figure \ref{fig:SerCol-VaR5yrAR1}
  in the appendix shows a more straightforward relationship between first order serial correlation of AR(1) and risk measures. Consistent with what was showing in the plot, all the assets except MXEA and MXEF have the high correlation between $\kappa(1)$ and risk measurements. Within each asset, as expected, the correlation with VaR and ES are very closed, as VaR is highly correlated with ES internally. However, compared with VaR and ES, the correlation with CED is relatively smaller, and sometimes the correlations are even with different sign.
 
 %\begin{wraptable}{l}{10.5cm}
@@ -518,11 +506,15 @@ All the returns in every subpath would be multiplied by approximately a constant
 \textbf{3. Fatter tail of return distributions result in }
 
 \section{Risk contribution}
-Started from AR(1), present an example how risk contribution varied for different risk measurements, different weight and different ARMA parameters.\\
 
-High light difference between CED and traditional risk measurements.\\
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=1.05\textwidth]{../figures/risk_contribution/risk_contribution_simulation_all}
+  \caption{First-order serial correlation calculated using AR(1) model versus CED}
+  \label{fig:simulation_risk_contribution}
+\end{figure}
 
-Short discuss how CED useful in capture the risk of financial assets on risk contribution aspect.
+
 
 
 \clearpage
@@ -648,7 +640,7 @@ USGG10YR & 0.314 & 0.098 &  0.09 & -0.05 &  2.67 &  1.17 \\
 \end{table}
 
 \section{Appendix C: Simulations specifics} \label{App:AppendixC}
-\subsubsection{Noise term with normal distribution}
+\subsection{Noise term with normal distribution}
 
 We use some simple assumptions and parameters for simulation with normal distribution as follows:
 
@@ -679,15 +671,7 @@ We use some simple assumptions and parameters for simulation with normal distrib
 \subparagraph{Model Selection Criteria}
 
 
-
-
 \newpage
-
-\bibliographystyle{unsrt}
-\bibliography{analysis}
-
-
-
 
 \clearpage
 
